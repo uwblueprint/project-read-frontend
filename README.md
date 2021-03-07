@@ -5,11 +5,13 @@
 ### Add environment variables
 
 Make a copy of `.env.sample` named `.env`, and fill in:
-* the URL your backend is running on
-* your Django Admin username
-* your Django Admin password
+
+- the URL your backend is running on
+- your Django Admin username
+- your Django Admin password
 
 For example:
+
 ```
 REACT_APP_API_URL=http://localhost:8000
 REACT_APP_USERNAME=test@uwblueprint.org
