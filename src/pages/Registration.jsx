@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Typography } from "@material-ui/core";
+
 import FamilyAPI from "../api/FamilyAPI";
 import SessionAPI from "../api/SessionAPI";
+import RegistrationTable from "../components/registration/RegistrationTable";
 
-function Registrations() {
+function Registration() {
   const [families, setFamilies] = useState([]);
   const [sessions, setSessions] = useState([]);
 
@@ -18,34 +21,24 @@ function Registrations() {
   }, []);
 
   return (
-    <div>
-      <h1>Main Registration</h1>
-      <h2>Sessions</h2>
+    <>
+      <Typography variant="h1">Main registration</Typography>
       {sessions.length ? (
         <ul>
           {sessions.map((session) => (
             <li key={session.id}>
-              {session.id} - {session.season} {session.year}
+              <Typography variant="body1">
+                {session.id} - {session.season} {session.year}
+              </Typography>
             </li>
           ))}
         </ul>
       ) : (
         <p>No sessions found</p>
       )}
-      <h2>Families</h2>
-      {families.length ? (
-        <ul>
-          {families.map((family) => (
-            <li key={family.id}>
-              {family.id} - {family.email}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No families found</p>
-      )}
-    </div>
+      <RegistrationTable data={families} />
+    </>
   );
 }
 
-export default Registrations;
+export default Registration;
