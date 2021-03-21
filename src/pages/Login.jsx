@@ -1,34 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
-import { useAuth } from "../context/auth";
+import firebase from "firebase";
+import { FirebaseAuth } from "react-firebaseui";
+import { AuthContext } from "../context/auth";
 
 function Login() {
-  const isAuthenticated = useAuth();
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const { user } = useContext(AuthContext);
 
-  if (isAuthenticated) {
-    return <Redirect to="/" />;
-  }
+  const uiConfig = {
+    signInFlow: "popup",
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccess: () => false,
+    },
+  };
 
   return (
     <div>
-      <h1>Login</h1>
-      <form>
-        <input
-          type="username"
-          value={userName}
-          onChange={setUserName}
-          placeholder="email"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={setPassword}
-          placeholder="password"
-        />
-        <button type="button">Sign In</button>
-      </form>
+      {user ? (
+        <Redirect to={{ pathname: "/" }} />
+      ) : (
+        <div>
+          <p>Please Sign In</p>
+          <FirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+        </div>
+      )}
     </div>
   );
 }
