@@ -8,7 +8,9 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: yarn
+          command: |
+            npm install -g yarn
+            yarn
       - run:
           name: Eslint
           command: yarn run eslint --fix .
