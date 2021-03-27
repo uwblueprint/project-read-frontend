@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import FamilyAPI from "../api/FamilyAPI";
 import SessionAPI from "../api/SessionAPI";
+import { AuthContext } from "../context/auth";
 
 function Registrations() {
   const [families, setFamilies] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     async function fetchFamilies() {
@@ -20,6 +22,7 @@ function Registrations() {
   return (
     <div>
       <h1>Main Registration</h1>
+      <h2>Hi {user ? user.email : "anonymous user"}</h2>
       <h2>Sessions</h2>
       {sessions.length ? (
         <ul>
