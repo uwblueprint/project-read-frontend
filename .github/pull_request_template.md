@@ -1,4 +1,3 @@
-
 ### Notion ticket link
 
 <!-- Please replace with your ticket's URL -->
