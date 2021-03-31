@@ -18,6 +18,7 @@
     ```bash
     vault kv get -format=json kv/project-read | python scripts/update_secret_files.py
     ```
+    If you get an error like `File location for key <ENV_KEYS> was not found.` you can safely ignore that.
 
 ### Install dependencies
 
