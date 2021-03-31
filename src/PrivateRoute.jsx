@@ -1,16 +1,23 @@
-import React from "react";
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useAuth } from "./context/auth";
+import { Container } from "@material-ui/core";
+import { AuthContext } from "./context/auth";
 
 function PrivateRoute({ component: Component }) {
-  const isAuthenticated = useAuth();
+  const { user } = useContext(AuthContext);
 
   return (
     <Route
       render={(props) =>
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
+        user ? (
+          <Container>
+            <Component {...props} />
+          </Container>
+        ) : (
+          <Redirect to="/login" />
+        )
       }
     />
   );

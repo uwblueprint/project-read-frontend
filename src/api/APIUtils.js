@@ -1,13 +1,17 @@
+import app from "../firebase/config";
+
 const url = process.env.REACT_APP_API_URL;
-const username = process.env.REACT_APP_USERNAME;
-const password = process.env.REACT_APP_PASSWORD;
+
+async function getIdToken() {
+  const user = app.auth().currentUser;
+  return user ? user.getIdToken() : "";
+}
 
 async function get(path) {
+  const token = await getIdToken();
   const res = await fetch(url + path, {
     headers: {
-      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
-        "base64"
-      )}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 

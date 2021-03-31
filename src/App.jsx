@@ -1,23 +1,35 @@
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import React from "react";
 import { AuthProvider } from "./context/auth";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import PrivateRoute from "./PrivateRoute";
-import Registrations from "./pages/Registrations";
+import Registration from "./pages/Registration";
+
+const theme = createMuiTheme({
+  typography: {
+    h1: {
+      fontSize: 36,
+      fontWeight: "bold",
+    },
+  },
+});
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <PrivateRoute exact path="/" component={Registrations} />
-          <Route exact path="*" component={NotFound} />
-        </Switch>
-      </Router>
-    </AuthProvider>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
+        <Router>
+          <Switch>
+            <Route exact path="/login" component={Login} />
+            <PrivateRoute exact path="/" component={Registration} />
+            <Route exact path="*" component={NotFound} />
+          </Switch>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
