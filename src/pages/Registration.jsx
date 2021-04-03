@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Typography } from "@material-ui/core";
 import { AuthContext } from "../context/auth";
+import { FieldsProvider } from "../context/fields";
 
 import FamilyAPI from "../api/FamilyAPI";
 import SessionAPI from "../api/SessionAPI";
@@ -23,7 +24,7 @@ function Registration() {
   }, []);
 
   return (
-    <>
+    <FieldsProvider>
       <Typography variant="h1">Main registration</Typography>
       <Typography variant="h2">
         Hi {user ? user.email : "anonymous user"}
@@ -42,8 +43,8 @@ function Registration() {
       ) : (
         <p>No sessions found</p>
       )}
-      <RegistrationTable data={families} />
-    </>
+      <RegistrationTable families={families} />
+    </FieldsProvider>
   );
 }
 
