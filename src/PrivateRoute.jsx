@@ -12,7 +12,7 @@ function PrivateRoute({ component: Component }) {
     <Route
       render={(props) =>
         user ? (
-          <Container>
+          <Container maxWidth={false}>
             <Component {...props} />
           </Container>
         ) : (

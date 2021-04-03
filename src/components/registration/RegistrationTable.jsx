@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import MUIDataTable from "mui-datatables";
 import PropTypes from "prop-types";
+import { Typography } from "@material-ui/core";
 
 import { FieldsContext } from "../../context/fields";
 import RegistrationTableColumns from "../../constants/registration/RegistrationTableColumns";
@@ -8,14 +9,16 @@ import QuestionTypes from "../../constants/QuestionTypes";
 
 const options = {
   responsive: "standard",
+  rowsPerPage: 25,
+  rowsPerPageOptions: [25, 50, 100],
   selectableRows: "none",
 };
 
-function getTableRows(families, extraFields) {
-  if (extraFields.length) {
+function getTableRows(families, extraColumns) {
+  if (extraColumns.length) {
     const fieldMap = Object.assign(
       {},
-      ...extraFields.map((field) => ({ [field.id]: field.name }))
+      ...extraColumns.map((field) => ({ [field.id]: field.name }))
     );
     families.forEach((family) => {
       const familyRow = family;
@@ -36,31 +39,43 @@ function getTableRows(families, extraFields) {
   return families;
 }
 
-function getTableColumns(extraFields) {
-  const extraColumns = [];
-  extraFields.forEach((field) => {
-    extraColumns.push({
+function getTableData(families, extraColumns) {
+  const rows = getTableRows(families, extraColumns);
+  const columns = [];
+
+  const noWrapText = (value) => (
+    <Typography noWrap variant="body2">
+      {value}
+    </Typography>
+  );
+  const noWrapOption = { customBodyRender: noWrapText };
+
+  RegistrationTableColumns.forEach((column) => {
+    const columnOptions = column.options
+      ? Object.assign(column.options, noWrapOption)
+      : noWrapOption;
+    columns.push(Object.assign(column, columnOptions));
+  });
+
+  extraColumns.forEach((field) => {
+    columns.push({
       name: field.name.toString(),
       options: {
         display: field.is_default,
         filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
         searchable: field.question_type === QuestionTypes.TEXT,
-        filterOptions: { fullWidth: true },
+        customBodyRender: noWrapText,
       },
     });
   });
-  return RegistrationTableColumns.concat(extraColumns);
+
+  return [rows, columns];
 }
 
 function RegistrationTable({ families }) {
   const { parentFields } = useContext(FieldsContext);
-  return (
-    <MUIDataTable
-      data={getTableRows(families, parentFields)}
-      columns={getTableColumns(parentFields)}
-      options={options}
-    />
-  );
+  const [rows, columns] = getTableData(families, parentFields);
+  return <MUIDataTable data={rows} columns={columns} options={options} />;
 }
 
 RegistrationTable.propTypes = {
