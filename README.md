@@ -2,21 +2,23 @@
 
 ## Setup
 
+1. (Optional) Create a post merge hook for automatically updating secrets upon `git pull`
+    ```bash
+    ./scripts/setup.sh "kv/project-read" "main"
+    ```
+    Note: If you recieve permission denied errors, provide executable permissions on the setup script (Resolve using command below if you are on Mac OS)
+    ```bash
+    chmod +x ./scripts/setup.sh
+    ```
+
 ### Add environment variables
 
-Make a copy of `.env.sample` named `.env`, and fill in:
-
-- the URL your backend is running on
-- your Django Admin username
-- your Django Admin password
-
-For example:
-
-```
-REACT_APP_API_URL=http://localhost:8000
-REACT_APP_USERNAME=test@uwblueprint.org
-REACT_APP_PASSWORD=test
-```
+1. Make a copy of `.env.sample` named `.env`
+2. Pull secrets into `.env` by running
+    ```bash
+    vault kv get -format=json kv/project-read | python scripts/update_secret_files.py
+    ```
+    If you get an error like `File location for key <ENV_KEYS> was not found.` you can safely ignore that.
 
 ### Install dependencies
 
