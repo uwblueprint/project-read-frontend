@@ -1,5 +1,5 @@
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 
 import React from "react";
 import { AuthProvider } from "./context/auth";
@@ -7,15 +7,7 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import PrivateRoute from "./PrivateRoute";
 import Registration from "./pages/Registration";
-
-const theme = createMuiTheme({
-  typography: {
-    h1: {
-      fontSize: 36,
-      fontWeight: "bold",
-    },
-  },
-});
+import theme from "./theme";
 
 function App() {
   return (
