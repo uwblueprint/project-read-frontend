@@ -39,13 +39,12 @@ function FamilyDetailsSidebar({ isOpen, rowData, handleClose }) {
 
 FamilyDetailsSidebar.defaultProps = {
   isOpen: false,
-  rowData: ["Test", "User"],
   handleClose: () => {},
 };
 
 FamilyDetailsSidebar.propTypes = {
   isOpen: PropTypes.bool,
-  rowData: PropTypes.arrayOf(PropTypes.string),
+  rowData: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleClose: PropTypes.func,
 };
 

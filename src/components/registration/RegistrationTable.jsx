@@ -76,27 +76,27 @@ function getTableData(families, extraColumns) {
 function RegistrationTable({ families }) {
   const { parentFields } = useContext(FieldsContext);
   const [rows, columns] = getTableData(families, parentFields);
-  const [open, setOpen] = useState(false);
-  const [currentRowData, setCurrentRowData] = useState(["Test", "User"]);
+  const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
+  const [currentRowData, setCurrentRowData] = useState(["", ""]);
 
-  const handleOpen = useCallback((rowData) => {
+  const handleOpenFamilyDetail = useCallback((rowData) => {
     setCurrentRowData(rowData);
-    setOpen(true);
+    setOpenFamilyDetail(true);
   }, []);
 
-  const handleClose = useCallback(() => {
-    setOpen(false);
+  const handleCloseFamilyDetail = useCallback(() => {
+    setOpenFamilyDetail(false);
   }, []);
 
-  options.onRowClick = handleOpen;
+  options.onRowClick = handleOpenFamilyDetail;
 
   return (
     <div>
       <MUIDataTable data={rows} columns={columns} options={options} />
       <FamilyDetailsSidebar
-        isOpen={open}
+        isOpen={openFamilyDetail}
         rowData={currentRowData}
-        handleClose={handleClose}
+        handleClose={handleCloseFamilyDetail}
       />
     </div>
   );
