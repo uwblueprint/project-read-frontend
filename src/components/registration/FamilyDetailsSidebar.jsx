@@ -6,15 +6,12 @@ import PropTypes from "prop-types";
 const drawerWidth = 250;
 
 const useStyles = makeStyles(() => ({
-  root: {
-    display: "flex",
-  },
-  h3: {
-    padding: "20px",
-    width: drawerWidth,
-  },
   drawer: {
     width: drawerWidth,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+    padding: 20,
   },
 }));
 
@@ -27,10 +24,13 @@ function FamilyDetailsSidebar({ isOpen, rowData, handleClose }) {
       anchor="right"
       variant="temporary"
       className={classes.drawer}
+      classes={{
+        paper: classes.drawerPaper,
+      }}
       open={isOpen}
       onClose={handleClose}
     >
-      <h3 className={classes.h3}>
+      <h3>
         Hey {firstName} {lastName}!
       </h3>
     </Drawer>
