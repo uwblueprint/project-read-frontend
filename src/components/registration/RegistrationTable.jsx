@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import MUIDataTable from "mui-datatables";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
@@ -6,6 +6,7 @@ import { Typography } from "@material-ui/core";
 import { FieldsContext } from "../../context/fields";
 import RegistrationTableColumns from "../../constants/registration/RegistrationTableColumns";
 import QuestionTypes from "../../constants/QuestionTypes";
+import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 
 const options = {
   responsive: "standard",
@@ -75,7 +76,30 @@ function getTableData(families, extraColumns) {
 function RegistrationTable({ families }) {
   const { parentFields } = useContext(FieldsContext);
   const [rows, columns] = getTableData(families, parentFields);
-  return <MUIDataTable data={rows} columns={columns} options={options} />;
+  const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
+  const [currentRowData, setCurrentRowData] = useState(["", ""]);
+
+  const handleOpenFamilyDetail = useCallback((rowData) => {
+    setCurrentRowData(rowData);
+    setOpenFamilyDetail(true);
+  }, []);
+
+  const handleCloseFamilyDetail = useCallback(() => {
+    setOpenFamilyDetail(false);
+  }, []);
+
+  options.onRowClick = handleOpenFamilyDetail;
+
+  return (
+    <div>
+      <MUIDataTable data={rows} columns={columns} options={options} />
+      <FamilyDetailsSidebar
+        isOpen={openFamilyDetail}
+        rowData={currentRowData}
+        handleClose={handleCloseFamilyDetail}
+      />
+    </div>
+  );
 }
 
 RegistrationTable.propTypes = {
