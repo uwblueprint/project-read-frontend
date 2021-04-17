@@ -77,10 +77,10 @@ function RegistrationTable({ families }) {
   const { parentFields } = useContext(FieldsContext);
   const [rows, columns] = getTableData(families, parentFields);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
-  const [currentRowData, setCurrentRowData] = useState(["", ""]);
+  const [currentRowIndex, setCurrentRowIndex] = useState(0);
 
-  const handleOpenFamilyDetail = useCallback((rowData) => {
-    setCurrentRowData(rowData);
+  const handleOpenFamilyDetail = useCallback((rowData, rowMeta) => {
+    setCurrentRowIndex(rowMeta.rowIndex);
     setOpenFamilyDetail(true);
   }, []);
 
@@ -95,7 +95,7 @@ function RegistrationTable({ families }) {
       <MUIDataTable data={rows} columns={columns} options={options} />
       <FamilyDetailsSidebar
         isOpen={openFamilyDetail}
-        rowData={currentRowData}
+        rowIndex={currentRowIndex}
         handleClose={handleCloseFamilyDetail}
       />
     </div>

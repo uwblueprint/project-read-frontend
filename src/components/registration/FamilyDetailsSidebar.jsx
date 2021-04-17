@@ -2,6 +2,7 @@ import React from "react";
 import { Drawer } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+// import getFamilyById from "../../api/FamilyAPI";
 
 const drawerWidth = 250;
 
@@ -15,10 +16,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function FamilyDetailsSidebar({ isOpen, rowData, handleClose }) {
+function FamilyDetailsSidebar({ isOpen, rowIndex, handleClose }) {
   const classes = useStyles();
-  const firstName = rowData[0];
-  const lastName = rowData[1];
+  // useEffect(() => {
+  //   getFamilyById(rowData);
+  // }, []);
+  // const firstName = rowData[0];
+  // const lastName = rowData[1];
   return (
     <Drawer
       anchor="right"
@@ -30,9 +34,7 @@ function FamilyDetailsSidebar({ isOpen, rowData, handleClose }) {
       open={isOpen}
       onClose={handleClose}
     >
-      <h3>
-        Hey {firstName} {lastName}!
-      </h3>
+      <h3>Hey {rowIndex + 1}!</h3>
     </Drawer>
   );
 }
@@ -44,7 +46,7 @@ FamilyDetailsSidebar.defaultProps = {
 
 FamilyDetailsSidebar.propTypes = {
   isOpen: PropTypes.bool,
-  rowData: PropTypes.arrayOf(PropTypes.string).isRequired,
+  rowIndex: PropTypes.number.isRequired,
   handleClose: PropTypes.func,
 };
 
