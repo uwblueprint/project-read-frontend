@@ -2,7 +2,6 @@ import React, { useContext, useState, useCallback } from "react";
 import MUIDataTable from "mui-datatables";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
-
 import { FieldsContext } from "../../context/fields";
 import RegistrationTableColumns from "../../constants/registration/RegistrationTableColumns";
 import QuestionTypes from "../../constants/QuestionTypes";
