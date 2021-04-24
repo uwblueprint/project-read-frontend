@@ -2,7 +2,6 @@ import React, { useContext, useState, useCallback } from "react";
 import MUIDataTable from "mui-datatables";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
-
 import { FieldsContext } from "../../context/fields";
 import RegistrationTableColumns from "../../constants/registration/RegistrationTableColumns";
 import QuestionTypes from "../../constants/QuestionTypes";
@@ -77,10 +76,10 @@ function RegistrationTable({ families }) {
   const { parentFields } = useContext(FieldsContext);
   const [rows, columns] = getTableData(families, parentFields);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
-  const [currentRowData, setCurrentRowData] = useState(["", ""]);
+  const [familyId, setFamilyId] = useState(null);
 
   const handleOpenFamilyDetail = useCallback((rowData) => {
-    setCurrentRowData(rowData);
+    setFamilyId(rowData[0].props.children);
     setOpenFamilyDetail(true);
   }, []);
 
@@ -95,7 +94,7 @@ function RegistrationTable({ families }) {
       <MUIDataTable data={rows} columns={columns} options={options} />
       <FamilyDetailsSidebar
         isOpen={openFamilyDetail}
-        rowData={currentRowData}
+        familyId={familyId}
         handleClose={handleCloseFamilyDetail}
       />
     </div>

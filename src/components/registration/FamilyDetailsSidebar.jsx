@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Drawer } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import FamilyAPI from "../../api/FamilyAPI";
 
 const drawerWidth = 250;
 
@@ -15,10 +16,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function FamilyDetailsSidebar({ isOpen, rowData, handleClose }) {
+function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
+  const [family, setFamily] = useState(null);
   const classes = useStyles();
-  const firstName = rowData[0];
-  const lastName = rowData[1];
+
+  useEffect(() => {
+    async function fetchFamily() {
+      setFamily(await FamilyAPI.getFamilyById(familyId));
+    }
+    if (familyId) fetchFamily();
+  }, [familyId]);
+
   return (
     <Drawer
       anchor="right"
@@ -31,7 +39,8 @@ function FamilyDetailsSidebar({ isOpen, rowData, handleClose }) {
       onClose={handleClose}
     >
       <h3>
-        Hey {firstName} {lastName}!
+        Hey {family?.parent?.first_name ?? ""} {family?.parent?.last_name ?? ""}
+        !
       </h3>
     </Drawer>
   );
@@ -39,12 +48,13 @@ function FamilyDetailsSidebar({ isOpen, rowData, handleClose }) {
 
 FamilyDetailsSidebar.defaultProps = {
   isOpen: false,
+  familyId: null,
   handleClose: () => {},
 };
 
 FamilyDetailsSidebar.propTypes = {
   isOpen: PropTypes.bool,
-  rowData: PropTypes.arrayOf(PropTypes.string).isRequired,
+  familyId: PropTypes.number,
   handleClose: PropTypes.func,
 };
 
