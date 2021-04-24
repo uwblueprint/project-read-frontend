@@ -2,10 +2,14 @@ import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "firebase";
 import { FirebaseAuth } from "react-firebaseui";
+
 import { AuthContext } from "../context/auth";
 
-function Login() {
+function Login(props) {
   const { user } = useContext(AuthContext);
+  const referer = { ...props }.location.state
+    ? { ...props }.location.state.referer
+    : "/";
 
   const uiConfig = {
     signInFlow: "popup",
@@ -18,7 +22,7 @@ function Login() {
   return (
     <div>
       {user ? (
-        <Redirect to={{ pathname: "/" }} />
+        <Redirect to={referer} />
       ) : (
         <div>
           <p>Please Sign In</p>
