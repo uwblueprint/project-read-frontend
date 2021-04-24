@@ -17,9 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
-  const [family, setFamily] = useState({
-    parent: { first_name: "", last_name: "" },
-  });
+  const [family, setFamily] = useState(null);
   const classes = useStyles();
 
   useEffect(() => {
@@ -41,7 +39,8 @@ function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
       onClose={handleClose}
     >
       <h3>
-        Hey {family.parent.first_name} {family.parent.last_name}!
+        Hey {family?.parent?.first_name ?? ""} {family?.parent?.last_name ?? ""}
+        !
       </h3>
     </Drawer>
   );

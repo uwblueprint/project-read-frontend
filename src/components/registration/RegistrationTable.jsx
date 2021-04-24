@@ -41,14 +41,7 @@ function getTableRows(families, extraFields) {
 
 function getTableData(families, extraColumns) {
   const rows = getTableRows(families, extraColumns);
-  const columns = [
-    {
-      name: "id",
-      options: {
-        display: "excluded",
-      },
-    },
-  ];
+  const columns = [];
 
   const noWrapText = (value) => (
     <Typography noWrap variant="body2">
@@ -86,7 +79,7 @@ function RegistrationTable({ families }) {
   const [familyId, setFamilyId] = useState(null);
 
   const handleOpenFamilyDetail = useCallback((rowData) => {
-    setFamilyId(rowData[0]);
+    setFamilyId(rowData[0].props.children);
     setOpenFamilyDetail(true);
   }, []);
 

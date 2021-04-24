@@ -2,6 +2,11 @@ import DefaultFields from "../DefaultFields";
 
 const RegistrationTableColumns = [
   {
+    name: DefaultFields.ID.name,
+    label: DefaultFields.ID.label,
+    options: { display: "excluded" },
+  },
+  {
     name: DefaultFields.FIRST_NAME.name,
     label: DefaultFields.FIRST_NAME.label,
     options: { filter: false },

@@ -7,6 +7,10 @@ const DefaultFields = Object.freeze({
     name: "first_name",
     label: "First Name",
   },
+  ID: {
+    name: "id",
+    label: "Id",
+  },
   LAST_NAME: {
     name: "last_name",
     label: "Last Name",
