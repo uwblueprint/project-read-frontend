@@ -15,11 +15,11 @@ const options = {
   selectableRows: "none",
 };
 
-function getTableRows(families, extraColumns) {
-  if (extraColumns.length) {
+function getTableRows(families, extraFields) {
+  if (extraFields.length) {
     const fieldMap = Object.assign(
       {},
-      ...extraColumns.map((field) => ({ [field.id]: field.name }))
+      ...extraFields.map((field) => ({ [field.id]: field.name }))
     );
     families.forEach((family) => {
       const familyRow = family;
