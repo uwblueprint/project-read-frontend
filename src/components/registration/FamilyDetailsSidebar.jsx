@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function FamilyDetailsSidebar({ isOpen, rowIndex, handleClose }) {
+function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
   const [family, setFamily] = useState({
     parent: { first_name: "", last_name: "" },
   });
@@ -24,10 +24,10 @@ function FamilyDetailsSidebar({ isOpen, rowIndex, handleClose }) {
 
   useEffect(() => {
     async function fetchFamily() {
-      setFamily(await FamilyAPI.getFamilyById(rowIndex + 1));
+      setFamily(await FamilyAPI.getFamilyById(familyId));
     }
-    fetchFamily();
-  }, [rowIndex]);
+    if (familyId) fetchFamily();
+  }, [familyId]);
 
   return (
     <Drawer
@@ -49,12 +49,13 @@ function FamilyDetailsSidebar({ isOpen, rowIndex, handleClose }) {
 
 FamilyDetailsSidebar.defaultProps = {
   isOpen: false,
+  familyId: null,
   handleClose: () => {},
 };
 
 FamilyDetailsSidebar.propTypes = {
   isOpen: PropTypes.bool,
-  rowIndex: PropTypes.number.isRequired,
+  familyId: PropTypes.number,
   handleClose: PropTypes.func,
 };
 

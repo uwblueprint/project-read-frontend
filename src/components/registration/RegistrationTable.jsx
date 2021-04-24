@@ -41,7 +41,14 @@ function getTableRows(families, extraFields) {
 
 function getTableData(families, extraColumns) {
   const rows = getTableRows(families, extraColumns);
-  const columns = [];
+  const columns = [
+    {
+      name: "id",
+      options: {
+        display: "excluded",
+      },
+    },
+  ];
 
   const noWrapText = (value) => (
     <Typography noWrap variant="body2">
@@ -76,10 +83,10 @@ function RegistrationTable({ families }) {
   const { parentFields } = useContext(FieldsContext);
   const [rows, columns] = getTableData(families, parentFields);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
-  const [currentRowIndex, setCurrentRowIndex] = useState(0);
+  const [familyId, setFamilyId] = useState(null);
 
-  const handleOpenFamilyDetail = useCallback((rowData, rowMeta) => {
-    setCurrentRowIndex(rowMeta.rowIndex);
+  const handleOpenFamilyDetail = useCallback((rowData) => {
+    setFamilyId(rowData[0]);
     setOpenFamilyDetail(true);
   }, []);
 
@@ -94,7 +101,7 @@ function RegistrationTable({ families }) {
       <MUIDataTable data={rows} columns={columns} options={options} />
       <FamilyDetailsSidebar
         isOpen={openFamilyDetail}
-        rowIndex={currentRowIndex}
+        familyId={familyId}
         handleClose={handleCloseFamilyDetail}
       />
     </div>
