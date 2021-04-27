@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import FormField from "./FormField";
 
-function useFormFields(fields, onChange) {
-  const [formFields, setFormFields] = React.useState(
+function useFormFields(fields) {
+  const [formFields, setFormFields] = useState(
     Object.assign({}, ...fields.map((field) => ({ [field.id]: "" })))
   );
 
   const createFieldChangeHandler = (key) => (e) => {
     const { value } = e.target;
     setFormFields((prev) => ({ ...prev, [key]: value }));
-    onChange(formFields);
   };
 
   return { formFields, createFieldChangeHandler };
@@ -21,6 +20,10 @@ function FormFieldGroup({ fields, onChange }) {
     fields,
     onChange
   );
+
+  useEffect(() => {
+    onChange(formFields);
+  }, [formFields]);
 
   return (
     <>

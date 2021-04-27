@@ -26,7 +26,7 @@ function FormField({ field, initialValue, onChange }) {
           variant="outlined"
           className={classes.formField}
         >
-          <MenuItem value="option">Option</MenuItem>
+          <MenuItem value="">None</MenuItem>
         </TextField>
       );
     case QuestionTypes.TEXT:
