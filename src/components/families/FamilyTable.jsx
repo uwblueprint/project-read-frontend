@@ -3,7 +3,7 @@ import MUIDataTable from "mui-datatables";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
 import { FieldsContext } from "../../context/fields";
-import RegistrationTableColumns from "../../constants/registration/RegistrationTableColumns";
+import FamilyTableColumns from "../../constants/registration/FamilyTableColumns";
 import QuestionTypes from "../../constants/QuestionTypes";
 import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 
@@ -50,7 +50,7 @@ function getTableData(families, extraColumns) {
   );
   const noWrapOption = { customBodyRender: noWrapText };
 
-  RegistrationTableColumns.forEach((column) => {
+  FamilyTableColumns.forEach((column) => {
     const columnOptions = column.options
       ? Object.assign(column.options, noWrapOption)
       : noWrapOption;
@@ -72,7 +72,7 @@ function getTableData(families, extraColumns) {
   return [rows, columns];
 }
 
-function RegistrationTable({ families }) {
+function FamilyTable({ families }) {
   const { parentFields } = useContext(FieldsContext);
   const [rows, columns] = getTableData(families, parentFields);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
@@ -101,8 +101,8 @@ function RegistrationTable({ families }) {
   );
 }
 
-RegistrationTable.propTypes = {
+FamilyTable.propTypes = {
   families: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default RegistrationTable;
+export default FamilyTable;

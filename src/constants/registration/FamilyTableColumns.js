@@ -1,6 +1,6 @@
 import DefaultFields from "../DefaultFields";
 
-const RegistrationTableColumns = [
+const FamilyTableColumns = [
   {
     name: DefaultFields.ID.name,
     label: DefaultFields.ID.label,
@@ -38,4 +38,4 @@ const RegistrationTableColumns = [
   },
 ];
 
-export default RegistrationTableColumns;
+export default FamilyTableColumns;
