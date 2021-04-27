@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
-import { makeStyles, TextField, Typography } from "@material-ui/core";
+import { makeStyles, MenuItem, TextField, Typography } from "@material-ui/core";
 import { FieldsContext } from "../../context/fields";
+import QuestionTypes from "../../constants/QuestionTypes";
 
 const useStyles = makeStyles((theme) => ({
   formField: {
@@ -29,17 +30,40 @@ function RegistrationForm() {
   return (
     <>
       <Typography>Currently enrolling a new family</Typography>
-      {parentFields.map((value) => (
-        <div>
-          <TextField
-            label={value.name}
-            value={formFields[value.id]}
-            onChange={createChangeHandler(value.id)}
-            variant="outlined"
-            className={classes.formField}
-          />
-        </div>
-      ))}
+      {parentFields.map((parentField) => {
+        switch (parentField.question_type) {
+          case QuestionTypes.MULTIPLE_CHOICE:
+            return (
+              <div>
+                <TextField
+                  id="select"
+                  label={parentField.name}
+                  value={formFields[parentField.id]}
+                  onChange={createChangeHandler(parentField.id)}
+                  variant="outlined"
+                  className={classes.formField}
+                  select
+                >
+                  <MenuItem value="option">Option</MenuItem>
+                </TextField>
+              </div>
+            );
+          case QuestionTypes.TEXT:
+            return (
+              <div>
+                <TextField
+                  label={parentField.name}
+                  value={formFields[parentField.id]}
+                  onChange={createChangeHandler(parentField.id)}
+                  variant="outlined"
+                  className={classes.formField}
+                />
+              </div>
+            );
+          default:
+            return <></>;
+        }
+      })}
     </>
   );
 }
