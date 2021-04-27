@@ -2,21 +2,25 @@ import React from "react";
 import PropTypes from "prop-types";
 import FormField from "./FormField";
 
-function useFormFields(fields) {
+function useFormFields(fields, onChange) {
   const [formFields, setFormFields] = React.useState(
     Object.assign({}, ...fields.map((field) => ({ [field.id]: "" })))
   );
 
-  const createChangeHandler = (key) => (e) => {
+  const createFieldChangeHandler = (key) => (e) => {
     const { value } = e.target;
     setFormFields((prev) => ({ ...prev, [key]: value }));
+    onChange(formFields);
   };
 
-  return { formFields, createChangeHandler };
+  return { formFields, createFieldChangeHandler };
 }
 
-function FormFieldGroup({ fields }) {
-  const { formFields, createChangeHandler } = useFormFields(fields);
+function FormFieldGroup({ fields, onChange }) {
+  const { formFields, createFieldChangeHandler } = useFormFields(
+    fields,
+    onChange
+  );
 
   return (
     <>
@@ -25,7 +29,7 @@ function FormFieldGroup({ fields }) {
           <FormField
             field={field}
             initialValue={formFields[field.id]}
-            onChange={createChangeHandler(field.id)}
+            onChange={createFieldChangeHandler(field.id)}
           />
         </div>
       ))}
@@ -35,6 +39,7 @@ function FormFieldGroup({ fields }) {
 
 FormFieldGroup.propTypes = {
   fields: PropTypes.arrayOf(FormField.propTypes.field).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default FormFieldGroup;
