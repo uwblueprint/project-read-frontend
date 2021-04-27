@@ -1,69 +1,35 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext } from "react";
-import { makeStyles, MenuItem, TextField, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { FieldsContext } from "../../context/fields";
-import QuestionTypes from "../../constants/QuestionTypes";
-
-const useStyles = makeStyles((theme) => ({
-  formField: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    width: 328,
-  },
-}));
-
-function useFormFields(initialValues) {
-  const [formFields, setFormFields] = React.useState(initialValues);
-  const createChangeHandler = (key) => (e) => {
-    const { value } = e.target;
-    setFormFields((prev) => ({ ...prev, [key]: value }));
-  };
-  return { formFields, createChangeHandler };
-}
+import FormFieldGroup from "./FormFieldGroup";
+import {
+  DefaultFamilyFields,
+  DefaultStudentFields,
+} from "../../constants/DefaultFields";
 
 function RegistrationForm() {
-  const classes = useStyles();
-  const { parentFields } = useContext(FieldsContext);
-  const { formFields, createChangeHandler } = useFormFields(
-    Object.assign({}, ...parentFields.map((field) => ({ [field.id]: "" })))
-  );
+  const { childFields, guestFields, parentFields } = useContext(FieldsContext);
 
   return (
     <>
-      <Typography>Currently enrolling a new family</Typography>
-      {parentFields.map((parentField) => {
-        switch (parentField.question_type) {
-          case QuestionTypes.MULTIPLE_CHOICE:
-            return (
-              <div>
-                <TextField
-                  id="select"
-                  label={parentField.name}
-                  value={formFields[parentField.id]}
-                  onChange={createChangeHandler(parentField.id)}
-                  variant="outlined"
-                  className={classes.formField}
-                  select
-                >
-                  <MenuItem value="option">Option</MenuItem>
-                </TextField>
-              </div>
-            );
-          case QuestionTypes.TEXT:
-            return (
-              <div>
-                <TextField
-                  label={parentField.name}
-                  value={formFields[parentField.id]}
-                  onChange={createChangeHandler(parentField.id)}
-                  variant="outlined"
-                  className={classes.formField}
-                />
-              </div>
-            );
-          default:
-            return <></>;
-        }
-      })}
+      <div>
+        <Typography>Currently enrolling a new family</Typography>
+        <Typography>Basic information</Typography>
+        <FormFieldGroup fields={Array.from(DefaultStudentFields)} />
+        <FormFieldGroup fields={Array.from(DefaultFamilyFields)} />
+        <FormFieldGroup fields={parentFields} />
+      </div>
+      <div>
+        <Typography>Children</Typography>
+        <FormFieldGroup fields={Array.from(DefaultStudentFields)} />
+        <FormFieldGroup fields={childFields} />
+      </div>
+      <div>
+        <Typography>Family members</Typography>
+        <FormFieldGroup fields={Array.from(DefaultStudentFields)} />
+        <FormFieldGroup fields={guestFields} />
+      </div>
     </>
   );
 }
