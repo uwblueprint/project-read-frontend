@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
+import PropTypes from "prop-types";
 import { FieldsContext } from "../../context/fields";
 import FormFieldGroup from "./FormFieldGroup";
 import {
   DefaultFamilyFields,
   DefaultStudentFields,
 } from "../../constants/DefaultFields";
-import FamilyAPI from "../../api/FamilyAPI";
 import StudentRoles from "../../constants/StudentRoles";
 
-function RegistrationForm() {
+function RegistrationForm({ onSubmit }) {
   const { childFields, guestFields, parentFields } = useContext(FieldsContext);
 
   const [familyData, setFamilyData] = useState({});
@@ -49,23 +49,17 @@ function RegistrationForm() {
     setGuestData(Object.assign(guestData, { ...guestData, information: info }));
   }
 
-  async function onSubmit() {
-    const payload = {
+  function getSubmissionData() {
+    return {
       ...familyData,
       parent: { ...parentData },
       children: [{ ...childData }],
       guests: [{ ...guestData }],
     };
-
-    const response = await FamilyAPI.postFamily(payload);
-    if (response.non_field_errors) {
-      // eslint-disable-next-line no-alert
-      alert(response.non_field_errors);
-    }
   }
 
   return (
-    <>
+    <form onSubmit={() => onSubmit(getSubmissionData())} data-testid="form">
       <Typography variant="body1">
         Currently enrolling a <b>new family</b> for <b>the latest session</b>
       </Typography>
@@ -77,7 +71,13 @@ function RegistrationForm() {
         fields={getDefaultStudentFields(StudentRoles.PARENT)}
         onChange={onChangeParentData}
       />
-      <FormFieldGroup fields={DefaultFamilyFields} onChange={setFamilyData} />
+      <FormFieldGroup
+        fields={DefaultFamilyFields.map((defaultField) => ({
+          ...defaultField,
+          role: StudentRoles.PARENT,
+        }))}
+        onChange={setFamilyData}
+      />
       <FormFieldGroup fields={parentFields} onChange={onChangeParentInfo} />
 
       <Typography component="h3" variant="h5">
@@ -97,11 +97,15 @@ function RegistrationForm() {
         onChange={onChangeGuestData}
       />
       <FormFieldGroup fields={guestFields} onChange={onChangeGuestInfo} />
-      <Button onClick={onSubmit} variant="contained" color="primary">
+      <Button type="submit" variant="contained" color="primary">
         Done
       </Button>
-    </>
+    </form>
   );
 }
+
+RegistrationForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 
 export default RegistrationForm;

@@ -42,6 +42,7 @@ function FormFieldGroup({ fields, onChange }) {
     <>
       {fields.map((field) => (
         <TextField
+          key={`${field.role} ${field.name}`}
           id={`${field.role} ${field.name}`}
           select={field.question_type === QuestionTypes.MULTIPLE_CHOICE}
           label={field.name}
@@ -53,10 +54,11 @@ function FormFieldGroup({ fields, onChange }) {
           inputProps={{
             autoComplete: "new-password",
             "aria-label": `${field.role} ${field.name}`,
+            "data-testid": `${field.role} ${field.name}`,
           }}
         >
           {field.question_type === QuestionTypes.MULTIPLE_CHOICE && (
-            <MenuItem value="">None</MenuItem>
+            <MenuItem value="none">None</MenuItem>
           )}
         </TextField>
       ))}
