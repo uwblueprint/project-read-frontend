@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[500],
   },
 }));
 
@@ -25,13 +24,13 @@ function RegistrationFormDialog({ onClose }) {
   const classes = useStyles();
   const [displayForm, setDisplayForm] = useState(false);
 
-  const handleDisplayForm = useCallback(() => {
+  const handleDisplayForm = () => {
     setDisplayForm(true);
-  }, []);
+  };
 
-  const handleHideForm = useCallback(() => {
+  const handleHideForm = () => {
     setDisplayForm(false);
-  }, []);
+  };
 
   return (
     <Dialog open disableBackdropClick onClose={onClose} fullWidth maxWidth="lg">

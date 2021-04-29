@@ -20,7 +20,7 @@ function Navbar() {
         <div style={{ marginLeft: "auto" }}>
           <Button onClick={() => history.push("/")}>All registrations</Button>
           <Button onClick={() => history.push("/sessions")}>Sessions</Button>
-          <IconButton edge="end" aria-label="account" color="inherit">
+          <IconButton edge="end" aria-label="account">
             <AccountCircle />
           </IconButton>
         </div>
