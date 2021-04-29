@@ -35,7 +35,9 @@ function RegistrationFormDialog({ onClose }) {
   return (
     <Dialog open disableBackdropClick onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle disableTypography>
-        <Typography variant="h2">Add a client</Typography>
+        <Typography component="h2" variant="h4">
+          Add a client
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={onClose}
