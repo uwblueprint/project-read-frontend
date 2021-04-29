@@ -3,13 +3,14 @@ import { MenuItem, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import PropTypes from "prop-types";
 import QuestionTypes from "../../constants/QuestionTypes";
+import StudentRoles from "../../constants/StudentRoles";
 
 const useStyles = makeStyles((theme) => ({
   formField: {
+    display: "block",
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
     width: 328,
-    display: "block",
   },
 }));
 
@@ -66,9 +67,10 @@ function FormFieldGroup({ fields, onChange }) {
 FormFieldGroup.propTypes = {
   fields: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      name: PropTypes.string,
-      question_type: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      name: PropTypes.string.isRequired,
+      question_type: PropTypes.oneOf(Object.values(QuestionTypes)).isRequired,
+      role: PropTypes.oneOf(Object.values(StudentRoles)).isRequired,
     }).isRequired
   ).isRequired,
   onChange: PropTypes.func.isRequired,
