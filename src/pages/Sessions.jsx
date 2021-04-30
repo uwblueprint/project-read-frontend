@@ -16,24 +16,24 @@ function Sessions() {
     fetchSessions();
   }, []);
 
-  const handleFormDialogOpen = () => {
+  const handleOpenFormDialog = () => {
     setDisplayRegDialog(true);
   };
 
-  const handleFormDialogClose = () => {
+  const handleCloseFormDialog = () => {
     setDisplayRegDialog(false);
   };
 
   return (
     <>
       <Typography variant="h1">Sessions</Typography>
-      <Button variant="outlined" onClick={handleFormDialogOpen}>
+      <Button variant="outlined" onClick={handleOpenFormDialog}>
         New registrant
         <Add />
       </Button>
       <RegistrationDialog
         open={displayRegDialog}
-        onClose={handleFormDialogClose}
+        onClose={handleCloseFormDialog}
       />
       {sessions.length ? (
         <ul>
