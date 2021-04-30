@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RegistrationFormDialog({ onClose }) {
+function RegistrationFormDialog({ open, onClose }) {
   const classes = useStyles();
   const [displayForm, setDisplayForm] = useState(false);
 
@@ -33,7 +33,13 @@ function RegistrationFormDialog({ onClose }) {
   };
 
   return (
-    <Dialog open disableBackdropClick onClose={onClose} fullWidth maxWidth="lg">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      disableBackdropClick
+      fullWidth
+      maxWidth="lg"
+    >
       <DialogTitle disableTypography>
         <Typography component="h2" variant="h4">
           Add a client
@@ -64,6 +70,7 @@ function RegistrationFormDialog({ onClose }) {
 }
 
 RegistrationFormDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 

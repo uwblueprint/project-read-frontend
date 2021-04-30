@@ -31,9 +31,10 @@ function Sessions() {
         New registrant
         <Add />
       </Button>
-      {displayRegDialog && (
-        <RegistrationDialog onClose={handleFormDialogClose} />
-      )}
+      <RegistrationDialog
+        open={displayRegDialog}
+        onClose={handleFormDialogClose}
+      />
       {sessions.length ? (
         <ul>
           {sessions.map((session) => (
