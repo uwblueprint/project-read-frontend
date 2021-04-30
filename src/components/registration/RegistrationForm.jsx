@@ -118,6 +118,7 @@ function RegistrationForm({ onSubmit }) {
         fields={guestFields}
         onChange={(data) => onChangeStudentData(StudentRoles.GUEST, data, true)}
       />
+
       <Button type="submit" variant="contained" color="primary">
         Done
       </Button>
