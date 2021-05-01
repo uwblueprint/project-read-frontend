@@ -20,21 +20,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-// function ParentInfo(parentFields, parentData) {
-//   // parentFields.map((parentField) => console.log(parentField));
-
-//   const parentInfo = parentFields.map((parentField, index) => (
-//     <p key={parentField?.id}>
-//       <b>{parentField?.name}:</b>{" "}
-//       {parentData.parent?.information[`${index - 1}`]}
-//     </p>
-//   ));
-//   return (
-//     <div>
-//       {parentInfo}: {parentData.home_number}
-//     </div>
-//   );
-// }
 function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
   const { parentFields } = useContext(FieldsContext);
   const [family, setFamily] = useState(null);
@@ -47,10 +32,10 @@ function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
     if (familyId) fetchFamily();
   }, [familyId]);
 
-  const parentInfo = parentFields.map((parentField, index) => (
+  const parentInfo = parentFields.map((parentField) => (
     <p key={parentField?.id}>
       <b>{parentField?.name}:</b>{" "}
-      {family?.parent?.information[`${index + 1}`] ?? ""}
+      {family?.parent?.information[`${parentField?.id}`] ?? ""}
     </p>
   ));
 
@@ -75,10 +60,8 @@ function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
         }}
       />
       <h3>Basic Information</h3>
-      {parentInfo}
       <p>
-        <b>Home phone:</b>
-        {family?.home_number}
+        <b>Home phone:</b> {family?.home_number}
       </p>
       <p>
         <b>Cell phone:</b> {family?.cell_number}
@@ -95,6 +78,7 @@ function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
       <p>
         <b>Preferred contact:</b> {family?.preferred_comms}
       </p>
+      {parentInfo}
     </Drawer>
   );
 }
