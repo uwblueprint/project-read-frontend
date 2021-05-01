@@ -2,10 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { Typography } from "@material-ui/core";
 
 import FamilyAPI from "../api/FamilyAPI";
-import RegistrationTable from "../components/registration/RegistrationTable";
+import FamilyTable from "../components/families/FamilyTable";
 import { AuthContext } from "../context/auth";
 
-function Registration() {
+function MainRegistration() {
   const [families, setFamilies] = useState([]);
   const { user } = useContext(AuthContext);
 
@@ -22,9 +22,9 @@ function Registration() {
       <Typography variant="h2">
         Hi {user ? user.email : "anonymous user"}
       </Typography>
-      <RegistrationTable families={families} />
+      <FamilyTable families={families} />
     </>
   );
 }
 
-export default Registration;
+export default MainRegistration;
