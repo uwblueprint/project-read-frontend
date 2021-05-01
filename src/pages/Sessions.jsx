@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
+import { Add } from "@material-ui/icons";
 
 import SessionAPI from "../api/SessionAPI";
+import RegistrationDialog from "../components/registration/RegistrationDialog";
 
 function Sessions() {
   const [sessions, setSessions] = useState([]);
+  const [displayRegDialog, setDisplayRegDialog] = useState(false);
 
   useEffect(() => {
     async function fetchSessions() {
@@ -13,9 +16,25 @@ function Sessions() {
     fetchSessions();
   }, []);
 
+  const handleOpenFormDialog = () => {
+    setDisplayRegDialog(true);
+  };
+
+  const handleCloseFormDialog = () => {
+    setDisplayRegDialog(false);
+  };
+
   return (
     <>
       <Typography variant="h1">Sessions</Typography>
+      <Button variant="outlined" onClick={handleOpenFormDialog}>
+        New registrant
+        <Add />
+      </Button>
+      <RegistrationDialog
+        open={displayRegDialog}
+        onClose={handleCloseFormDialog}
+      />
       {sessions.length ? (
         <ul>
           {sessions.map((session) => (

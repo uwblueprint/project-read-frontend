@@ -5,9 +5,6 @@ const defaultTheme = createMuiTheme();
 const theme = createMuiTheme({
   palette: {
     type: "light",
-    primary: {
-      main: "#F3F3F3",
-    },
   },
   overrides: {
     MuiContainer: {
