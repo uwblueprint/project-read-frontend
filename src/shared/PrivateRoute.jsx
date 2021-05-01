@@ -22,8 +22,13 @@ function PrivateRoute({ component: Component, ...rest }) {
   );
 }
 
+PrivateRoute.defaultProps = {
+  location: null,
+};
+
 PrivateRoute.propTypes = {
   component: PropTypes.elementType.isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string }),
 };
 
 export default PrivateRoute;

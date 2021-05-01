@@ -2,6 +2,7 @@
   "env": {
     "browser": true,
     "es2021": true,
+    "jest/globals": true,
     "node": true
   },
   "extends": ["plugin:react/recommended", "airbnb", "prettier"],
@@ -12,7 +13,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["react", "prettier", "jest"],
   "rules": {
     "prettier/prettier": ["error"]
   }

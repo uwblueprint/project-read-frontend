@@ -4,10 +4,16 @@ import FieldAPI from "../api/FieldAPI";
 
 export const FieldsContext = createContext();
 
-export const FieldsProvider = ({ children }) => {
-  const [parentFields, setParentFields] = useState([]);
-  const [childFields, setChildFields] = useState([]);
-  const [guestFields, setGuestFields] = useState([]);
+export const FieldsProvider = ({ values, children }) => {
+  const [parentFields, setParentFields] = useState(
+    values ? values.parentFields : []
+  );
+  const [childFields, setChildFields] = useState(
+    values ? values.childFields : []
+  );
+  const [guestFields, setGuestFields] = useState(
+    values ? values.guestFields : []
+  );
 
   useEffect(() => {
     async function fetchFields() {
@@ -18,7 +24,9 @@ export const FieldsProvider = ({ children }) => {
         setGuestFields(fields[0].guest_fields);
       }
     }
-    fetchFields();
+    if (values === null) {
+      fetchFields();
+    }
   }, []);
 
   return (
@@ -28,6 +36,15 @@ export const FieldsProvider = ({ children }) => {
   );
 };
 
+FieldsProvider.defaultProps = {
+  values: null,
+};
+
 FieldsProvider.propTypes = {
+  values: PropTypes.shape({
+    parentFields: PropTypes.arrayOf(PropTypes.object).isRequired,
+    childFields: PropTypes.arrayOf(PropTypes.object).isRequired,
+    guestFields: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }),
   children: PropTypes.node.isRequired,
 };

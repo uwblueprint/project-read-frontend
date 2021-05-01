@@ -9,7 +9,7 @@ function Login(props) {
   const { user } = useContext(AuthContext);
   const referer = { ...props }.location.state
     ? { ...props }.location.state.referer
-    : "/";
+    : { pathname: "/" };
 
   const uiConfig = {
     signInFlow: "popup",

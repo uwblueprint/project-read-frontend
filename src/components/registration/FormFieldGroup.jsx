@@ -54,6 +54,7 @@ function FormFieldGroup({ fields, onChange }) {
           inputProps={{
             autoComplete: "new-password",
             "aria-label": `${field.role} ${field.name}`,
+            "data-testid": `${field.role} ${field.name}`,
           }}
         >
           {field.question_type === QuestionTypes.MULTIPLE_CHOICE && (
