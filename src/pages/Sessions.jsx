@@ -7,7 +7,7 @@ import RegistrationDialog from "../components/registration/RegistrationDialog";
 
 function Sessions() {
   const [sessions, setSessions] = useState([]);
-  const [displayRegDialog, setDisplayRegDialog] = React.useState(false);
+  const [displayRegDialog, setDisplayRegDialog] = useState(false);
 
   useEffect(() => {
     async function fetchSessions() {
