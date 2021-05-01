@@ -1,32 +1,73 @@
-const DefaultFields = Object.freeze({
+import QuestionTypes from "./QuestionTypes";
+
+export const DefaultFields = Object.freeze({
   EMAIL: {
-    name: "email",
-    label: "Email",
+    id: "email",
+    name: "Email",
+    question_type: QuestionTypes.TEXT,
+  },
+  CELL_PHONE: {
+    id: "cell_number",
+    name: "Cell Phone",
+    question_type: QuestionTypes.TEXT,
   },
   FIRST_NAME: {
-    name: "first_name",
-    label: "First Name",
+    id: "first_name",
+    name: "First name",
+    question_type: QuestionTypes.TEXT,
+  },
+  HOME_PHONE: {
+    id: "home_number",
+    name: "Home Phone",
+    question_type: QuestionTypes.TEXT,
   },
   ID: {
-    name: "id",
-    label: "Id",
+    id: "id",
+    name: "Id",
+    question_type: QuestionTypes.TEXT,
   },
   LAST_NAME: {
-    name: "last_name",
-    label: "Last Name",
+    id: "last_name",
+    name: "Last name",
+    question_type: QuestionTypes.TEXT,
   },
   NUM_CHILDREN: {
-    name: "num_children",
-    label: "No. of Children",
+    id: "num_children",
+    name: "No. of Children",
+    question_type: QuestionTypes.TEXT,
   },
   PHONE: {
-    name: "phone_number",
-    label: "Phone Number",
+    id: "phone_number",
+    name: "Phone Number",
+    question_type: QuestionTypes.TEXT,
   },
   PREFERRED_CONTACT: {
-    name: "preferred_comms",
-    label: "Preferred Contact",
+    id: "preferred_comms",
+    name: "Preferred Contact",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
+  },
+  PREFERRED_NUMBER: {
+    id: "preferred_number",
+    name: "Preferred Number",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
+  },
+  WORK_PHONE: {
+    id: "work_number",
+    name: "Work Phone",
+    question_type: QuestionTypes.TEXT,
   },
 });
 
-export default DefaultFields;
+export const DefaultFamilyFields = [
+  DefaultFields.HOME_PHONE,
+  DefaultFields.CELL_PHONE,
+  DefaultFields.WORK_PHONE,
+  DefaultFields.PREFERRED_NUMBER,
+  DefaultFields.EMAIL,
+  DefaultFields.PREFERRED_CONTACT,
+];
+
+export const DefaultStudentFields = [
+  DefaultFields.FIRST_NAME,
+  DefaultFields.LAST_NAME,
+];
