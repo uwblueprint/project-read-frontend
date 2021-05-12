@@ -66,7 +66,7 @@ function RegistrationForm({ onSubmit }) {
   }
 
   return (
-    <form onSubmit={() => onSubmit(getSubmissionData())}>
+    <form onSubmit={(e) => onSubmit(e, getSubmissionData())}>
       <Typography variant="body1">
         Currently enrolling a <b>new family</b> for <b>the latest session</b>
       </Typography>

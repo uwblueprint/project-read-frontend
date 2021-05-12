@@ -33,13 +33,16 @@ function RegistrationFormDialog({ open, onClose }) {
     setDisplayForm(false);
   };
 
-  async function onFormSubmit(data) {
+  const onFormSubmit = async (e, data) => {
+    e.preventDefault();
     const response = await FamilyAPI.postFamily(data);
     if (response.non_field_errors) {
       // eslint-disable-next-line no-alert
       alert(response.non_field_errors);
+    } else {
+      handleHideForm();
     }
-  }
+  };
 
   return (
     <Dialog
