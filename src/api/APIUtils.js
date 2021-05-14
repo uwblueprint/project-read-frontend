@@ -7,7 +7,7 @@ async function getIdToken() {
   return user ? user.getIdToken() : "";
 }
 
-async function get(path) {
+export async function get(path) {
   const token = await getIdToken();
   const res = await fetch(url + path, {
     headers: {
@@ -18,5 +18,16 @@ async function get(path) {
   return res.json();
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export { get };
+export async function post(path, data) {
+  const token = await getIdToken();
+  const res = await fetch(url + path, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return res.json();
+}

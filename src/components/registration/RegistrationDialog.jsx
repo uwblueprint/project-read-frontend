@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import RegistrationForm from "./RegistrationForm";
+import FamilyAPI from "../../api/FamilyAPI";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -30,6 +31,17 @@ function RegistrationFormDialog({ open, onClose }) {
 
   const handleHideForm = () => {
     setDisplayForm(false);
+  };
+
+  const onFormSubmit = async (e, data) => {
+    e.preventDefault();
+    const response = await FamilyAPI.postFamily(data);
+    if (response.non_field_errors) {
+      // eslint-disable-next-line no-alert
+      alert(response.non_field_errors);
+    } else {
+      handleHideForm();
+    }
   };
 
   return (
@@ -59,7 +71,7 @@ function RegistrationFormDialog({ open, onClose }) {
               <NavigateBefore />
               Go back
             </Button>
-            <RegistrationForm />
+            <RegistrationForm onSubmit={onFormSubmit} />
           </>
         ) : (
           <Button onClick={handleDisplayForm}>Register a new client</Button>
