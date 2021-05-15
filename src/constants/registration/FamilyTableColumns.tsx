@@ -1,6 +1,7 @@
+import { MUIDataTableColumn } from "mui-datatables";
 import { DefaultFields } from "../DefaultFields";
 
-const FamilyTableColumns = [
+const FamilyTableColumns: Array<MUIDataTableColumn> = [
   {
     name: DefaultFields.ID.id,
     label: DefaultFields.ID.name,
@@ -22,8 +23,8 @@ const FamilyTableColumns = [
     options: { filter: false },
   },
   {
-    name: DefaultFields.PHONE.id,
-    label: DefaultFields.PHONE.name,
+    name: DefaultFields.PHONE_NUMBER.id,
+    label: DefaultFields.PHONE_NUMBER.name,
     options: { filter: false },
   },
   {

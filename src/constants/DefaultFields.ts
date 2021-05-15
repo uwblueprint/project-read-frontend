@@ -1,70 +1,90 @@
 import QuestionTypes from "./QuestionTypes";
 
+export enum DefaultFieldName {
+  ADDRESS = "address",
+  CELL_NUMBER = "cell_number",
+  EMAIL = "email",
+  FIRST_NAME = "first_name",
+  HOME_NUMBER = "home_number",
+  ID = "id",
+  LAST_NAME = "last_name",
+  NUM_CHILDREN = "num_children",
+  PHONE_NUMBER = "phone_number",
+  PREFERRED_CONTACT = "preferred_comms",
+  PREFERRED_NUMBER = "preferred_number",
+  WORK_NUMBER = "work_number",
+}
+
 export const DefaultFields = Object.freeze({
-  EMAIL: {
-    id: "email",
-    name: "Email",
+  ADDRESS: {
+    id: DefaultFieldName.ADDRESS,
+    name: "Address",
     question_type: QuestionTypes.TEXT,
   },
-  CELL_PHONE: {
-    id: "cell_number",
+  CELL_NUMBER: {
+    id: DefaultFieldName.CELL_NUMBER,
     name: "Cell Phone",
     question_type: QuestionTypes.TEXT,
   },
+  EMAIL: {
+    id: DefaultFieldName.EMAIL,
+    name: "Email",
+    question_type: QuestionTypes.TEXT,
+  },
   FIRST_NAME: {
-    id: "first_name",
+    id: DefaultFieldName.FIRST_NAME,
     name: "First name",
     question_type: QuestionTypes.TEXT,
   },
-  HOME_PHONE: {
-    id: "home_number",
+  HOME_NUMBER: {
+    id: DefaultFieldName.HOME_NUMBER,
     name: "Home Phone",
     question_type: QuestionTypes.TEXT,
   },
   ID: {
-    id: "id",
+    id: DefaultFieldName.ID,
     name: "Id",
     question_type: QuestionTypes.TEXT,
   },
   LAST_NAME: {
-    id: "last_name",
+    id: DefaultFieldName.LAST_NAME,
     name: "Last name",
     question_type: QuestionTypes.TEXT,
   },
   NUM_CHILDREN: {
-    id: "num_children",
+    id: DefaultFieldName.NUM_CHILDREN,
     name: "No. of Children",
     question_type: QuestionTypes.TEXT,
   },
-  PHONE: {
-    id: "phone_number",
+  PHONE_NUMBER: {
+    id: DefaultFieldName.PHONE_NUMBER,
     name: "Phone Number",
     question_type: QuestionTypes.TEXT,
   },
   PREFERRED_CONTACT: {
-    id: "preferred_comms",
+    id: DefaultFieldName.PREFERRED_CONTACT,
     name: "Preferred Contact",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
   PREFERRED_NUMBER: {
-    id: "preferred_number",
+    id: DefaultFieldName.PREFERRED_NUMBER,
     name: "Preferred Number",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
-  WORK_PHONE: {
-    id: "work_number",
+  WORK_NUMBER: {
+    id: DefaultFieldName.WORK_NUMBER,
     name: "Work Phone",
     question_type: QuestionTypes.TEXT,
   },
 });
 
 export const DefaultFamilyFields = [
-  DefaultFields.HOME_PHONE,
-  DefaultFields.CELL_PHONE,
-  DefaultFields.WORK_PHONE,
-  DefaultFields.PREFERRED_NUMBER,
+  DefaultFields.CELL_NUMBER,
   DefaultFields.EMAIL,
+  DefaultFields.HOME_NUMBER,
+  DefaultFields.PREFERRED_NUMBER,
   DefaultFields.PREFERRED_CONTACT,
+  DefaultFields.WORK_NUMBER,
 ];
 
 export const DefaultStudentFields = [
