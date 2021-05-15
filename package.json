@@ -9,6 +9,10 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.0.2",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.3",
     "firebase": "^8.3.0",
     "mui-datatables": "^3.7.6",
     "prop-types": "^15.7.2",
@@ -17,6 +21,7 @@
     "react-firebaseui": "^4.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "typescript": "^4.2.4",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -44,8 +49,12 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.20.0",
+    "@types/mui-datatables": "^3.7.3",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "eslint": "^7.26.0",
     "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
