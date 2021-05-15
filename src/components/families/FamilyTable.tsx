@@ -29,7 +29,14 @@ const noWrapOption: MUIDataTableColumnOptions = {
   customBodyRender: noWrapText,
 };
 
-type FamilyTableRow = Omit<Family, "parent"> & {
+type FamilyTableRow = Pick<
+  Family,
+  | DefaultFieldName.EMAIL
+  | DefaultFieldName.ID
+  | DefaultFieldName.NUM_CHILDREN
+  | DefaultFieldName.PHONE_NUMBER
+  | DefaultFieldName.PREFERRED_CONTACT
+> & {
   [DefaultFieldName.FIRST_NAME]: string;
   [DefaultFieldName.LAST_NAME]: string;
   [key: number]: string | number; // dynamic fields

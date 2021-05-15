@@ -1,29 +1,28 @@
-/* eslint-disable camelcase */
 import { DefaultFieldName } from "../constants/DefaultFields";
 
 export type Field = {
   id: number;
-  role: string;
+  is_default: boolean;
   name: string;
   question_type: string;
-  is_default: boolean;
+  role: string;
 };
 
 export type Student = {
-  id: number;
-  role: "Parent" | "Child" | "Guest";
   [DefaultFieldName.FIRST_NAME]: string;
   [DefaultFieldName.LAST_NAME]: string;
+  id: number;
   information: {
     [key: number]: string | number; // dynamic fields
   };
+  role: "Parent" | "Child" | "Guest";
 };
 
 export type Family = {
-  [DefaultFieldName.ID]: number;
   [DefaultFieldName.EMAIL]: string;
+  [DefaultFieldName.ID]: number;
+  [DefaultFieldName.NUM_CHILDREN]: number;
   [DefaultFieldName.PHONE_NUMBER]: string;
   [DefaultFieldName.PREFERRED_CONTACT]: string;
-  [DefaultFieldName.NUM_CHILDREN]: number;
   parent: Student;
 };
