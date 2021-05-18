@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
 function ParentInfo({ family, classes }) {
   const { parentFields } = useContext(FieldsContext);
   return parentFields.map((parentField) => (
-    <Typography variant="body1" className={classes.pb} key={parentField.id}>
+    <Typography variant="body2" className={classes.pb} key={parentField.id}>
       <b>{parentField.name}:</b>{" "}
       {family.parent.information[`${parentField.id}`] ?? ""}
     </Typography>
@@ -33,7 +33,7 @@ function ParentInfo({ family, classes }) {
 
 function DefaultInfo({ family, classes }) {
   return DefaultFamilyFields.map((defaultField) => (
-    <Typography variant="body1" className={classes.pb} key={defaultField.name}>
+    <Typography variant="body2" className={classes.pb} key={defaultField.name}>
       <b>{defaultField.name}:</b> {family[`${defaultField.id}`] ?? ""}
     </Typography>
   ));
@@ -50,7 +50,7 @@ function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
     if (familyId) fetchFamily();
   }, [familyId]);
 
-  return family ? (
+  return (
     <Drawer
       anchor="right"
       variant="temporary"
@@ -61,27 +61,22 @@ function FamilyDetailsSidebar({ isOpen, familyId, handleClose }) {
       open={isOpen}
       onClose={handleClose}
     >
-      <Typography variant="h3">
-        {family.parent.first_name} {family.parent.last_name}
-      </Typography>
-      <Divider variant="fullWidth" />
-      <Typography variant="h5" className="pb">
-        Basic Information
-      </Typography>
-      <DefaultInfo family={family} classes={classes} />
-      <ParentInfo family={family} classes={classes} />
+      {family ? (
+        <div>
+          <Typography variant="h2">
+            {family.parent.first_name} {family.parent.last_name}
+          </Typography>
+          <Divider variant="fullWidth" />
+          <Typography variant="h3" className={classes.pb}>
+            Basic Information
+          </Typography>
+          <DefaultInfo family={family} classes={classes} />
+          <ParentInfo family={family} classes={classes} />
+        </div>
+      ) : (
+        <></>
+      )}
     </Drawer>
-  ) : (
-    <Drawer
-      anchor="right"
-      variant="temporary"
-      className={classes.drawer}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-      open={isOpen}
-      onClose={handleClose}
-    />
   );
 }
 
