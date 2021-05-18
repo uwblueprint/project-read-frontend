@@ -49,7 +49,7 @@ type FamilyTableProps = {
 function FamilyTable({ families }: FamilyTableProps) {
   const { parentFields } = useContext(FieldsContext);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
-  const [familyId, setFamilyId] = useState(null);
+  const [familyId, setFamilyId] = useState<number>();
 
   const getTableRows = (): FamilyTableRow[] =>
     families.map(({ parent, ...args }) => {
