@@ -46,7 +46,7 @@ type FamilyTableProps = {
   families: Family[];
 };
 
-function FamilyTable({ families }: FamilyTableProps) {
+const FamilyTable = ({ families }: FamilyTableProps) => {
   const { parentFields } = useContext(FieldsContext);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
   const [familyId, setFamilyId] = useState<number>();
@@ -115,6 +115,6 @@ function FamilyTable({ families }: FamilyTableProps) {
       />
     </>
   );
-}
+};
 
 export default FamilyTable;
