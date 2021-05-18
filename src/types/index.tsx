@@ -26,3 +26,11 @@ export type Family = {
   [DefaultFieldName.PREFERRED_CONTACT]: string;
   parent: Student;
 };
+
+export type Session = {
+  fields: number[]; // array of field IDs
+  id: number;
+  season: string;
+  start_date: string;
+  year: number;
+};

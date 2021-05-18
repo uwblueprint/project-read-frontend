@@ -4,15 +4,16 @@ import { Add } from "@material-ui/icons";
 
 import SessionAPI from "../api/SessionAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
+import { Session } from "../types";
 
-function Sessions() {
-  const [sessions, setSessions] = useState([]);
+const Sessions = () => {
+  const [sessions, setSessions] = useState<Session[]>([]);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
 
   useEffect(() => {
-    async function fetchSessions() {
+    const fetchSessions = async () => {
       setSessions(await SessionAPI.getSessions());
-    }
+    };
     fetchSessions();
   }, []);
 
@@ -50,6 +51,6 @@ function Sessions() {
       )}
     </>
   );
-}
+};
 
 export default Sessions;
