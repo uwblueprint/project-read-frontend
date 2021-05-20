@@ -75,7 +75,7 @@ const Sessions = () => {
         <>
           <Box flexShrink={0}>
             <Button variant="outlined" onClick={handleOpenFormDialog}>
-              New registrant
+              Add a client
               <Add />
             </Button>
           </Box>
