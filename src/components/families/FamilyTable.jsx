@@ -14,6 +14,17 @@ const options = {
   selectableRows: "none",
 };
 
+function getAge(dateString) {
+  const today = new Date();
+  const birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+  return age;
+}
+
 function getTableRows(families, extraFields) {
   if (extraFields.length) {
     const fieldMap = Object.assign(
@@ -32,6 +43,12 @@ function getTableRows(families, extraFields) {
             }
           );
         }
+        familyRow.children_info = Array.prototype.map
+          .call(
+            family.children,
+            (item) => `${item.first_name} ${getAge(item.information[9])}`
+          )
+          .join(", ");
       }
       return familyRow;
     });

@@ -32,6 +32,10 @@ const FamilyTableColumns = [
     options: { searchable: false, filterOptions: { fullWidth: true } },
   },
   {
+    name: DefaultFields.CHILDREN.id,
+    label: DefaultFields.CHILDREN.name,
+  },
+  {
     name: DefaultFields.PREFERRED_CONTACT.id,
     label: DefaultFields.PREFERRED_CONTACT.name,
     options: { searchable: false, filterOptions: { fullWidth: true } },

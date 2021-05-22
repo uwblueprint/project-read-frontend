@@ -36,6 +36,11 @@ export const DefaultFields = Object.freeze({
     name: "No. of Children",
     question_type: QuestionTypes.TEXT,
   },
+  CHILDREN: {
+    id: "children_info",
+    name: "Children",
+    question_type: QuestionTypes.TEXT,
+  },
   PHONE: {
     id: "phone_number",
     name: "Phone Number",
