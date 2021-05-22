@@ -23,7 +23,7 @@ export const DefaultFields = Object.freeze({
   },
   CELL_NUMBER: {
     id: DefaultFieldName.CELL_NUMBER,
-    name: "Cell Phone",
+    name: "Cell phone",
     question_type: QuestionTypes.TEXT,
   },
   EMAIL: {
@@ -38,7 +38,7 @@ export const DefaultFields = Object.freeze({
   },
   HOME_NUMBER: {
     id: DefaultFieldName.HOME_NUMBER,
-    name: "Home Phone",
+    name: "Home phone",
     question_type: QuestionTypes.TEXT,
   },
   ID: {
@@ -53,27 +53,27 @@ export const DefaultFields = Object.freeze({
   },
   NUM_CHILDREN: {
     id: DefaultFieldName.NUM_CHILDREN,
-    name: "No. of Children",
+    name: "No. of children",
     question_type: QuestionTypes.TEXT,
   },
   PHONE_NUMBER: {
     id: DefaultFieldName.PHONE_NUMBER,
-    name: "Phone Number",
+    name: "Phone number",
     question_type: QuestionTypes.TEXT,
   },
   PREFERRED_CONTACT: {
     id: DefaultFieldName.PREFERRED_CONTACT,
-    name: "Preferred Contact",
+    name: "Preferred contact",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
   PREFERRED_NUMBER: {
     id: DefaultFieldName.PREFERRED_NUMBER,
-    name: "Preferred Number",
+    name: "Preferred number",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
   WORK_NUMBER: {
     id: DefaultFieldName.WORK_NUMBER,
-    name: "Work Phone",
+    name: "Work phone",
     question_type: QuestionTypes.TEXT,
   },
 });
