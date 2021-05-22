@@ -82,7 +82,7 @@ export const DefaultFields = Object.freeze({
   ENROLLED: {
     id: DefaultFieldName.ENROLLED,
     name: "Enrolled",
-    question_type: QuestionTypes.TEXT,
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
   CURRENT_CLASS: {
     id: DefaultFieldName.CURRENT_CLASS,
@@ -92,7 +92,7 @@ export const DefaultFields = Object.freeze({
   STATUS: {
     id: DefaultFieldName.STATUS,
     name: "Status",
-    question_type: QuestionTypes.TEXT,
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
 });
 
