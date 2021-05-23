@@ -9,6 +9,11 @@ jobs:
       - run:
           name: Install dependencies
           command: yarn
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
       - run:
           name: Eslint
           command: yarn run eslint --fix .
@@ -20,9 +25,10 @@ jobs:
       - image: circleci/python:3.9-node
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: yarn
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: Unit Tests
           command: yarn test .
