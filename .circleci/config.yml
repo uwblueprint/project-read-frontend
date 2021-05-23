@@ -21,6 +21,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install dependencies
+          command: yarn
+      - run:
           name: Unit Tests
           command: yarn test .
 
