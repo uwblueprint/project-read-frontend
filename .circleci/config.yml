@@ -6,6 +6,10 @@ jobs:
       - image: circleci/python:3.9-node
     steps:
       - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: yarn
@@ -20,15 +24,17 @@ jobs:
       - run:
           name: Prettier
           command: yarn prettier --write .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   test:
     docker:
       - image: circleci/python:3.9-node
     steps:
       - checkout
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+      - attach_workspace:
+          at: .
       - run:
           name: Unit Tests
           command: yarn test .
