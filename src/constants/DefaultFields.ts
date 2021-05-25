@@ -1,111 +1,130 @@
+import { DefaultField } from "../types";
+import DefaultFieldKey from "./DefaultFieldKey";
 import QuestionTypes from "./QuestionTypes";
 
-export enum DefaultFieldName {
-  ADDRESS = "address",
-  CELL_NUMBER = "cell_number",
-  EMAIL = "email",
-  FIRST_NAME = "first_name",
-  HOME_NUMBER = "home_number",
-  ID = "id",
-  LAST_NAME = "last_name",
-  NUM_CHILDREN = "num_children",
-  PHONE_NUMBER = "phone_number",
-  PREFERRED_CONTACT = "preferred_comms",
-  PREFERRED_NUMBER = "preferred_number",
-  WORK_NUMBER = "work_number",
-  ENROLLED = "enrolled",
-  CURRENT_CLASS = "current_class",
-  STATUS = "status",
-}
-
-export const DefaultFields = Object.freeze({
+export const DefaultFields: Record<string, DefaultField> = Object.freeze({
   ADDRESS: {
-    id: DefaultFieldName.ADDRESS,
+    id: DefaultFieldKey.ADDRESS,
+    is_default: false,
     name: "Address",
     question_type: QuestionTypes.TEXT,
   },
   CELL_NUMBER: {
-    id: DefaultFieldName.CELL_NUMBER,
+    id: DefaultFieldKey.CELL_NUMBER,
+    is_default: false,
     name: "Cell phone",
     question_type: QuestionTypes.TEXT,
   },
+  CURRENT_CLASS: {
+    id: DefaultFieldKey.CURRENT_CLASS,
+    is_default: true,
+    name: "Current Class",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
+  },
   EMAIL: {
-    id: DefaultFieldName.EMAIL,
+    id: DefaultFieldKey.EMAIL,
+    is_default: true,
     name: "Email",
     question_type: QuestionTypes.TEXT,
   },
+  ENROLLED: {
+    id: DefaultFieldKey.ENROLLED,
+    is_default: true,
+    name: "Enrolled",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
+  },
   FIRST_NAME: {
-    id: DefaultFieldName.FIRST_NAME,
+    id: DefaultFieldKey.FIRST_NAME,
+    is_default: true,
     name: "First name",
     question_type: QuestionTypes.TEXT,
   },
   HOME_NUMBER: {
-    id: DefaultFieldName.HOME_NUMBER,
+    id: DefaultFieldKey.HOME_NUMBER,
+    is_default: false,
     name: "Home phone",
     question_type: QuestionTypes.TEXT,
   },
   ID: {
-    id: DefaultFieldName.ID,
+    id: DefaultFieldKey.ID,
+    is_default: false,
     name: "Id",
     question_type: QuestionTypes.TEXT,
   },
   LAST_NAME: {
-    id: DefaultFieldName.LAST_NAME,
+    id: DefaultFieldKey.LAST_NAME,
+    is_default: true,
     name: "Last name",
     question_type: QuestionTypes.TEXT,
   },
   NUM_CHILDREN: {
-    id: DefaultFieldName.NUM_CHILDREN,
+    id: DefaultFieldKey.NUM_CHILDREN,
+    is_default: true,
     name: "No. of children",
     question_type: QuestionTypes.TEXT,
   },
   PHONE_NUMBER: {
-    id: DefaultFieldName.PHONE_NUMBER,
+    id: DefaultFieldKey.PHONE_NUMBER,
+    is_default: true,
     name: "Phone number",
     question_type: QuestionTypes.TEXT,
   },
   PREFERRED_CONTACT: {
-    id: DefaultFieldName.PREFERRED_CONTACT,
+    id: DefaultFieldKey.PREFERRED_CONTACT,
+    is_default: true,
     name: "Preferred contact",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
   PREFERRED_NUMBER: {
-    id: DefaultFieldName.PREFERRED_NUMBER,
+    id: DefaultFieldKey.PREFERRED_NUMBER,
+    is_default: false,
     name: "Preferred number",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
-  WORK_NUMBER: {
-    id: DefaultFieldName.WORK_NUMBER,
-    name: "Work phone",
-    question_type: QuestionTypes.TEXT,
-  },
-  ENROLLED: {
-    id: DefaultFieldName.ENROLLED,
-    name: "Enrolled",
-    question_type: QuestionTypes.MULTIPLE_CHOICE,
-  },
-  CURRENT_CLASS: {
-    id: DefaultFieldName.CURRENT_CLASS,
-    name: "Current Class",
-    question_type: QuestionTypes.TEXT,
-  },
   STATUS: {
-    id: DefaultFieldName.STATUS,
+    id: DefaultFieldKey.STATUS,
+    is_default: true,
     name: "Status",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
+  WORK_NUMBER: {
+    id: DefaultFieldKey.WORK_NUMBER,
+    is_default: false,
+    name: "Work phone",
+    question_type: QuestionTypes.TEXT,
+  },
 });
 
-export const DefaultFamilyFields = [
-  DefaultFields.CELL_NUMBER,
+export const DefaultFamilyTableFields: DefaultField[] = [
+  // default view
+  DefaultFields.FIRST_NAME,
+  DefaultFields.LAST_NAME,
+  DefaultFields.PHONE_NUMBER,
   DefaultFields.EMAIL,
+  DefaultFields.NUM_CHILDREN,
+  DefaultFields.PREFERRED_CONTACT,
+  // can expand to view
+  DefaultFields.CELL_NUMBER,
   DefaultFields.HOME_NUMBER,
   DefaultFields.PREFERRED_NUMBER,
-  DefaultFields.PREFERRED_CONTACT,
-  DefaultFields.WORK_NUMBER,
 ];
 
-export const DefaultStudentFields = [
+export const DefaultFamilyTableEnrolmentFields: DefaultField[] = [
+  DefaultFields.ENROLLED,
+  DefaultFields.CURRENT_CLASS,
+  DefaultFields.STATUS,
+];
+
+export const DefaultFamilyFormFields: DefaultField[] = [
+  DefaultFields.HOME_NUMBER,
+  DefaultFields.CELL_NUMBER,
+  DefaultFields.WORK_NUMBER,
+  DefaultFields.PREFERRED_NUMBER,
+  DefaultFields.EMAIL,
+  DefaultFields.PREFERRED_CONTACT,
+];
+
+export const DefaultStudentFormFields: DefaultField[] = [
   DefaultFields.FIRST_NAME,
   DefaultFields.LAST_NAME,
 ];
