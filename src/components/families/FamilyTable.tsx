@@ -122,11 +122,13 @@ const FamilyTable = ({ families }: FamilyTableProps) => {
         columns={getTableColumns}
         options={options}
       />
-      <FamilyDetailsSidebar
-        isOpen={openFamilyDetail}
-        familyId={familyId}
-        handleClose={handleCloseFamilyDetail}
-      />
+      {familyId && (
+        <FamilyDetailsSidebar
+          isOpen={openFamilyDetail}
+          familyId={familyId}
+          handleClose={handleCloseFamilyDetail}
+        />
+      )}
     </>
   );
 };
