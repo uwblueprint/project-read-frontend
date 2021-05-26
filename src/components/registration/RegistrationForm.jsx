@@ -7,7 +7,7 @@ import {
   DefaultFamilyFormFields,
   DefaultStudentFormFields,
 } from "../../constants/DefaultFields";
-import StudentRoles from "../../constants/StudentRoles";
+import StudentRole from "../../constants/StudentRole";
 
 function RegistrationForm({ onSubmit }) {
   const {
@@ -31,26 +31,26 @@ function RegistrationForm({ onSubmit }) {
   function getDefaultFamilyFields() {
     return DefaultFamilyFormFields.map((defaultField) => ({
       ...defaultField,
-      role: StudentRoles.PARENT,
+      role: StudentRole.PARENT,
     }));
   }
 
   function onChangeStudentData(role, data, isInfo) {
-    if (role === StudentRoles.PARENT) {
+    if (role === StudentRole.PARENT) {
       return isInfo
         ? setParentData(
             Object.assign(parentData, { ...parentData, information: data })
           )
         : setParentData(Object.assign(parentData, data));
     }
-    if (role === StudentRoles.CHILD) {
+    if (role === StudentRole.CHILD) {
       return isInfo
         ? setChildData(
             Object.assign(childData, { ...childData, information: data })
           )
         : setChildData(Object.assign(childData, data));
     }
-    if (role === StudentRoles.GUEST) {
+    if (role === StudentRole.GUEST) {
       return isInfo
         ? setGuestData(
             Object.assign(guestData, { ...guestData, information: data })
@@ -79,9 +79,9 @@ function RegistrationForm({ onSubmit }) {
         Basic information
       </Typography>
       <FormFieldGroup
-        fields={getDefaultStudentFields(StudentRoles.PARENT)}
+        fields={getDefaultStudentFields(StudentRole.PARENT)}
         onChange={(data) =>
-          onChangeStudentData(StudentRoles.PARENT, data, false)
+          onChangeStudentData(StudentRole.PARENT, data, false)
         }
       />
       <FormFieldGroup
@@ -90,37 +90,31 @@ function RegistrationForm({ onSubmit }) {
       />
       <FormFieldGroup
         fields={parentDynamicFields}
-        onChange={(data) =>
-          onChangeStudentData(StudentRoles.PARENT, data, true)
-        }
+        onChange={(data) => onChangeStudentData(StudentRole.PARENT, data, true)}
       />
 
       <Typography component="h3" variant="h5">
         Children
       </Typography>
       <FormFieldGroup
-        fields={getDefaultStudentFields(StudentRoles.CHILD)}
-        onChange={(data) =>
-          onChangeStudentData(StudentRoles.CHILD, data, false)
-        }
+        fields={getDefaultStudentFields(StudentRole.CHILD)}
+        onChange={(data) => onChangeStudentData(StudentRole.CHILD, data, false)}
       />
       <FormFieldGroup
         fields={childDynamicFields}
-        onChange={(data) => onChangeStudentData(StudentRoles.CHILD, data, true)}
+        onChange={(data) => onChangeStudentData(StudentRole.CHILD, data, true)}
       />
 
       <Typography component="h3" variant="h5">
         Family members
       </Typography>
       <FormFieldGroup
-        fields={getDefaultStudentFields(StudentRoles.GUEST)}
-        onChange={(data) =>
-          onChangeStudentData(StudentRoles.GUEST, data, false)
-        }
+        fields={getDefaultStudentFields(StudentRole.GUEST)}
+        onChange={(data) => onChangeStudentData(StudentRole.GUEST, data, false)}
       />
       <FormFieldGroup
         fields={guestDynamicFields}
-        onChange={(data) => onChangeStudentData(StudentRoles.GUEST, data, true)}
+        onChange={(data) => onChangeStudentData(StudentRole.GUEST, data, true)}
       />
 
       <Button type="submit" variant="contained" color="primary">
