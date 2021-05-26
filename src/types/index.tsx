@@ -20,21 +20,26 @@ export type Student = {
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
   id: number;
-  information: {
-    [key: number]: string | number; // dynamic fields
-  };
+  information: Record<number, string>; // dynamic fields
   role: StudentRole;
 };
 
 export type Family = {
+  [DefaultFieldKey.ADDRESS]: string;
+  [DefaultFieldKey.CELL_NUMBER]: string;
   [DefaultFieldKey.CURRENT_CLASS]: string;
   [DefaultFieldKey.EMAIL]: string;
   [DefaultFieldKey.ENROLLED]: string;
+  [DefaultFieldKey.HOME_NUMBER]: string;
   [DefaultFieldKey.ID]: number;
   [DefaultFieldKey.NUM_CHILDREN]: number;
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
+  [DefaultFieldKey.PREFERRED_NUMBER]: string;
   [DefaultFieldKey.STATUS]: string;
+  [DefaultFieldKey.WORK_NUMBER]: string;
+  children: Student[];
+  guests: Student[];
   parent: Student;
 };
 
