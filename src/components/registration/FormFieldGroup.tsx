@@ -29,6 +29,10 @@ const FormFieldGroup = ({ fields, onChange }: FormFieldGroupProps) => {
           marginY={2}
           width={FORM_FIELD_WIDTH}
         >
+          {/* hidden input to disable autocomplete: https://gist.github.com/niksumeiko/360164708c3b326bd1c8#gistcomment-3716208 */}
+          <Box display="none" aria-hidden="true">
+            <input tabIndex={-1} />
+          </Box>
           <TextField
             id={`${field.role} ${field.name}`}
             select={field.question_type === QuestionTypes.MULTIPLE_CHOICE}
@@ -38,8 +42,7 @@ const FormFieldGroup = ({ fields, onChange }: FormFieldGroupProps) => {
             variant="outlined"
             fullWidth
             inputProps={{
-              autoComplete: "new-password",
-              type: "password",
+              autoComplete: "new-password", // disable autocomplete
               "aria-label": `${field.role} ${field.name}`,
             }}
           >
