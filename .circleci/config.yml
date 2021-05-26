@@ -37,7 +37,7 @@ jobs:
           at: .
       - run:
           name: Unit Tests
-          command: yarn test .
+          command: yarn test . --passWithNoTests
 
 workflows:
   build_and_test:
