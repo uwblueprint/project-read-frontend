@@ -1,7 +1,7 @@
 import { MUIDataTableColumn } from "mui-datatables";
 import { DefaultFields } from "../DefaultFields";
 
-const FamilyTableColumns: Array<MUIDataTableColumn> = [
+export const FamilyTableColumns: Array<MUIDataTableColumn> = [
   {
     name: DefaultFields.ID.id,
     label: DefaultFields.ID.name,
@@ -39,4 +39,20 @@ const FamilyTableColumns: Array<MUIDataTableColumn> = [
   },
 ];
 
-export default FamilyTableColumns;
+export const FamilyTableEnrolmentStatusColumns: Array<MUIDataTableColumn> = [
+  {
+    name: DefaultFields.ENROLLED.id,
+    label: DefaultFields.ENROLLED.name,
+    options: { searchable: false, filterOptions: { fullWidth: true } },
+  },
+  {
+    name: DefaultFields.CURRENT_CLASS.id,
+    label: DefaultFields.CURRENT_CLASS.name,
+    options: { searchable: false, filterOptions: { fullWidth: true } },
+  },
+  {
+    name: DefaultFields.STATUS.id,
+    label: DefaultFields.STATUS.name,
+    options: { searchable: false, filterOptions: { fullWidth: true } },
+  },
+];

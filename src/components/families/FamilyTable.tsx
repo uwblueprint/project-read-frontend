@@ -6,7 +6,10 @@ import MUIDataTable, {
 } from "mui-datatables";
 import { Typography } from "@material-ui/core";
 import { FieldsContext } from "../../context/fields";
-import FamilyTableColumns from "../../constants/registration/FamilyTableColumns";
+import {
+  FamilyTableColumns,
+  FamilyTableEnrolmentStatusColumns,
+} from "../../constants/registration/FamilyTableColumns";
 import QuestionTypes from "../../constants/QuestionTypes";
 import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 import { Family, Field } from "../../types";
@@ -87,6 +90,17 @@ const FamilyTable = ({ families }: FamilyTableProps) => {
             customBodyRender: noWrapText,
           },
         }))
+      )
+      // add enrolment status columns
+      .concat(
+        FamilyTableEnrolmentStatusColumns.map((column) =>
+          Object.assign(
+            column,
+            column.options
+              ? Object.assign(column.options, noWrapOption)
+              : noWrapOption
+          )
+        )
       );
 
   const handleOpenFamilyDetail = useCallback((rowData) => {

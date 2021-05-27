@@ -13,6 +13,9 @@ export enum DefaultFieldName {
   PREFERRED_CONTACT = "preferred_comms",
   PREFERRED_NUMBER = "preferred_number",
   WORK_NUMBER = "work_number",
+  ENROLLED = "enrolled",
+  CURRENT_CLASS = "current_class",
+  STATUS = "status",
 }
 
 export const DefaultFields = Object.freeze({
@@ -75,6 +78,21 @@ export const DefaultFields = Object.freeze({
     id: DefaultFieldName.WORK_NUMBER,
     name: "Work phone",
     question_type: QuestionTypes.TEXT,
+  },
+  ENROLLED: {
+    id: DefaultFieldName.ENROLLED,
+    name: "Enrolled",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
+  },
+  CURRENT_CLASS: {
+    id: DefaultFieldName.CURRENT_CLASS,
+    name: "Current Class",
+    question_type: QuestionTypes.TEXT,
+  },
+  STATUS: {
+    id: DefaultFieldName.STATUS,
+    name: "Status",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
   },
 });
 
