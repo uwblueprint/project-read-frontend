@@ -1,16 +1,23 @@
-import { DefaultFieldName } from "../constants/DefaultFields";
+import DefaultFieldKey from "../constants/DefaultFieldKey";
 
-export type Field = {
-  id: number;
+type Field = {
   is_default: boolean;
   name: string;
   question_type: string;
-  role: string;
+};
+
+export type DefaultField = Field & {
+  id: DefaultFieldKey;
+};
+
+export type DynamicField = Field & {
+  id: number;
+  role: "Parent" | "Child" | "Guest";
 };
 
 export type Student = {
-  [DefaultFieldName.FIRST_NAME]: string;
-  [DefaultFieldName.LAST_NAME]: string;
+  [DefaultFieldKey.FIRST_NAME]: string;
+  [DefaultFieldKey.LAST_NAME]: string;
   id: number;
   information: {
     [key: number]: string | number; // dynamic fields
@@ -19,11 +26,14 @@ export type Student = {
 };
 
 export type Family = {
-  [DefaultFieldName.EMAIL]: string;
-  [DefaultFieldName.ID]: number;
-  [DefaultFieldName.NUM_CHILDREN]: number;
-  [DefaultFieldName.PHONE_NUMBER]: string;
-  [DefaultFieldName.PREFERRED_CONTACT]: string;
+  [DefaultFieldKey.CURRENT_CLASS]: string;
+  [DefaultFieldKey.EMAIL]: string;
+  [DefaultFieldKey.ENROLLED]: string;
+  [DefaultFieldKey.ID]: number;
+  [DefaultFieldKey.NUM_CHILDREN]: number;
+  [DefaultFieldKey.PHONE_NUMBER]: string;
+  [DefaultFieldKey.PREFERRED_CONTACT]: string;
+  [DefaultFieldKey.STATUS]: string;
   parent: Student;
 };
 

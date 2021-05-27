@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Drawer, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { DefaultFamilyFields } from "../../constants/DefaultFields";
-import { FieldsContext } from "../../context/fields";
+import { DefaultFamilyFormFields } from "../../constants/DefaultFields";
+import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import FamilyAPI from "../../api/FamilyAPI";
 import { Family } from "../../types";
 
@@ -32,7 +32,7 @@ const FamilyDetailsSidebar = ({
   familyId,
   handleClose,
 }: FamilyDetailsSidebarProps) => {
-  const { parentFields } = useContext(FieldsContext);
+  const { parentDynamicFields } = useContext(DynamicFieldsContext);
   const [family, setFamily] = useState<Family>();
   const classes = useStyles();
 
@@ -61,7 +61,7 @@ const FamilyDetailsSidebar = ({
           </Typography>
           <Divider variant="fullWidth" />
           <Typography variant="h3">Basic Information</Typography>
-          {DefaultFamilyFields.map((defaultField) => (
+          {DefaultFamilyFormFields.map((defaultField) => (
             <Typography
               variant="body2"
               className={classes.pb}
@@ -70,7 +70,7 @@ const FamilyDetailsSidebar = ({
               <b>{defaultField.name}:</b> {(family as any)[defaultField.id]}
             </Typography>
           ))}
-          {parentFields.map((parentField) => (
+          {parentDynamicFields.map((parentField) => (
             <Typography
               variant="body2"
               className={classes.pb}

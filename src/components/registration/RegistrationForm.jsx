@@ -1,16 +1,20 @@
 import React, { useContext, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
-import { FieldsContext } from "../../context/fields";
+import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import FormFieldGroup from "./FormFieldGroup";
 import {
-  DefaultFamilyFields,
-  DefaultStudentFields,
+  DefaultFamilyFormFields,
+  DefaultStudentFormFields,
 } from "../../constants/DefaultFields";
 import StudentRoles from "../../constants/StudentRoles";
 
 function RegistrationForm({ onSubmit }) {
-  const { childFields, guestFields, parentFields } = useContext(FieldsContext);
+  const {
+    childDynamicFields,
+    guestDynamicFields,
+    parentDynamicFields,
+  } = useContext(DynamicFieldsContext);
 
   const [familyData, setFamilyData] = useState({});
   const [parentData, setParentData] = useState({ information: {} });
@@ -18,14 +22,14 @@ function RegistrationForm({ onSubmit }) {
   const [guestData, setGuestData] = useState({ information: {} });
 
   function getDefaultStudentFields(role) {
-    return DefaultStudentFields.map((defaultField) => ({
+    return DefaultStudentFormFields.map((defaultField) => ({
       ...defaultField,
       role,
     }));
   }
 
   function getDefaultFamilyFields() {
-    return DefaultFamilyFields.map((defaultField) => ({
+    return DefaultFamilyFormFields.map((defaultField) => ({
       ...defaultField,
       role: StudentRoles.PARENT,
     }));
@@ -85,7 +89,7 @@ function RegistrationForm({ onSubmit }) {
         onChange={setFamilyData}
       />
       <FormFieldGroup
-        fields={parentFields}
+        fields={parentDynamicFields}
         onChange={(data) =>
           onChangeStudentData(StudentRoles.PARENT, data, true)
         }
@@ -101,7 +105,7 @@ function RegistrationForm({ onSubmit }) {
         }
       />
       <FormFieldGroup
-        fields={childFields}
+        fields={childDynamicFields}
         onChange={(data) => onChangeStudentData(StudentRoles.CHILD, data, true)}
       />
 
@@ -115,7 +119,7 @@ function RegistrationForm({ onSubmit }) {
         }
       />
       <FormFieldGroup
-        fields={guestFields}
+        fields={guestDynamicFields}
         onChange={(data) => onChangeStudentData(StudentRoles.GUEST, data, true)}
       />
 
