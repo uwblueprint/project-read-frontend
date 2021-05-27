@@ -1,4 +1,5 @@
 import DefaultFieldKey from "../constants/DefaultFieldKey";
+import StudentRole from "../constants/StudentRole";
 
 type Field = {
   is_default: boolean;
@@ -12,7 +13,7 @@ export type DefaultField = Field & {
 
 export type DynamicField = Field & {
   id: number;
-  role: "Parent" | "Child" | "Guest";
+  role: StudentRole;
 };
 
 export type Student = {
@@ -22,7 +23,7 @@ export type Student = {
   information: {
     [key: number]: string | number; // dynamic fields
   };
-  role: "Parent" | "Child" | "Guest";
+  role: StudentRole;
 };
 
 export type Family = {
