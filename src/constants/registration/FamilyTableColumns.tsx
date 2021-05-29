@@ -5,7 +5,7 @@ export const FamilyTableColumns: Array<MUIDataTableColumn> = [
   {
     name: DefaultFields.ID.id,
     label: DefaultFields.ID.name,
-    options: { display: "excluded" },
+    options: { display: "excluded", filter: false },
   },
   {
     name: DefaultFields.FIRST_NAME.id,
