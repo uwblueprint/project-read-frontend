@@ -95,7 +95,7 @@ const FamilyTable = ({ families }: FamilyTableProps) => {
   const idColumn: MUIDataTableColumn = {
     name: DefaultFields.ID.id.toString(),
     label: DefaultFields.ID.name,
-    options: { display: "excluded" },
+    options: { display: "excluded", filter: false },
   };
 
   const getColumn = (
