@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Drawer, Divider, Typography } from "@material-ui/core";
+import { Drawer, Divider, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { DefaultFamilyFormFields } from "../../constants/DefaultFields";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
@@ -18,6 +18,13 @@ const useStyles = makeStyles(() => ({
   },
   pb: {
     paddingBottom: 16,
+  },
+  heading: {
+    color: "#42526E",
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 700,
+    fontSize: 16,
   },
 }));
 
@@ -80,6 +87,10 @@ const FamilyDetailsSidebar = ({
               {family.parent.information[parentField.id]}
             </Typography>
           ))}
+          <Typography variant="body2" className={classes.heading}>
+            Notes
+          </Typography>
+          <TextField value={family.notes} fullWidth variant="filled" />
         </div>
       )}
     </Drawer>

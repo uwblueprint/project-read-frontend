@@ -14,6 +14,7 @@ enum DefaultFieldKey {
   PREFERRED_NUMBER = "preferred_number",
   STATUS = "status",
   WORK_NUMBER = "work_number",
+  NOTES = "notes",
 }
 
 export default DefaultFieldKey;

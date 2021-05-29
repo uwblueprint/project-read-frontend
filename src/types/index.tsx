@@ -35,6 +35,7 @@ export type Family = {
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.STATUS]: string;
+  [DefaultFieldKey.NOTES]: string;
   parent: Student;
 };
 
