@@ -63,6 +63,12 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "No. of children",
     question_type: QuestionTypes.TEXT,
   },
+  CHILDREN_INFO: {
+    id: DefaultFieldKey.CHILDREN_INFO,
+    is_default: true,
+    name: "Children (Age)",
+    question_type: QuestionTypes.TEXT,
+  },
   PHONE_NUMBER: {
     id: DefaultFieldKey.PHONE_NUMBER,
     is_default: true,
@@ -102,6 +108,7 @@ export const DefaultFamilyTableFields: DefaultField[] = [
   DefaultFields.PHONE_NUMBER,
   DefaultFields.EMAIL,
   DefaultFields.NUM_CHILDREN,
+  DefaultFields.CHILDREN_INFO,
   DefaultFields.PREFERRED_CONTACT,
   // can expand to view
   DefaultFields.CELL_NUMBER,
