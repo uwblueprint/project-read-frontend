@@ -41,7 +41,7 @@ type FamilyTableRow = Pick<
 > & {
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
-  [DefaultFieldKey.CHILDREN_INFO]: string;
+  [DefaultFieldKey.CHILDREN]: string;
   [key: number]: string | number; // dynamic fields
 };
 
@@ -83,7 +83,7 @@ const FamilyTable = ({ families }: FamilyTableProps) => {
       const familyRow: FamilyTableRow = {
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
-        [DefaultFieldKey.CHILDREN_INFO]: childrenInfo,
+        [DefaultFieldKey.CHILDREN]: childrenInfo,
         ...args,
       };
       parentDynamicFields.forEach((field) => {

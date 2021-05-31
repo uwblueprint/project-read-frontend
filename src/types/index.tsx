@@ -33,7 +33,7 @@ export type Family = {
   [DefaultFieldKey.ENROLLED]: string;
   [DefaultFieldKey.ID]: number;
   [DefaultFieldKey.NUM_CHILDREN]: number;
-  [DefaultFieldKey.CHILDREN_INFO]: Student[];
+  [DefaultFieldKey.CHILDREN]: Student[];
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.STATUS]: string;
