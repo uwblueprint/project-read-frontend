@@ -12,13 +12,15 @@ export type FamilyDetailResponse = Pick<
   | DefaultFieldKey.PREFERRED_CONTACT
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
-  | "children"
-  | "guests"
   | "parent"
->;
+> & {
+  children: Student[];
+  guests: Student[];
+};
 
 export type FamilyListResponse = Pick<
   Family,
+  | DefaultFieldKey.CHILDREN
   | DefaultFieldKey.CURRENT_CLASS
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.ENROLLED
@@ -30,11 +32,6 @@ export type FamilyListResponse = Pick<
   | "parent"
 >;
 
-type StudentRequest = Pick<
-  Student,
-  DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME | "information"
->;
-
 export type FamilyRequest = Pick<
   Family,
   | DefaultFieldKey.ADDRESS
@@ -44,7 +41,14 @@ export type FamilyRequest = Pick<
   | DefaultFieldKey.PREFERRED_CONTACT
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
-> & {
+>;
+
+export type StudentRequest = Pick<
+  Student,
+  DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME | "information"
+>;
+
+export type FamilyStudentRequest = FamilyRequest & {
   children: StudentRequest[];
   guests: StudentRequest[];
   parent: StudentRequest;
@@ -56,6 +60,7 @@ const getFamilies = (): Promise<FamilyListResponse[]> =>
 const getFamilyById = (id: number): Promise<FamilyDetailResponse> =>
   APIUtils.get(`/families/${id}`);
 
-const postFamily = (data: FamilyRequest) => APIUtils.post("/families/", data);
+const postFamily = (data: FamilyStudentRequest) =>
+  APIUtils.post("/families/", data);
 
 export default { getFamilies, getFamilyById, postFamily };
