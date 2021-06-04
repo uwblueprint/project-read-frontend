@@ -14,6 +14,7 @@ import {
 } from "../../api/FamilyAPI";
 import { DefaultFormField } from "../../hooks/useFormFields";
 import DefaultFieldKey from "../../constants/DefaultFieldKey";
+import { Student } from "../../types";
 
 const defaultFamilyRequestData: FamilyRequest = {
   [DefaultFieldKey.ADDRESS]: "",
@@ -51,8 +52,12 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
   const [parentData, setParentData] = useState<StudentRequest>({
     ...defaultStudentRequestData,
   });
-  const [childData, setChildData] = useState({ ...defaultStudentRequestData });
-  const [guestData, setGuestData] = useState({ ...defaultStudentRequestData });
+  const [childData, setChildData] = useState<StudentRequest>({
+    ...defaultStudentRequestData,
+  });
+  const [guestData, setGuestData] = useState<StudentRequest>({
+    ...defaultStudentRequestData,
+  });
 
   const getDefaultStudentFields = (role: StudentRole): DefaultFormField[] =>
     DefaultStudentFormFields.map((defaultField) => ({
