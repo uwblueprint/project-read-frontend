@@ -22,6 +22,7 @@ export type Student = {
   id: number;
   information: Record<number, string>; // dynamic fields
   role: StudentRole;
+  date_of_birth: string;
 };
 
 export type Family = {
@@ -33,6 +34,7 @@ export type Family = {
   [DefaultFieldKey.HOME_NUMBER]: string;
   [DefaultFieldKey.ID]: number;
   [DefaultFieldKey.NUM_CHILDREN]: number;
+  [DefaultFieldKey.CHILDREN]: Student[];
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.PREFERRED_NUMBER]: string;
