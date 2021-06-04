@@ -6,7 +6,7 @@ import MUIDataTable, {
 import { Typography } from "@material-ui/core";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
-import { DefaultField, DynamicField, Family } from "../../types";
+import { DefaultField, DynamicField } from "../../types";
 import DefaultFieldKey from "../../constants/DefaultFieldKey";
 import {
   DefaultFamilyTableFields,
@@ -14,6 +14,7 @@ import {
   DefaultFields,
 } from "../../constants/DefaultFields";
 import QuestionTypes from "../../constants/QuestionTypes";
+import { FamilyListResponse } from "../../api/FamilyAPI";
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
@@ -29,7 +30,7 @@ const noWrapText = (value: string): ReactNode => (
 );
 
 type FamilyTableRow = Pick<
-  Family,
+  FamilyListResponse,
   | DefaultFieldKey.CURRENT_CLASS
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.ENROLLED
@@ -46,7 +47,7 @@ type FamilyTableRow = Pick<
 };
 
 type FamilyTableProps = {
-  families: Family[];
+  families: FamilyListResponse[];
 };
 
 const getAge = (dateString: string): number => {

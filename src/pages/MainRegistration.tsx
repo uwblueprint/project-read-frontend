@@ -1,13 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@material-ui/core";
-
-import FamilyAPI from "../api/FamilyAPI";
+import FamilyAPI, { FamilyListResponse } from "../api/FamilyAPI";
 import FamilyTable from "../components/families/FamilyTable";
-import { AuthContext } from "../context/auth";
 
-function MainRegistration() {
-  const [families, setFamilies] = useState([]);
-  const { user } = useContext(AuthContext);
+const MainRegistration = () => {
+  const [families, setFamilies] = useState<FamilyListResponse[]>([]);
 
   useEffect(() => {
     async function fetchFamilies() {
@@ -19,12 +16,9 @@ function MainRegistration() {
   return (
     <>
       <Typography variant="h1">Main registration</Typography>
-      <Typography variant="h2">
-        Hi {user ? user.email : "anonymous user"}
-      </Typography>
       <FamilyTable families={families} />
     </>
   );
-}
+};
 
 export default MainRegistration;

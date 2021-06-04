@@ -3,8 +3,7 @@ import { Drawer, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { DefaultFamilyFormFields } from "../../constants/DefaultFields";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
-import FamilyAPI from "../../api/FamilyAPI";
-import { Family } from "../../types";
+import FamilyAPI, { FamilyDetailResponse } from "../../api/FamilyAPI";
 
 const drawerWidth = 400;
 
@@ -33,7 +32,7 @@ const FamilyDetailsSidebar = ({
   handleClose,
 }: FamilyDetailsSidebarProps) => {
   const { parentDynamicFields } = useContext(DynamicFieldsContext);
-  const [family, setFamily] = useState<Family>();
+  const [family, setFamily] = useState<FamilyDetailResponse>();
   const classes = useStyles();
 
   useEffect(() => {
