@@ -40,8 +40,6 @@ export type Family = {
   [DefaultFieldKey.PREFERRED_NUMBER]: string;
   [DefaultFieldKey.STATUS]: string;
   [DefaultFieldKey.WORK_NUMBER]: string;
-  children: Student[];
-  guests: Student[];
   parent: Student;
 };
 
