@@ -14,7 +14,6 @@ import {
 } from "../../api/FamilyAPI";
 import { DefaultFormField } from "../../hooks/useFormFields";
 import DefaultFieldKey from "../../constants/DefaultFieldKey";
-import { Student } from "../../types";
 
 const defaultFamilyRequestData: FamilyRequest = {
   [DefaultFieldKey.ADDRESS]: "",
