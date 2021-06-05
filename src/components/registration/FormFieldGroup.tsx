@@ -48,9 +48,10 @@ const FormFieldGroup = ({ testId, fields, onChange }: FormFieldGroupProps) => {
               "data-testid": `${field.role} ${field.name}`,
             }}
           >
-            {field.question_type === QuestionTypes.MULTIPLE_CHOICE && (
-              <MenuItem value="none">None</MenuItem>
-            )}
+            {field.question_type === QuestionTypes.MULTIPLE_CHOICE &&
+              field.options.map((option: string) => (
+                <MenuItem value={option}>{option}</MenuItem>
+              ))}
           </TextField>
         </Box>
       ))}

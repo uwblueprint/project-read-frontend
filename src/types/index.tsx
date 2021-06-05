@@ -5,6 +5,7 @@ type Field = {
   is_default: boolean;
   name: string;
   question_type: string;
+  options: string[];
 };
 
 export type DefaultField = Field & {
