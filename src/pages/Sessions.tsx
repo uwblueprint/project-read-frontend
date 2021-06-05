@@ -24,8 +24,10 @@ const useStyles = makeStyles(() => ({
     borderRadius: "15px 15px 0px 0px",
     opacity: "100%",
     border: "1px solid #C8C8C8",
-    borderBottom: "0px",
     fontWeight: 700,
+  },
+  borderBottom: {
+    borderBottom: "1px solid #C8C8C8",
   },
 }));
 
@@ -162,9 +164,10 @@ const Sessions = () => {
                 {...tabProps(classInfo.id)}
               />
             ))}
-            <Button className={styles.tabButton}>
+            <Button variant="text" className={styles.tabButton}>
               <Add />
             </Button>
+            <Box flexGrow={1} className={styles.borderBottom} />
           </Tabs>
         </AppBar>
         <TabPanel key="all" value={tab} index={0}>
