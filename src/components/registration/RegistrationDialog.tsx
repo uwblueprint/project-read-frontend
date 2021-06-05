@@ -9,9 +9,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
-import PropTypes from "prop-types";
 import RegistrationForm from "./RegistrationForm";
-import FamilyAPI from "../../api/FamilyAPI";
+import FamilyAPI, { FamilyStudentRequest } from "../../api/FamilyAPI";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -21,7 +20,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RegistrationFormDialog({ open, onClose }) {
+type RegistrationFormDialogProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+const RegistrationFormDialog = ({
+  open,
+  onClose,
+}: RegistrationFormDialogProps) => {
   const classes = useStyles();
   const [displayForm, setDisplayForm] = useState(false);
 
@@ -33,7 +40,10 @@ function RegistrationFormDialog({ open, onClose }) {
     setDisplayForm(false);
   };
 
-  const onFormSubmit = async (e, data) => {
+  const onFormSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    data: FamilyStudentRequest
+  ) => {
     e.preventDefault();
     const response = await FamilyAPI.postFamily(data);
     if (response.non_field_errors) {
@@ -79,11 +89,6 @@ function RegistrationFormDialog({ open, onClose }) {
       </DialogContent>
     </Dialog>
   );
-}
-
-RegistrationFormDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
 export default RegistrationFormDialog;
