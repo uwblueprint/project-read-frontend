@@ -51,6 +51,31 @@ const theme = createMuiTheme({
         wordBreak: "break-word",
       },
     },
+    MuiTab: {
+      root: {
+        minWidth: 0,
+        backgroundColor: "#E7E7E7",
+        borderRadius: "15px 15px 0px 0px",
+        opacity: "100%",
+        border: "1px solid #C8C8C8",
+        borderBottom: "0px",
+        fontWeight: 700,
+        textTransform: "none",
+        "@media (min-width: 0px)": {
+          minWidth: 0,
+        },
+        "&$selected": {
+          backgroundColor: "white",
+        },
+      },
+    },
+    MuiTabs: {
+      root: {
+        backgroundColor: "white",
+        color: "black",
+        borderBottom: "1px solid #C8C8C8",
+      },
+    },
   },
   typography: {
     h1: {
