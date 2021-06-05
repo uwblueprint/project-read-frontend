@@ -5,6 +5,7 @@ import { DefaultFamilyFormFields } from "../../constants/DefaultFields";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import FamilyAPI from "../../api/FamilyAPI";
 import { Family } from "../../types";
+import DefaultFieldKey from "../../constants/DefaultFieldKey";
 
 const drawerWidth = 400;
 
@@ -21,8 +22,6 @@ const useStyles = makeStyles(() => ({
   },
   heading: {
     color: "#42526E",
-    fontFamily: "Roboto",
-    fontStyle: "normal",
     fontWeight: 700,
     fontSize: 16,
   },
@@ -90,7 +89,15 @@ const FamilyDetailsSidebar = ({
           <Typography variant="body2" className={classes.heading}>
             Notes
           </Typography>
-          <TextField value={family.notes} fullWidth variant="filled" />
+          <form>
+            <TextField
+              InputLabelProps={{ shrink: true }}
+              label="Notes"
+              value={family[DefaultFieldKey.NOTES]}
+              fullWidth
+              variant="filled"
+            />
+          </form>
         </div>
       )}
     </Drawer>
