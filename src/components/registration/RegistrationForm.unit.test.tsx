@@ -1,10 +1,10 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import RegistrationForm, { DataTestId } from "./RegistrationForm";
-import { DynamicFieldsContext } from "../../../context/DynamicFieldsContext";
-import StudentRole from "../../../constants/StudentRole";
-import QuestionTypes from "../../../constants/QuestionTypes";
-import { DefaultFields } from "../../../constants/DefaultFields";
+import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
+import StudentRole from "../../constants/StudentRole";
+import QuestionTypes from "../../constants/QuestionTypes";
+import { DefaultFields } from "../../constants/DefaultFields";
 
 describe("when the registration form is opened", () => {
   it("renders the form", () => {

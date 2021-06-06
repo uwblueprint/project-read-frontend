@@ -1,19 +1,19 @@
 import React, { useContext, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
-import { DynamicFieldsContext } from "../../../context/DynamicFieldsContext";
-import FormFieldGroup from "../FormFieldGroup";
+import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
+import FormFieldGroup from "./FormFieldGroup";
 import {
   DefaultFamilyFormFields,
   DefaultStudentFormFields,
-} from "../../../constants/DefaultFields";
-import StudentRole from "../../../constants/StudentRole";
+} from "../../constants/DefaultFields";
+import StudentRole from "../../constants/StudentRole";
 import {
   FamilyRequest,
   FamilyStudentRequest,
   StudentRequest,
-} from "../../../api/FamilyAPI";
-import { DefaultFormField } from "../../../hooks/useFormFields";
-import DefaultFieldKey from "../../../constants/DefaultFieldKey";
+} from "../../api/FamilyAPI";
+import { DefaultFormField } from "../../hooks/useFormFields";
+import DefaultFieldKey from "../../constants/DefaultFieldKey";
 
 export enum DataTestId {
   ChildrenDefaultFields = "children-default-fields",
