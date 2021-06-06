@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
-import RegistrationForm from "./registration-form";
+import RegistrationForm from "./RegistrationForm";
 import FamilyAPI, { FamilyStudentRequest } from "../../api/FamilyAPI";
 
 const useStyles = makeStyles((theme) => ({
