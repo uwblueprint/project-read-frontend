@@ -4,8 +4,8 @@ import StudentRole from "../constants/StudentRole";
 type Field = {
   is_default: boolean;
   name: string;
-  question_type: string;
   options: string[];
+  question_type: string;
 };
 
 export type DefaultField = Field & {
