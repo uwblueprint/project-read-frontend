@@ -12,9 +12,10 @@ const FORM_FIELD_WIDTH = 328;
 type FormFieldGroupProps = {
   fields: DefaultFormField[] | DynamicField[];
   onChange: (data: FormFieldData) => void;
+  testId: string;
 };
 
-const FormFieldGroup = ({ fields, onChange }: FormFieldGroupProps) => {
+const FormFieldGroup = ({ testId, fields, onChange }: FormFieldGroupProps) => {
   const { formFieldData, onFormFieldDataChange } = useFormFields(fields);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const FormFieldGroup = ({ fields, onChange }: FormFieldGroupProps) => {
   }, [formFieldData]);
 
   return (
-    <>
+    <div data-testid={testId}>
       {fields.map((field: DefaultFormField | DynamicField) => (
         <Box
           key={`${field.role} ${field.name}`}
@@ -44,6 +45,7 @@ const FormFieldGroup = ({ fields, onChange }: FormFieldGroupProps) => {
             inputProps={{
               autoComplete: "new-password", // disable autocomplete
               "aria-label": `${field.role} ${field.name}`,
+              "data-testid": `${field.role} ${field.name}`,
             }}
           >
             {field.question_type === QuestionTypes.MULTIPLE_CHOICE && (
@@ -52,7 +54,7 @@ const FormFieldGroup = ({ fields, onChange }: FormFieldGroupProps) => {
           </TextField>
         </Box>
       ))}
-    </>
+    </div>
   );
 };
 
