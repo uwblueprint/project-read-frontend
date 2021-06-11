@@ -15,7 +15,7 @@ import {
 import { DefaultFormField } from "../../hooks/useFormFields";
 import DefaultFieldKey from "../../constants/DefaultFieldKey";
 
-export enum DataTestId {
+export enum TestId {
   ChildrenDefaultFields = "children-default-fields",
   ChildrenDynamicFields = "children-dynamic-fields",
   FamilyDefaultFields = "family-default-fields",
@@ -90,7 +90,7 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
 
   return (
     <form
-      data-testid={DataTestId.RegistrationForm}
+      data-testid={TestId.RegistrationForm}
       onSubmit={(e) => onSubmit(e, getSubmissionData())}
     >
       <Typography variant="body1">
@@ -101,17 +101,17 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
         Basic information
       </Typography>
       <FormFieldGroup
-        testId={DataTestId.ParentDefaultFields}
+        testId={TestId.ParentDefaultFields}
         fields={getDefaultStudentFields(StudentRole.PARENT)}
         onChange={(data) => setParentData(Object.assign(parentData, data))}
       />
       <FormFieldGroup
-        testId={DataTestId.FamilyDefaultFields}
+        testId={TestId.FamilyDefaultFields}
         fields={getDefaultFamilyFields()}
         onChange={setFamilyData}
       />
       <FormFieldGroup
-        testId={DataTestId.ParentDynamicFields}
+        testId={TestId.ParentDynamicFields}
         fields={parentDynamicFields}
         onChange={(data) =>
           setParentData(
@@ -124,12 +124,12 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
         Children
       </Typography>
       <FormFieldGroup
-        testId={DataTestId.ChildrenDefaultFields}
+        testId={TestId.ChildrenDefaultFields}
         fields={getDefaultStudentFields(StudentRole.CHILD)}
         onChange={(data) => setChildData(Object.assign(childData, data))}
       />
       <FormFieldGroup
-        testId={DataTestId.ChildrenDynamicFields}
+        testId={TestId.ChildrenDynamicFields}
         fields={childDynamicFields}
         onChange={(data) =>
           setChildData(
@@ -142,12 +142,12 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
         Family members
       </Typography>
       <FormFieldGroup
-        testId={DataTestId.GuestsDefaultFields}
+        testId={TestId.GuestsDefaultFields}
         fields={getDefaultStudentFields(StudentRole.GUEST)}
         onChange={(data) => setGuestData(Object.assign(guestData, data))}
       />
       <FormFieldGroup
-        testId={DataTestId.GuestsDynamicFields}
+        testId={TestId.GuestsDynamicFields}
         fields={guestDynamicFields}
         onChange={(data) =>
           setGuestData(

@@ -1,6 +1,6 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
-import RegistrationForm, { DataTestId } from "./RegistrationForm";
+import RegistrationForm, { TestId } from "./RegistrationForm";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import StudentRole from "../../constants/StudentRole";
 import QuestionTypes from "../../constants/QuestionTypes";
@@ -9,7 +9,7 @@ import { DefaultFields } from "../../constants/DefaultFields";
 describe("when the registration form is opened", () => {
   it("renders the form", () => {
     const { getByTestId } = render(<RegistrationForm onSubmit={() => {}} />);
-    expect(getByTestId(DataTestId.RegistrationForm)).toBeInTheDocument();
+    expect(getByTestId(TestId.RegistrationForm)).toBeInTheDocument();
   });
 
   it("renders the basic information section", () => {
@@ -17,9 +17,9 @@ describe("when the registration form is opened", () => {
       <RegistrationForm onSubmit={() => {}} />
     );
     expect(getByText("Basic information")).toBeInTheDocument();
-    expect(getByTestId(DataTestId.ParentDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(DataTestId.FamilyDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(DataTestId.ParentDynamicFields)).toBeInTheDocument();
+    expect(getByTestId(TestId.ParentDefaultFields)).toBeInTheDocument();
+    expect(getByTestId(TestId.FamilyDefaultFields)).toBeInTheDocument();
+    expect(getByTestId(TestId.ParentDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the children section", () => {
@@ -27,8 +27,8 @@ describe("when the registration form is opened", () => {
       <RegistrationForm onSubmit={() => {}} />
     );
     expect(getByText("Children")).toBeInTheDocument();
-    expect(getByTestId(DataTestId.ChildrenDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(DataTestId.ChildrenDynamicFields)).toBeInTheDocument();
+    expect(getByTestId(TestId.ChildrenDefaultFields)).toBeInTheDocument();
+    expect(getByTestId(TestId.ChildrenDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the family members section", () => {
@@ -36,8 +36,8 @@ describe("when the registration form is opened", () => {
       <RegistrationForm onSubmit={() => {}} />
     );
     expect(getByText("Family members")).toBeInTheDocument();
-    expect(getByTestId(DataTestId.GuestsDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(DataTestId.GuestsDynamicFields)).toBeInTheDocument();
+    expect(getByTestId(TestId.GuestsDefaultFields)).toBeInTheDocument();
+    expect(getByTestId(TestId.GuestsDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the submit button", () => {
