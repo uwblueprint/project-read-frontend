@@ -24,6 +24,7 @@ const useStyles = makeStyles(() => ({
     color: "#42526E",
     fontWeight: 700,
     fontSize: 16,
+    paddingBottom: 16,
   },
 }));
 
@@ -66,7 +67,9 @@ const FamilyDetailsSidebar = ({
             {family.parent.first_name} {family.parent.last_name}
           </Typography>
           <Divider variant="fullWidth" />
-          <Typography variant="h3">Basic Information</Typography>
+          <Typography variant="h3" className={classes.heading}>
+            Basic Information
+          </Typography>
           {DefaultFamilyFormFields.map((defaultField) => (
             <Typography
               variant="body2"
@@ -86,11 +89,12 @@ const FamilyDetailsSidebar = ({
               {family.parent.information[parentField.id]}
             </Typography>
           ))}
-          <Typography variant="body2" className={classes.heading}>
+          <Typography variant="h3" className={classes.heading}>
             Notes
           </Typography>
           <form>
             <TextField
+              id={DefaultFieldKey.NOTES}
               InputLabelProps={{ shrink: true }}
               label="Notes"
               value={family[DefaultFieldKey.NOTES]}

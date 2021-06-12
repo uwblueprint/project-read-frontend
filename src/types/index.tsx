@@ -31,11 +31,11 @@ export type Family = {
   [DefaultFieldKey.EMAIL]: string;
   [DefaultFieldKey.ENROLLED]: string;
   [DefaultFieldKey.ID]: number;
+  [DefaultFieldKey.NOTES]: string;
   [DefaultFieldKey.NUM_CHILDREN]: number;
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.STATUS]: string;
-  [DefaultFieldKey.NOTES]: string;
   parent: Student;
 };
 
