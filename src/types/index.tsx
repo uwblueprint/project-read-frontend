@@ -53,6 +53,13 @@ export type Session = {
   year: number;
 };
 
+export type ClassInfo = {
+  id: number;
+  email: string;
+  phone_number: string;
+  students: Student[];
+};
+
 export type InputProps = {
   id: string;
   label: string;
