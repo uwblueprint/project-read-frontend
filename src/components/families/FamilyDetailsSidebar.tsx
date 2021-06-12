@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Drawer, Divider, Typography } from "@material-ui/core";
+import { Drawer, Divider, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { DefaultFamilyFormFields } from "../../constants/DefaultFields";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
+import DefaultFieldKey from "../../constants/DefaultFieldKey";
 import FamilyAPI, { FamilyDetailResponse } from "../../api/FamilyAPI";
 
 const drawerWidth = 400;
@@ -16,6 +17,12 @@ const useStyles = makeStyles(() => ({
     padding: 20,
   },
   pb: {
+    paddingBottom: 16,
+  },
+  heading: {
+    color: "#42526E",
+    fontWeight: 700,
+    fontSize: 16,
     paddingBottom: 16,
   },
 }));
@@ -59,7 +66,9 @@ const FamilyDetailsSidebar = ({
             {family.parent.first_name} {family.parent.last_name}
           </Typography>
           <Divider variant="fullWidth" />
-          <Typography variant="h3">Basic Information</Typography>
+          <Typography variant="h3" className={classes.heading}>
+            Basic Information
+          </Typography>
           {DefaultFamilyFormFields.map((defaultField) => (
             <Typography
               variant="body2"
@@ -79,6 +88,19 @@ const FamilyDetailsSidebar = ({
               {family.parent.information[parentField.id]}
             </Typography>
           ))}
+          <Typography variant="h3" className={classes.heading}>
+            Notes
+          </Typography>
+          <form>
+            <TextField
+              id={DefaultFieldKey.NOTES}
+              InputLabelProps={{ shrink: true }}
+              label="Notes"
+              value={(family as any)[DefaultFieldKey.NOTES]}
+              fullWidth
+              variant="filled"
+            />
+          </form>
         </div>
       )}
     </Drawer>

@@ -34,6 +34,7 @@ export type Family = {
   [DefaultFieldKey.ENROLLED]: string;
   [DefaultFieldKey.HOME_NUMBER]: string;
   [DefaultFieldKey.ID]: number;
+  [DefaultFieldKey.NOTES]: string;
   [DefaultFieldKey.NUM_CHILDREN]: number;
   [DefaultFieldKey.CHILDREN]: Student[];
   [DefaultFieldKey.PHONE_NUMBER]: string;

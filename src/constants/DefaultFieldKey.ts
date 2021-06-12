@@ -9,6 +9,7 @@ enum DefaultFieldKey {
   HOME_NUMBER = "home_number",
   ID = "id",
   LAST_NAME = "last_name",
+  NOTES = "notes",
   NUM_CHILDREN = "num_children",
   PHONE_NUMBER = "phone_number",
   PREFERRED_CONTACT = "preferred_comms",
