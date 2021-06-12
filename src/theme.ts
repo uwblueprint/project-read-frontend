@@ -58,7 +58,6 @@ const theme = createMuiTheme({
         borderRadius: "15px 15px 0px 0px",
         opacity: "100%",
         border: "1px solid #C8C8C8",
-        // borderBottom: "0px",
         fontWeight: 700,
         textTransform: "none",
         "@media (min-width: 0px)": {
@@ -74,7 +73,6 @@ const theme = createMuiTheme({
       root: {
         backgroundColor: "white",
         color: "black",
-        // borderBottom: "1px solid #C8C8C8",
       },
     },
   },
