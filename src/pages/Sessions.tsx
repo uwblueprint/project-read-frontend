@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+// import MUIDataTable, {
+//   MUIDataTableColumn,
+//   MUIDataTableOptions,
+// } from "mui-datatables";
 import {
   Box,
   Button,
@@ -10,13 +14,16 @@ import {
   AppBar,
   Tabs,
   Tab,
+  Grid,
+  TextField,
 } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { Add } from "@material-ui/icons/";
+import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
-
 import SessionAPI from "../api/SessionAPI";
+import ClassAPI from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
-import { Session } from "../types";
+import { Session, ClassInfo } from "../types";
 
 const useStyles = makeStyles(() => ({
   tabButton: {
@@ -58,13 +65,26 @@ const Sessions = () => {
   const [tab, setTab] = useState<number>(0);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [classes, setClasses] = useState<ClassIndex[]>([]);
+  const [classesData, setClassesData] = useState(new Map<number, ClassInfo>());
   const [currentSessionId, setCurrentSessionId] = useState<number>();
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
   const styles = useStyles();
 
   const handleChangeClasses = async (id: number) => {
-    const classesData = await SessionAPI.getClasses(id);
-    setClasses(classesData);
+    const classesInSession = await SessionAPI.getClasses(id);
+    setClasses(classesInSession);
+
+    const classesMap = new Map<number, ClassInfo>();
+
+    await Promise.all(
+      classesInSession.map(async (classInSession) => {
+        const classMapItem = await ClassAPI.getClass(classInSession.id);
+        classesMap.set(classInSession.id, classMapItem);
+      })
+    );
+
+    setClassesData(classesMap);
+    console.log(classesData);
   };
 
   useEffect(() => {
@@ -92,9 +112,11 @@ const Sessions = () => {
   ) => {
     setCurrentSessionId(e.target.value as number);
     handleChangeClasses(e.target.value as number);
+    setTab(0);
   };
 
-  const handleTabChange = (e: any, newTab: number) => {
+  const handleTabChange = async (e: any, newTab: number) => {
+    console.log(newTab);
     setTab(newTab);
   };
 
@@ -102,6 +124,21 @@ const Sessions = () => {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   });
+
+  // const idColumn: MUIDataTableColumn = {
+  //   name: DefaultFields.ID.id.toString(),
+  //   label: DefaultFields.ID.name,
+  //   options: { display: "excluded", filter: false },
+  // };
+
+  // const getTableColumns: MUIDataTableColumn[] =
+  //   // apply noWrap text to each default column
+  //   [idColumn]
+  //     .concat(DefaultFamilyTableFields.map((field) => getColumn(field)))
+  //     .concat(parentDynamicFields.map((field) => getColumn(field)))
+  //     .concat(
+  //       DefaultFamilyTableEnrolmentFields.map((field) => getColumn(field))
+  //     );
 
   return (
     <>
@@ -151,14 +188,17 @@ const Sessions = () => {
           <Tabs
             TabIndicatorProps={{ style: { backgroundColor: "inherit" } }}
             value={tab}
-            onChange={handleTabChange}
+            onChange={(event, value) => {
+              handleTabChange(event, value);
+            }}
             aria-label="Classes Tabs"
           >
             {/* eslint-disable react/jsx-props-no-spreading */}
-            <Tab label="All Classes" {...tabProps(0)} />
+            <Tab value={0} label="All Classes" {...tabProps(0)} />
             {classes.map((classInfo) => (
               /* eslint-disable react/jsx-props-no-spreading */
               <Tab
+                value={classInfo.id}
                 key={classInfo.id}
                 label={classInfo.name}
                 {...tabProps(classInfo.id)}
@@ -171,7 +211,21 @@ const Sessions = () => {
           </Tabs>
         </AppBar>
         <TabPanel key="all" value={tab} index={0}>
-          <div>All items</div>
+          <>
+            <Grid container spacing={1} alignItems="flex-end">
+              <Grid item>
+                <SearchIcon />
+              </Grid>
+              <Grid item>
+                <TextField label="Search" />
+              </Grid>
+            </Grid>
+            {/* <MUIDataTable
+              title=""
+              data={getTableRows()}
+              columns={getTableColumns}
+            /> */}
+          </>
         </TabPanel>
         {classes.map((classInfo, i) => (
           <TabPanel key={classInfo.id} value={tab} index={i + 1}>
