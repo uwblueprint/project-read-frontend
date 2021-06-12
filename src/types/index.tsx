@@ -50,3 +50,10 @@ export type Session = {
   start_date: string;
   year: number;
 };
+
+export type ClassInfo = {
+  id: number;
+  email: string;
+  phone_number: string;
+  students: Student[];
+};
