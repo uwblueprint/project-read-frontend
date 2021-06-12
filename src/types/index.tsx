@@ -4,6 +4,7 @@ import StudentRole from "../constants/StudentRole";
 type Field = {
   is_default: boolean;
   name: string;
+  options: string[];
   question_type: string;
 };
 
