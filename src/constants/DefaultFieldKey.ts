@@ -1,6 +1,7 @@
 enum DefaultFieldKey {
   ADDRESS = "address",
   CELL_NUMBER = "cell_number",
+  CHILDREN = "children",
   CURRENT_CLASS = "current_class",
   EMAIL = "email",
   ENROLLED = "enrolled",

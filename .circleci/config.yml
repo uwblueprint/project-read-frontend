@@ -6,12 +6,43 @@ jobs:
       - image: circleci/python:3.9-node
     steps:
       - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: yarn
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
       - run:
           name: Eslint
           command: yarn run eslint --fix .
       - run:
           name: Prettier
           command: yarn prettier --write .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  test:
+    docker:
+      - image: circleci/python:3.9-node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Unit Tests
+          command: yarn test .
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build

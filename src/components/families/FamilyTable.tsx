@@ -6,7 +6,7 @@ import MUIDataTable, {
 import { Typography } from "@material-ui/core";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
-import { DefaultField, DynamicField, Family } from "../../types";
+import { DefaultField, DynamicField } from "../../types";
 import DefaultFieldKey from "../../constants/DefaultFieldKey";
 import {
   DefaultFamilyTableFields,
@@ -14,6 +14,7 @@ import {
   DefaultFields,
 } from "../../constants/DefaultFields";
 import QuestionTypes from "../../constants/QuestionTypes";
+import { FamilyListResponse } from "../../api/FamilyAPI";
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
@@ -29,7 +30,7 @@ const noWrapText = (value: string): ReactNode => (
 );
 
 type FamilyTableRow = Pick<
-  Family,
+  FamilyListResponse,
   | DefaultFieldKey.CURRENT_CLASS
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.ENROLLED
@@ -41,11 +42,23 @@ type FamilyTableRow = Pick<
 > & {
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
+  [DefaultFieldKey.CHILDREN]: string;
   [key: number]: string | number; // dynamic fields
 };
 
 type FamilyTableProps = {
-  families: Family[];
+  families: FamilyListResponse[];
+};
+
+const getAge = (dateString: string): number => {
+  const today = new Date();
+  const birthDate = new Date(dateString);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+  return age;
 };
 
 const FamilyTable = ({ families }: FamilyTableProps) => {
@@ -54,10 +67,24 @@ const FamilyTable = ({ families }: FamilyTableProps) => {
   const [familyId, setFamilyId] = useState<number>();
 
   const getTableRows = (): FamilyTableRow[] =>
-    families.map(({ parent, ...args }) => {
+    families.map(({ parent, children, ...args }) => {
+      let childrenInfo = "";
+      children.forEach((child, i) => {
+        if (child.date_of_birth != null) {
+          childrenInfo += `${child.first_name} (${getAge(
+            child.date_of_birth
+          )})`;
+        } else {
+          childrenInfo += `${child.first_name} (N/A)`;
+        }
+        if (i < children.length - 1) {
+          childrenInfo += ", ";
+        }
+      });
       const familyRow: FamilyTableRow = {
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
+        [DefaultFieldKey.CHILDREN]: childrenInfo,
         ...args,
       };
       parentDynamicFields.forEach((field) => {
