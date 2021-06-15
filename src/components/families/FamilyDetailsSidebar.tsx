@@ -67,8 +67,10 @@ const FamilyDetailsSidebar = ({
           <Typography variant="h2">
             {family.parent.first_name} {family.parent.last_name}
           </Typography>
-          <Typography variant="h3">Enrolment</Typography>
-          {DefaultFamilyTableEnrolmentFields.map((enrolmentField) => (
+          <Typography variant="h3" className={classes.heading}>
+            Enrolment
+          </Typography>
+          {FamilySidebarEnrolmentFields.map((enrolmentField) => (
             <Typography
               variant="body2"
               className={classes.pb}
