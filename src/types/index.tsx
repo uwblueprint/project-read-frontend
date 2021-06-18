@@ -53,11 +53,18 @@ export type Session = {
   year: number;
 };
 
+export type Attendance = {
+  date: string;
+  attendees: number[];
+};
+
 export type ClassInfo = {
   id: number;
-  email: string;
-  phone_number: string;
-  students: Student[];
+  name: string;
+  session_id: number;
+  facilitator_id: number;
+  attendance: Attendance[];
+  families: Family[];
 };
 
 export type InputProps = {

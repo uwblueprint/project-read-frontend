@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-// import MUIDataTable, {
-//   MUIDataTableColumn,
-//   MUIDataTableOptions,
-// } from "mui-datatables";
+import React, { useContext, useEffect, useState, ReactNode } from "react";
+import MUIDataTable, {
+  MUIDataTableColumn,
+  MUIDataTableOptions,
+} from "mui-datatables";
 import {
   Box,
   Button,
@@ -19,24 +19,33 @@ import {
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
 import SearchIcon from "@material-ui/icons/Search";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import SessionAPI from "../api/SessionAPI";
 import ClassAPI from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
-import { Session, ClassInfo } from "../types";
+import { Session, ClassInfo, DefaultField, DynamicField } from "../types";
+import { DynamicFieldsContext } from "../context/DynamicFieldsContext";
+import DefaultFieldKey from "../constants/DefaultFieldKey";
+import {
+  DefaultFamilyTableFields,
+  DefaultFamilyTableEnrolmentFields,
+  DefaultFields,
+} from "../constants/DefaultFields";
+import { FamilyListResponse } from "../api/FamilyAPI";
+import QuestionTypes from "../constants/QuestionTypes";
 
-const useStyles = makeStyles(() => ({
-  tabButton: {
-    backgroundColor: "#E7E7E7",
-    borderRadius: "15px 15px 0px 0px",
-    opacity: "100%",
-    border: "1px solid #C8C8C8",
-    fontWeight: 700,
-  },
-  borderBottom: {
-    borderBottom: "1px solid #C8C8C8",
-  },
-}));
+// const useStyles = makeStyles(() => ({
+//   tabButton: {
+//     backgroundColor: "#E7E7E7",
+//     borderRadius: "15px 15px 0px 0px",
+//     opacity: "100%",
+//     border: "1px solid #C8C8C8",
+//     fontWeight: 700,
+//   },
+//   borderBottom: {
+//     borderBottom: "1px solid #C8C8C8",
+//   },
+// }));
 
 type TabPanelProps = {
   children: JSX.Element;
@@ -48,6 +57,34 @@ type ClassIndex = {
   id: number;
   name: string;
   facilitator_id: number;
+};
+
+type FamilyTableRow = Pick<
+  FamilyListResponse,
+  | DefaultFieldKey.CURRENT_CLASS
+  | DefaultFieldKey.EMAIL
+  | DefaultFieldKey.ENROLLED
+  | DefaultFieldKey.ID
+  | DefaultFieldKey.PHONE_NUMBER
+  | DefaultFieldKey.PREFERRED_CONTACT
+  | DefaultFieldKey.STATUS
+> & {
+  [DefaultFieldKey.FIRST_NAME]: string;
+  [DefaultFieldKey.LAST_NAME]: string;
+  [key: number]: string | number; // dynamic fields
+};
+
+const noWrapText = (value: string): ReactNode => (
+  <Typography noWrap variant="body2">
+    {value}
+  </Typography>
+);
+
+const options: MUIDataTableOptions = {
+  responsive: "standard",
+  rowsPerPage: 25,
+  rowsPerPageOptions: [25, 50, 100],
+  selectableRows: "none",
 };
 
 const TabPanel = ({ children, value, index }: TabPanelProps) => (
@@ -62,13 +99,14 @@ const TabPanel = ({ children, value, index }: TabPanelProps) => (
 );
 
 const Sessions = () => {
+  const { parentDynamicFields } = useContext(DynamicFieldsContext);
   const [tab, setTab] = useState<number>(0);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [classes, setClasses] = useState<ClassIndex[]>([]);
   const [classesData, setClassesData] = useState(new Map<number, ClassInfo>());
   const [currentSessionId, setCurrentSessionId] = useState<number>();
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
-  const styles = useStyles();
+  // const styles = useStyles();
 
   const handleChangeClasses = async (id: number) => {
     const classesInSession = await SessionAPI.getClasses(id);
@@ -125,20 +163,45 @@ const Sessions = () => {
     "aria-controls": `simple-tabpanel-${index}`,
   });
 
-  // const idColumn: MUIDataTableColumn = {
-  //   name: DefaultFields.ID.id.toString(),
-  //   label: DefaultFields.ID.name,
-  //   options: { display: "excluded", filter: false },
-  // };
+  const getTableRows = (): FamilyTableRow[] => {
+    const classData = classesData.get(31);
 
-  // const getTableColumns: MUIDataTableColumn[] =
-  //   // apply noWrap text to each default column
-  //   [idColumn]
-  //     .concat(DefaultFamilyTableFields.map((field) => getColumn(field)))
-  //     .concat(parentDynamicFields.map((field) => getColumn(field)))
-  //     .concat(
-  //       DefaultFamilyTableEnrolmentFields.map((field) => getColumn(field))
-  //     );
+    classData.families.map(({ parent, ...args }) => {
+      const familyRow: FamilyTableRow = {
+        [DefaultFieldKey.FIRST_NAME]: parent.first_name,
+        [DefaultFieldKey.LAST_NAME]: parent.last_name,
+        ...args,
+      };
+      parentDynamicFields.forEach((field) => {
+        Object.assign(familyRow, { [field.id]: parent.information[field.id] });
+      });
+      return familyRow;
+    });
+  };
+
+  const idColumn: MUIDataTableColumn = {
+    name: DefaultFields.ID.id.toString(),
+    label: DefaultFields.ID.name,
+    options: { display: "excluded", filter: false },
+  };
+
+  const getColumn = (
+    field: DefaultField | DynamicField
+  ): MUIDataTableColumn => ({
+    name: field.id.toString(),
+    label: field.name,
+    options: {
+      display: field.is_default,
+      filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
+      searchable: field.question_type === QuestionTypes.TEXT,
+      customBodyRender: noWrapText,
+    },
+  });
+
+  const getTableColumns: MUIDataTableColumn[] = [idColumn]
+    .concat(DefaultFamilyTableFields.map((field) => getColumn(field)))
+    .concat(parentDynamicFields.map((field) => getColumn(field)))
+    .concat(DefaultFamilyTableEnrolmentFields.map((field) => getColumn(field)));
 
   return (
     <>
@@ -204,10 +267,10 @@ const Sessions = () => {
                 {...tabProps(classInfo.id)}
               />
             ))}
-            <Button variant="text" className={styles.tabButton}>
+            {/* <Button variant="text" className={styles.tabButton}>
               <Add />
-            </Button>
-            <Box flexGrow={1} className={styles.borderBottom} />
+            </Button> */}
+            {/* <Box flexGrow={1} className={styles.borderBottom} /> */}
           </Tabs>
         </AppBar>
         <TabPanel key="all" value={tab} index={0}>
@@ -220,11 +283,12 @@ const Sessions = () => {
                 <TextField label="Search" />
               </Grid>
             </Grid>
-            {/* <MUIDataTable
+            <MUIDataTable
               title=""
               data={getTableRows()}
               columns={getTableColumns}
-            /> */}
+              options={options}
+            />
           </>
         </TabPanel>
         {classes.map((classInfo, i) => (
