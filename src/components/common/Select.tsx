@@ -27,12 +27,12 @@ const TextInput = ({ id, label, value, onChange, options, testId }: Props) => {
     <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
       <InputLabel id={id}>{label}</InputLabel>
       <Select
+        data-testid={testId}
         labelId={id}
-        id="select"
+        aria-label={id}
         className={classes.input}
         value={value}
         onChange={(e) => onChange(e.target.value as string)}
-        data-testid={testId}
         fullWidth
         variant="outlined"
       >
