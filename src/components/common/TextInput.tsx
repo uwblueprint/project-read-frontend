@@ -26,7 +26,7 @@ const TextInput = ({ id, label, value, onChange, testId }: Props) => {
     <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
       {/* hidden input to disable autocomplete: https://gist.github.com/niksumeiko/360164708c3b326bd1c8#gistcomment-3716208 */}
       <Box display="none" aria-hidden="true">
-        <input tabIndex={-1} />
+        <input aria-hidden="true" tabIndex={-1} />
       </Box>
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <OutlinedInput
