@@ -47,7 +47,7 @@ describe("Select", () => {
     expect(onChange).toHaveBeenCalledWith("Email");
   });
 
-  it("renders the select options", async () => {
+  it("renders the unselected options when clicked", async () => {
     fireEvent.keyDown(getByRole("button"), { key: "ArrowDown" });
     expect(getByText("Email")).toBeInTheDocument();
     expect(getByText("Text")).toBeInTheDocument();

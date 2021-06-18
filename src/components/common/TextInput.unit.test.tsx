@@ -27,7 +27,7 @@ describe("TextInput", () => {
     ).toBeInTheDocument();
   });
 
-  it("has a text box", () => {
+  it("renders a text box", () => {
     expect(getByRole("textbox")).toBeInTheDocument();
   });
 
