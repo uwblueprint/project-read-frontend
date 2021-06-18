@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import DefaultFieldKey from "../constants/DefaultFieldKey";
 import StudentRole from "../constants/StudentRole";
 import { DefaultField, DynamicField } from "../types";
@@ -17,12 +17,10 @@ const useFormFields = (fields: DefaultFormField[] | DynamicField[]) => {
     )
   );
 
-  const onFormFieldDataChange = (fieldId: FormFieldKey) => (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  const onFormFieldDataChange = (fieldId: FormFieldKey, value: string) => {
     setFormFieldData((prev: FormFieldData) => ({
       ...prev,
-      [fieldId]: e.target.value,
+      [fieldId]: value,
     }));
   };
 
