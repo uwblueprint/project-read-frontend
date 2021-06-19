@@ -56,7 +56,6 @@ const theme = createMuiTheme({
         minWidth: 0,
         backgroundColor: "#E7E7E7",
         borderRadius: "15px 15px 0px 0px",
-        opacity: "100%",
         border: "1px solid #C8C8C8",
         fontWeight: 700,
         textTransform: "none",
