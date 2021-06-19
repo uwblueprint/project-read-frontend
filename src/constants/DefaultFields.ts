@@ -138,6 +138,20 @@ export const DefaultFamilyTableEnrolmentFields: DefaultField[] = [
   DefaultFields.STATUS,
 ];
 
+export const DefaultSessionsTableFields: DefaultField[] = [
+  DefaultFields.FIRST_NAME,
+  DefaultFields.LAST_NAME,
+  DefaultFields.PHONE_NUMBER,
+  DefaultFields.EMAIL,
+  DefaultFields.NUM_CHILDREN,
+  DefaultFields.PREFERRED_CONTACT,
+];
+
+export const DefaultSessionsTableEnrolmentFields: DefaultField[] = [
+  DefaultFields.CURRENT_CLASS,
+  DefaultFields.STATUS,
+];
+
 export const DefaultFamilyFormFields: DefaultField[] = [
   DefaultFields.HOME_NUMBER,
   DefaultFields.CELL_NUMBER,
