@@ -60,7 +60,7 @@ const RegistrationFormDialog = ({
       onClose={onClose}
       disableBackdropClick
       fullWidth
-      maxWidth="lg"
+      maxWidth="md"
     >
       <DialogTitle disableTypography>
         <Typography variant="h2">Add a client</Typography>

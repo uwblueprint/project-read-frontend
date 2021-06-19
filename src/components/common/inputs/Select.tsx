@@ -1,35 +1,28 @@
 import React from "react";
 import { Box, InputLabel, MenuItem, Select } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { InputProps } from "../../../types";
 
-const useStyles = makeStyles(() => ({
-  input: {
-    width: 328,
-  },
-}));
-
-type Props = {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
+type Props = InputProps & {
   options: string[];
-  testId?: string;
 };
 
-const defaultProps = {
-  testId: "",
-};
-
-const TextInput = ({ id, label, value, onChange, options, testId }: Props) => {
-  const classes = useStyles();
-  return (
-    <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
+const TextInput = ({
+  id,
+  label,
+  value,
+  onChange,
+  options,
+  inputWidth,
+  testId,
+}: Props) => (
+  <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
+    <Box paddingRight={2} width={150}>
       <InputLabel id={id}>{label}</InputLabel>
+    </Box>
+    <Box width={inputWidth}>
       <Select
         labelId={id}
         aria-label={label}
-        className={classes.input}
         value={value}
         onChange={(e) => onChange(e.target.value as string)}
         fullWidth
@@ -44,8 +37,7 @@ const TextInput = ({ id, label, value, onChange, options, testId }: Props) => {
         ))}
       </Select>
     </Box>
-  );
-};
-TextInput.defaultProps = defaultProps;
+  </Box>
+);
 
 export default TextInput;

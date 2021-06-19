@@ -5,8 +5,10 @@ import useFormFields, {
   DefaultFormField,
   FormFieldData,
 } from "../../hooks/useFormFields";
-import Select from "../common/Select";
-import TextInput from "../common/TextInput";
+import Select from "../common/inputs/Select";
+import TextInput from "../common/inputs/TextInput";
+
+const FORM_FIELD_WIDTH = 328;
 
 type FormFieldGroupProps = {
   fields: DefaultFormField[] | DynamicField[];
@@ -33,6 +35,7 @@ const FormFieldGroup = ({ testId, fields, onChange }: FormFieldGroupProps) => {
                 label={field.name}
                 value={formFieldData[field.id]}
                 onChange={(value) => onFormFieldDataChange(field.id, value)}
+                inputWidth={FORM_FIELD_WIDTH}
                 testId={`${field.role} ${field.name}`}
               />
             );
@@ -44,8 +47,9 @@ const FormFieldGroup = ({ testId, fields, onChange }: FormFieldGroupProps) => {
                 label={field.name}
                 value={formFieldData[field.id]}
                 onChange={(value) => onFormFieldDataChange(field.id, value)}
-                options={field.options}
+                inputWidth={FORM_FIELD_WIDTH}
                 testId={`${field.role} ${field.name}`}
+                options={field.options}
               />
             );
           default:
