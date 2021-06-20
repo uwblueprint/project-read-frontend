@@ -16,9 +16,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import SessionAPI, { SessionListResponse, ClassIndex } from "../api/SessionAPI";
 import ClassAPI, { Class } from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
-import DefaultFieldKey from "../constants/DefaultFieldKey";
 import { FamilyListResponse } from "../api/FamilyAPI";
-import SessionTable from "../components/sessions/SessionTable";
+import FamilyTable from "../components/families/FamilyTable";
+import { DefaultFields } from "../constants/DefaultFields";
 
 const useStyles = makeStyles(() => ({
   borderBottom: {
@@ -36,21 +36,6 @@ type TabPanelProps = {
   children: JSX.Element;
   value: number;
   index: number;
-};
-
-type FamilyTableRow = Pick<
-  FamilyListResponse,
-  | DefaultFieldKey.CURRENT_CLASS
-  | DefaultFieldKey.EMAIL
-  | DefaultFieldKey.ENROLLED
-  | DefaultFieldKey.ID
-  | DefaultFieldKey.PHONE_NUMBER
-  | DefaultFieldKey.PREFERRED_CONTACT
-  | DefaultFieldKey.NUM_CHILDREN
-  | DefaultFieldKey.STATUS
-> & {
-  [DefaultFieldKey.FIRST_NAME]: string;
-  [DefaultFieldKey.LAST_NAME]: string;
 };
 
 const TabPanel = ({ children, value, index }: TabPanelProps) => (
@@ -126,32 +111,28 @@ const Sessions = () => {
     "aria-controls": `simple-tabpanel-${index}`,
   });
 
-  const getTableRowsData = (classData: Class): FamilyTableRow[] => {
-    const tableRows = classData.families.map(({ parent, ...args }) => {
-      const familyRow: FamilyTableRow = {
-        [DefaultFieldKey.FIRST_NAME]: parent.first_name,
-        [DefaultFieldKey.LAST_NAME]: parent.last_name,
-        ...args,
-      };
-      return familyRow;
-    });
-    return tableRows;
-  };
-
-  const getTableRows = (): FamilyTableRow[] => {
+  const getFamilies = (): FamilyListResponse[] => {
     if (tab === 0) {
-      let allClassesData: FamilyTableRow[] = [];
+      let allClassesFamilies: FamilyListResponse[] = [];
       classesData.forEach((classData) => {
-        allClassesData = allClassesData.concat(getTableRowsData(classData));
+        allClassesFamilies = allClassesFamilies.concat(classData.families);
       });
-      return allClassesData;
+      return allClassesFamilies;
     }
     const classData = classesData.get(tab);
     if (!classData) {
       return [];
     }
-    return getTableRowsData(classData);
+    return classData.families;
   };
+
+  const SessionFamilyTable = () => (
+    <FamilyTable
+      families={getFamilies()}
+      enrolmentFields={[DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]}
+      displayDynamicFields={false}
+    />
+  );
 
   return (
     <>
@@ -225,11 +206,11 @@ const Sessions = () => {
           <Box flexGrow={1} className={styles.borderBottom} />
         </AppBar>
         <TabPanel key="all" value={tab} index={0}>
-          <SessionTable families={getTableRows()} />
+          <SessionFamilyTable />
         </TabPanel>
         {classes.map((classInfo) => (
           <TabPanel key={classInfo.id} value={tab} index={classInfo.id}>
-            <SessionTable families={getTableRows()} />
+            <SessionFamilyTable />
           </TabPanel>
         ))}
       </Box>
