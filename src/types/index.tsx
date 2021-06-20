@@ -58,7 +58,7 @@ export type Attendance = {
   attendees: number[];
 };
 
-export type ClassInfo = {
+export type Class = {
   id: number;
   name: string;
   session_id: number;
