@@ -1,11 +1,8 @@
 import * as APIUtils from "./APIUtils";
 import { Session } from "../types";
+import { Class } from "./ClassAPI";
 
-export type ClassIndex = {
-  id: number;
-  name: string;
-  facilitator_id: number;
-};
+export type ClassIndex = Pick<Class, "id" | "name" | "facilitator_id">;
 
 export type SessionListResponse = Pick<Session, "id" | "season" | "year">;
 
