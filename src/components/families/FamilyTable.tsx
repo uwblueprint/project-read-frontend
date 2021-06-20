@@ -20,6 +20,7 @@ const options: MUIDataTableOptions = {
   rowsPerPage: 25,
   rowsPerPageOptions: [25, 50, 100],
   selectableRows: "none",
+  elevation: 0,
 };
 
 const noWrapText = (value: string): ReactNode => (
