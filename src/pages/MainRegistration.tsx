@@ -24,7 +24,7 @@ const MainRegistration = () => {
           DefaultFields.CURRENT_CLASS,
           DefaultFields.STATUS,
         ]}
-        displayDynamicFields
+        shouldDisplayDynamicFields
       />
     </>
   );

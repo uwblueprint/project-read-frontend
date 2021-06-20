@@ -130,7 +130,7 @@ const Sessions = () => {
     <FamilyTable
       families={getFamilies()}
       enrolmentFields={[DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]}
-      displayDynamicFields={false}
+      shouldDisplayDynamicFields={false}
     />
   );
 

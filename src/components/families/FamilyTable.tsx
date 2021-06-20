@@ -66,13 +66,13 @@ const getAge = (dateString: string): number => {
 type FamilyTableProps = {
   families: FamilyListResponse[];
   enrolmentFields: DefaultField[];
-  displayDynamicFields: boolean;
+  shouldDisplayDynamicFields: boolean;
 };
 
 const FamilyTable = ({
   families,
   enrolmentFields,
-  displayDynamicFields,
+  shouldDisplayDynamicFields,
 }: FamilyTableProps) => {
   const { parentDynamicFields } = useContext(DynamicFieldsContext);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
@@ -118,7 +118,7 @@ const FamilyTable = ({
     name: field.id.toString(),
     label: field.name,
     options: {
-      display: field.is_default && (!isDynamic || displayDynamicFields),
+      display: field.is_default && (!isDynamic || shouldDisplayDynamicFields),
       filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
       searchable: field.question_type === QuestionTypes.TEXT,
       customBodyRender: noWrapText,
