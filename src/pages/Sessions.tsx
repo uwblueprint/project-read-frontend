@@ -13,23 +13,15 @@ import {
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
 import { makeStyles } from "@material-ui/core/styles";
-import SessionAPI from "../api/SessionAPI";
+import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
 import ClassAPI from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
-import { Session, ClassInfo } from "../types";
-// import { DynamicFieldsContext } from "../context/DynamicFieldsContext";
+import { ClassInfo } from "../types";
 import DefaultFieldKey from "../constants/DefaultFieldKey";
 import { FamilyListResponse } from "../api/FamilyAPI";
 import SessionTable from "../components/sessions/SessionTable";
 
 const useStyles = makeStyles(() => ({
-  // tabButton: {
-  //   backgroundColor: "#E7E7E7",
-  //   borderRadius: "15px 15px 0px 0px",
-  //   opacity: "100%",
-  //   border: "1px solid #C8C8C8",
-  //   fontWeight: 700,
-  // },
   borderBottom: {
     borderBottom: "1px solid #C8C8C8",
     opacity: 0.7,
@@ -66,7 +58,6 @@ type FamilyTableRow = Pick<
 > & {
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
-  // [key: number]: string | number; // dynamic fields
 };
 
 const TabPanel = ({ children, value, index }: TabPanelProps) => (
@@ -81,9 +72,8 @@ const TabPanel = ({ children, value, index }: TabPanelProps) => (
 );
 
 const Sessions = () => {
-  // const { parentDynamicFields } = useContext(DynamicFieldsContext);
   const [tab, setTab] = useState<number>(0);
-  const [sessions, setSessions] = useState<Session[]>([]);
+  const [sessions, setSessions] = useState<SessionListResponse[]>([]);
   const [classes, setClasses] = useState<ClassIndex[]>([]);
   const [classesData, setClassesData] = useState(new Map<number, ClassInfo>());
   const [currentSessionId, setCurrentSessionId] = useState<number>();
@@ -222,22 +212,22 @@ const Sessions = () => {
               handleTabChange(event, value);
             }}
             aria-label="Classes Tabs"
-            // className={styles.tabs}
           >
-            {/* eslint-disable react/jsx-props-no-spreading */}
-            <Tab value={0} label="All Classes" {...tabProps(0)} />
+            <Tab
+              value={0}
+              label="All Classes"
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...tabProps(0)}
+            />
             {classes.map((classInfo) => (
-              /* eslint-disable react/jsx-props-no-spreading */
               <Tab
                 value={classInfo.id}
                 key={classInfo.id}
                 label={classInfo.name}
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...tabProps(classInfo.id)}
               />
             ))}
-            {/* <Button variant="text" className={styles.tabButton}>
-              <Add />
-            </Button> */}
           </Tabs>
           <Box flexGrow={1} className={styles.borderBottom} />
         </AppBar>
