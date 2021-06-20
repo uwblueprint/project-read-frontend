@@ -14,9 +14,8 @@ import {
 import { Add } from "@material-ui/icons/";
 import { makeStyles } from "@material-ui/core/styles";
 import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
-import ClassAPI from "../api/ClassAPI";
+import ClassAPI, { Class } from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
-import { Class } from "../types";
 import DefaultFieldKey from "../constants/DefaultFieldKey";
 import { FamilyListResponse } from "../api/FamilyAPI";
 import SessionTable from "../components/sessions/SessionTable";
