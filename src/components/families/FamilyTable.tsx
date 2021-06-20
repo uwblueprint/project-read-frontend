@@ -8,7 +8,10 @@ import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 import { DefaultField, DynamicField } from "../../types";
 import DefaultFieldKey from "../../constants/DefaultFieldKey";
-import { DefaultFields } from "../../constants/DefaultFields";
+import {
+  DefaultFamilyTableFields,
+  DefaultFields,
+} from "../../constants/DefaultFields";
 import QuestionTypes from "../../constants/QuestionTypes";
 import { FamilyListResponse } from "../../api/FamilyAPI";
 
@@ -41,16 +44,6 @@ type FamilyTableRow = Pick<
   [DefaultFieldKey.CHILDREN]: string;
   [key: number]: string | number; // dynamic fields
 };
-
-const familyDefaultFields: DefaultField[] = [
-  DefaultFields.FIRST_NAME,
-  DefaultFields.LAST_NAME,
-  DefaultFields.PHONE_NUMBER,
-  DefaultFields.EMAIL,
-  DefaultFields.NUM_CHILDREN,
-  DefaultFields.CHILDREN,
-  DefaultFields.PREFERRED_CONTACT,
-];
 
 const getAge = (dateString: string): number => {
   const today = new Date();
@@ -128,7 +121,7 @@ const FamilyTable = ({
   const getTableColumns: MUIDataTableColumn[] =
     // apply noWrap text to each default column
     [idColumn]
-      .concat(familyDefaultFields.map((field) => getColumn(field, false)))
+      .concat(DefaultFamilyTableFields.map((field) => getColumn(field, false)))
       .concat(parentDynamicFields.map((field) => getColumn(field, true)))
       .concat(enrolmentFields.map((field) => getColumn(field, false)));
 
