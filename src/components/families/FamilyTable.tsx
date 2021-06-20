@@ -10,7 +10,6 @@ import { DefaultField, DynamicField } from "../../types";
 import DefaultFieldKey from "../../constants/DefaultFieldKey";
 import {
   DefaultFamilyTableFields,
-  DefaultFamilyTableEnrolmentFields,
   DefaultFields,
 } from "../../constants/DefaultFields";
 import QuestionTypes from "../../constants/QuestionTypes";
@@ -21,6 +20,7 @@ const options: MUIDataTableOptions = {
   rowsPerPage: 25,
   rowsPerPageOptions: [25, 50, 100],
   selectableRows: "none",
+  elevation: 0,
 };
 
 const noWrapText = (value: string): ReactNode => (
@@ -46,10 +46,6 @@ type FamilyTableRow = Pick<
   [key: number]: string | number; // dynamic fields
 };
 
-type FamilyTableProps = {
-  families: FamilyListResponse[];
-};
-
 const getAge = (dateString: string): number => {
   const today = new Date();
   const birthDate = new Date(dateString);
@@ -61,7 +57,17 @@ const getAge = (dateString: string): number => {
   return age;
 };
 
-const FamilyTable = ({ families }: FamilyTableProps) => {
+type FamilyTableProps = {
+  families: FamilyListResponse[];
+  enrolmentFields: DefaultField[];
+  shouldDisplayDynamicFields: boolean;
+};
+
+const FamilyTable = ({
+  families,
+  enrolmentFields,
+  shouldDisplayDynamicFields,
+}: FamilyTableProps) => {
   const { parentDynamicFields } = useContext(DynamicFieldsContext);
   const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
   const [familyId, setFamilyId] = useState<number>();
@@ -100,12 +106,13 @@ const FamilyTable = ({ families }: FamilyTableProps) => {
   };
 
   const getColumn = (
-    field: DefaultField | DynamicField
+    field: DefaultField | DynamicField,
+    isDynamic: boolean
   ): MUIDataTableColumn => ({
     name: field.id.toString(),
     label: field.name,
     options: {
-      display: field.is_default,
+      display: field.is_default && (!isDynamic || shouldDisplayDynamicFields),
       filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
       searchable: field.question_type === QuestionTypes.TEXT,
       customBodyRender: noWrapText,
@@ -115,11 +122,9 @@ const FamilyTable = ({ families }: FamilyTableProps) => {
   const getTableColumns: MUIDataTableColumn[] =
     // apply noWrap text to each default column
     [idColumn]
-      .concat(DefaultFamilyTableFields.map((field) => getColumn(field)))
-      .concat(parentDynamicFields.map((field) => getColumn(field)))
-      .concat(
-        DefaultFamilyTableEnrolmentFields.map((field) => getColumn(field))
-      );
+      .concat(DefaultFamilyTableFields.map((field) => getColumn(field, false)))
+      .concat(parentDynamicFields.map((field) => getColumn(field, true)))
+      .concat(enrolmentFields.map((field) => getColumn(field, false)));
 
   const handleOpenFamilyDetail = useCallback((rowData) => {
     setFamilyId(rowData[0]);
