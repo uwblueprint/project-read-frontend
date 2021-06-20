@@ -16,7 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
 import ClassAPI from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
-import { ClassInfo } from "../types";
+import { Class } from "../types";
 import DefaultFieldKey from "../constants/DefaultFieldKey";
 import { FamilyListResponse } from "../api/FamilyAPI";
 import SessionTable from "../components/sessions/SessionTable";
@@ -75,7 +75,7 @@ const Sessions = () => {
   const [tab, setTab] = useState<number>(0);
   const [sessions, setSessions] = useState<SessionListResponse[]>([]);
   const [classes, setClasses] = useState<ClassIndex[]>([]);
-  const [classesData, setClassesData] = useState(new Map<number, ClassInfo>());
+  const [classesData, setClassesData] = useState(new Map<number, Class>());
   const [currentSessionId, setCurrentSessionId] = useState<number>();
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
   const styles = useStyles();
@@ -84,7 +84,7 @@ const Sessions = () => {
     const classesInSession = await SessionAPI.getClasses(id);
     setClasses(classesInSession);
 
-    const classesMap = new Map<number, ClassInfo>();
+    const classesMap = new Map<number, Class>();
 
     await Promise.all(
       classesInSession.map(async (classInSession) => {
@@ -133,7 +133,7 @@ const Sessions = () => {
     "aria-controls": `simple-tabpanel-${index}`,
   });
 
-  const getTableRowsData = (classData: ClassInfo): FamilyTableRow[] => {
+  const getTableRowsData = (classData: Class): FamilyTableRow[] => {
     const tableRows = classData.families.map(({ parent, ...args }) => {
       const familyRow: FamilyTableRow = {
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
