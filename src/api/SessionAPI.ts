@@ -7,7 +7,10 @@ export type ClassIndex = {
   facilitator_id: number;
 };
 
-const getSessions = (): Promise<Session[]> => APIUtils.get("/sessions");
+export type SessionListResponse = Pick<Session, "id" | "season" | "year">;
+
+const getSessions = (): Promise<SessionListResponse[]> =>
+  APIUtils.get("/sessions");
 const getClasses = (id: number): Promise<ClassIndex[]> =>
   APIUtils.get(`/sessions/${id}/classes`);
 
