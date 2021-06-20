@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
 import { makeStyles } from "@material-ui/core/styles";
-import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
+import SessionAPI, { SessionListResponse, ClassIndex } from "../api/SessionAPI";
 import ClassAPI, { Class } from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
 import DefaultFieldKey from "../constants/DefaultFieldKey";
@@ -36,12 +36,6 @@ type TabPanelProps = {
   children: JSX.Element;
   value: number;
   index: number;
-};
-
-type ClassIndex = {
-  id: number;
-  name: string;
-  facilitator_id: number;
 };
 
 type FamilyTableRow = Pick<
