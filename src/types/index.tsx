@@ -55,12 +55,3 @@ export type Attendance = {
   date: string;
   attendees: number[];
 };
-
-export type Class = {
-  id: number;
-  name: string;
-  session_id: number;
-  facilitator_id: number;
-  attendance: Attendance[];
-  families: Family[];
-};
