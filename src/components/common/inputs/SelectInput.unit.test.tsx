@@ -1,8 +1,8 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
-import Select from "./Select";
+import SelectInput from "./SelectInput";
 
-describe("Select", () => {
+describe("SelectInput", () => {
   let getAllByLabelText: any;
   let getByRole: any;
   let getByTestId: any;
@@ -12,7 +12,7 @@ describe("Select", () => {
 
   beforeEach(() => {
     ({ getAllByLabelText, getByRole, getByTestId, getByText } = render(
-      <Select
+      <SelectInput
         id="id"
         label="Preferred contact"
         value="Phone"

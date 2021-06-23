@@ -5,7 +5,7 @@ import useFormFields, {
   DefaultFormField,
   FormFieldData,
 } from "../../hooks/useFormFields";
-import Select from "../common/inputs/Select";
+import SelectInput from "../common/inputs/SelectInput";
 import TextInput from "../common/inputs/TextInput";
 
 const FORM_FIELD_WIDTH = 328;
@@ -41,7 +41,7 @@ const FormFieldGroup = ({ testId, fields, onChange }: FormFieldGroupProps) => {
             );
           case QuestionTypes.MULTIPLE_CHOICE:
             return (
-              <Select
+              <SelectInput
                 key={`${field.role} ${field.name}`}
                 id={`${field.role} ${field.name}`}
                 label={field.name}

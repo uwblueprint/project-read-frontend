@@ -6,7 +6,7 @@ type Props = InputProps & {
   options: string[];
 };
 
-const TextInput = ({
+const SelectInput = ({
   id,
   label,
   value,
@@ -40,4 +40,4 @@ const TextInput = ({
   </Box>
 );
 
-export default TextInput;
+export default SelectInput;
