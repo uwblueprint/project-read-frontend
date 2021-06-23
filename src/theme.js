@@ -27,10 +27,38 @@ const theme = createMuiTheme({
         textTransform: "none",
       },
     },
+    MuiDialogContent: {
+      root: {
+        paddingLeft: 48,
+        paddingRight: 48,
+        paddingBottom: 48,
+      },
+    },
+    MuiDialogTitle: {
+      root: {
+        paddingLeft: 48,
+        paddingRight: 48,
+        paddingTop: 48,
+      },
+    },
+    MuiInputLabel: {
+      root: {
+        color: defaultTheme.palette.text.primary,
+        fontSize: 16,
+        fontWeight: 700,
+        position: "relative",
+        transform: "none",
+        wordBreak: "break-word",
+      },
+    },
   },
   typography: {
     h1: {
       fontSize: 36,
+      fontWeight: "bold",
+    },
+    h2: {
+      fontSize: 24,
       fontWeight: "bold",
     },
   },

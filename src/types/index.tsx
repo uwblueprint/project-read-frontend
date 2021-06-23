@@ -52,3 +52,12 @@ export type Session = {
   start_date: string;
   year: number;
 };
+
+export type InputProps = {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  inputWidth?: number;
+  testId?: string;
+};
