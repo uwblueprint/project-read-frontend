@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, InputLabel, MenuItem, Select } from "@material-ui/core";
-import { InputProps } from "../../../types";
+import { StringInputProps } from "../../../types";
 
-type Props = InputProps & {
+type Props = StringInputProps & {
   options: string[];
 };
 

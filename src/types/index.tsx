@@ -56,8 +56,11 @@ export type Session = {
 export type InputProps = {
   id: string;
   label: string;
-  value: string;
-  onChange: (value: string) => void;
   inputWidth?: number;
   testId?: string;
+};
+
+export type StringInputProps = InputProps & {
+  value: string;
+  onChange: (value: string) => void;
 };

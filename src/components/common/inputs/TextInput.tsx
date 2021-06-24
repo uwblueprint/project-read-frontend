@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, InputLabel, OutlinedInput } from "@material-ui/core";
-import { InputProps } from "../../../types";
+import { StringInputProps } from "../../../types";
 
 const TextInput = ({
   id,
@@ -9,7 +9,7 @@ const TextInput = ({
   onChange,
   inputWidth,
   testId,
-}: InputProps) => (
+}: StringInputProps) => (
   <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
     {/* hidden input to disable autocomplete: https://gist.github.com/niksumeiko/360164708c3b326bd1c8#gistcomment-3716208 */}
     <Box display="none" aria-hidden="true">

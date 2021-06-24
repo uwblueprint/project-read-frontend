@@ -1,5 +1,7 @@
 import React from "react";
 import { Container } from "@material-ui/core";
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import { DynamicFieldsProvider } from "../context/DynamicFieldsContext";
 import Navbar from "../components/Navbar";
@@ -12,8 +14,10 @@ function ProjectREAD() {
     <DynamicFieldsProvider>
       <Container maxWidth={false}>
         <Navbar />
-        <PrivateRoute exact path="/" component={MainRegistration} />
-        <PrivateRoute exact path="/sessions" component={Sessions} />
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <PrivateRoute exact path="/" component={MainRegistration} />
+          <PrivateRoute exact path="/sessions" component={Sessions} />
+        </MuiPickersUtilsProvider>
       </Container>
     </DynamicFieldsProvider>
   );
