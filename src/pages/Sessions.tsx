@@ -13,21 +13,21 @@ import {
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
 import { makeStyles } from "@material-ui/core/styles";
-import SessionAPI, { SessionListResponse, ClassIndex } from "../api/SessionAPI";
-import ClassAPI, { Class } from "../api/ClassAPI";
+import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
+import ClassAPI, { ClassDetailResponse } from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
 import { FamilyListResponse } from "../api/FamilyAPI";
 import FamilyTable from "../components/families/FamilyTable";
 import { DefaultFields } from "../constants/DefaultFields";
 
 const useStyles = makeStyles(() => ({
+  appBar: {
+    flexDirection: "row",
+    backgroundColor: "inherit",
+  },
   borderBottom: {
     borderBottom: "1px solid #C8C8C8",
     opacity: 0.7,
-    backgroundColor: "inherit",
-  },
-  appbar: {
-    flexDirection: "row",
     backgroundColor: "inherit",
   },
 }));
@@ -42,36 +42,33 @@ const TabPanel = ({ children, value, index }: TabPanelProps) => (
   <div
     role="tabpanel"
     hidden={value !== index}
-    id={`simple-tabpanel-${index}`}
-    aria-labelledby={`simple-tab-${index}`}
+    id={`tabpanel-${index}`}
+    aria-labelledby={`tab-${index}`}
   >
-    {value === index && <Box p={3}>{children}</Box>}
+    {value === index && <Box pt={3}>{children}</Box>}
   </div>
 );
 
 const Sessions = () => {
   const [tab, setTab] = useState<number>(0);
   const [sessions, setSessions] = useState<SessionListResponse[]>([]);
-  const [classes, setClasses] = useState<ClassIndex[]>([]);
-  const [classesData, setClassesData] = useState(new Map<number, Class>());
+  const [classesMap, setClassesMap] = useState(
+    new Map<number, ClassDetailResponse>()
+  );
   const [currentSessionId, setCurrentSessionId] = useState<number>();
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
   const styles = useStyles();
 
   const handleChangeClasses = async (id: number) => {
-    const classesInSession = await SessionAPI.getClasses(id);
-    setClasses(classesInSession);
-
-    const classesMap = new Map<number, Class>();
-
+    const sessionClasses = await SessionAPI.getSessionClasses(id);
+    const map = new Map<number, ClassDetailResponse>();
     await Promise.all(
-      classesInSession.map(async (classInSession) => {
-        const classMapItem = await ClassAPI.getClass(classInSession.id);
-        classesMap.set(classInSession.id, classMapItem);
+      sessionClasses.map(async (sessionClass) => {
+        const classMapItem = await ClassAPI.getClass(sessionClass.id);
+        map.set(sessionClass.id, classMapItem);
       })
     );
-
-    setClassesData(classesMap);
+    setClassesMap(map);
   };
 
   useEffect(() => {
@@ -102,24 +99,24 @@ const Sessions = () => {
     setTab(0);
   };
 
-  const handleTabChange = async (e: any, newTab: number) => {
+  const handleTabChange = async (e: React.ChangeEvent<{}>, newTab: number) => {
     setTab(newTab);
   };
 
   const tabProps = (index: number) => ({
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+    id: `tab-${index}`,
+    "aria-controls": `tabpanel-${index}`,
   });
 
   const getFamilies = (): FamilyListResponse[] => {
     if (tab === 0) {
       let allClassesFamilies: FamilyListResponse[] = [];
-      classesData.forEach((classData) => {
+      Array.from(classesMap.values()).forEach((classData) => {
         allClassesFamilies = allClassesFamilies.concat(classData.families);
       });
       return allClassesFamilies;
     }
-    const classData = classesData.get(tab);
+    const classData = classesMap.get(tab);
     if (!classData) {
       return [];
     }
@@ -178,13 +175,11 @@ const Sessions = () => {
         )}
       </Box>
       <Box mt={4}>
-        <AppBar position="static" className={styles.appbar}>
+        <AppBar position="static" className={styles.appBar}>
           <Tabs
             TabIndicatorProps={{ style: { backgroundColor: "inherit" } }}
             value={tab}
-            onChange={(event, value) => {
-              handleTabChange(event, value);
-            }}
+            onChange={handleTabChange}
             aria-label="Classes Tabs"
           >
             <Tab
@@ -193,13 +188,13 @@ const Sessions = () => {
               // eslint-disable-next-line react/jsx-props-no-spreading
               {...tabProps(0)}
             />
-            {classes.map((classInfo) => (
+            {Array.from(classesMap.values()).map((classObj) => (
               <Tab
-                value={classInfo.id}
-                key={classInfo.id}
-                label={classInfo.name}
+                value={classObj.id}
+                key={classObj.id}
+                label={classObj.name}
                 // eslint-disable-next-line react/jsx-props-no-spreading
-                {...tabProps(classInfo.id)}
+                {...tabProps(classObj.id)}
               />
             ))}
           </Tabs>
@@ -208,8 +203,8 @@ const Sessions = () => {
         <TabPanel key="all" value={tab} index={0}>
           <SessionFamilyTable />
         </TabPanel>
-        {classes.map((classInfo) => (
-          <TabPanel key={classInfo.id} value={tab} index={classInfo.id}>
+        {Array.from(classesMap.values()).map((classObj) => (
+          <TabPanel key={classObj.id} value={tab} index={classObj.id}>
             <SessionFamilyTable />
           </TabPanel>
         ))}

@@ -1,16 +1,12 @@
 import * as APIUtils from "./APIUtils";
 import { FamilyListResponse } from "./FamilyAPI";
-import { Attendance } from "../types/index";
+import { Class } from "../types/index";
 
-export type Class = {
-  id: number;
-  name: string;
-  session_id: number;
-  facilitator_id: number;
-  attendance: Attendance[];
+export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
 };
 
-const getClass = (id: number): Promise<Class> => APIUtils.get(`/classes/${id}`);
+const getClass = (id: number): Promise<ClassDetailResponse> =>
+  APIUtils.get(`/classes/${id}`);
 
 export default { getClass };

@@ -1,14 +1,14 @@
 import * as APIUtils from "./APIUtils";
-import { Session } from "../types";
-import { Class } from "./ClassAPI";
+import { Class, Session } from "../types";
 
-export type ClassIndex = Pick<Class, "id" | "name" | "facilitator_id">;
+export type ClassListResponse = Pick<Class, "id" | "name">;
 
 export type SessionListResponse = Pick<Session, "id" | "season" | "year">;
 
 const getSessions = (): Promise<SessionListResponse[]> =>
   APIUtils.get("/sessions");
-const getClasses = (id: number): Promise<ClassIndex[]> =>
+
+const getSessionClasses = (id: number): Promise<ClassListResponse[]> =>
   APIUtils.get(`/sessions/${id}/classes`);
 
-export default { getSessions, getClasses };
+export default { getSessions, getSessionClasses };
