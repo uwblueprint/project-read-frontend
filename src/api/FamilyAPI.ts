@@ -57,10 +57,20 @@ export type FamilyStudentRequest = FamilyRequest & {
 const getFamilies = (): Promise<FamilyListResponse[]> =>
   APIUtils.get("/families/");
 
+// search/?first_name="
+//           + query_params["first_name"]
+//           + "&last_name="
+//           + query_params["last_name"]
+
+const getFamilySearch = (firstName: string, lastName: string): Promise<any> =>
+  APIUtils.get(
+    `/families/search/?first_name=${firstName}&last_name=${lastName}`
+  );
+
 const getFamilyById = (id: number): Promise<FamilyDetailResponse> =>
   APIUtils.get(`/families/${id}`);
 
 const postFamily = (data: FamilyStudentRequest) =>
   APIUtils.post("/families/", data);
 
-export default { getFamilies, getFamilyById, postFamily };
+export default { getFamilies, getFamilyById, postFamily, getFamilySearch };
