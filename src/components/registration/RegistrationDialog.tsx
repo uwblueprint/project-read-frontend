@@ -19,7 +19,10 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, Search, NavigateBefore } from "@material-ui/icons";
 import RegistrationForm from "./RegistrationForm";
-import FamilyAPI, { FamilyStudentRequest } from "../../api/FamilyAPI";
+import FamilyAPI, {
+  FamilySearchResponse,
+  FamilyStudentRequest,
+} from "../../api/FamilyAPI";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -55,8 +58,9 @@ const RegistrationFormDialog = ({
   const [lastName, setLastName] = useState("");
   const [validInput, setValidInput] = useState(true);
   const [displayResults, setDisplayResults] = useState(false);
-
-  const [familyResponse, setFamilyResponse] = useState<any[]>([]);
+  const [familyResults, setFamilyResults] = useState<FamilySearchResponse[]>(
+    []
+  );
 
   const handleDisplayForm = () => {
     setDisplayForm(true);
@@ -86,7 +90,9 @@ const RegistrationFormDialog = ({
     if (firstName || lastName) {
       setDisplayResults(true);
       setValidInput(true);
-      setFamilyResponse(await FamilyAPI.getFamilySearch(firstName, lastName));
+      setFamilyResults(
+        await FamilyAPI.searchFamiliesByParent(firstName, lastName)
+      );
     } else {
       setDisplayResults(false);
       setValidInput(false);
@@ -166,9 +172,9 @@ const RegistrationFormDialog = ({
                         <TableCell># of Children</TableCell>
                       </TableRow>
                     </TableHead>
-                    {familyResponse.length ? (
+                    {familyResults.length ? (
                       <TableBody>
-                        {familyResponse.map((family) => (
+                        {familyResults.map((family) => (
                           <TableRow>
                             <TableCell>{family.first_name}</TableCell>
                             <TableCell>{family.last_name}</TableCell>
