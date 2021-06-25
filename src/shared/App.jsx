@@ -20,11 +20,7 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/login" component={Login} />
-            <PrivateRoute
-              exact
-              path={["/", "/sessions"]}
-              component={ProjectREAD}
-            />
+            <PrivateRoute component={ProjectREAD} />
             <Redirect to="/" />
           </Switch>
         </Router>
