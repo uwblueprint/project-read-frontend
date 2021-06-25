@@ -7,57 +7,26 @@ import {
   MenuItem,
   Select,
   Typography,
-  AppBar,
-  Tabs,
-  Tab,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
-import { makeStyles } from "@material-ui/core/styles";
 import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
 import ClassAPI, { ClassDetailResponse } from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
 import { FamilyListResponse } from "../api/FamilyAPI";
 import FamilyTable from "../components/families/FamilyTable";
+import SessionDetailView, {
+  ALL_CLASSES_TAB_INDEX,
+} from "../components/sessions/SessionDetailView";
 import { DefaultFields } from "../constants/DefaultFields";
 
-const useStyles = makeStyles(() => ({
-  appBar: {
-    flexDirection: "row",
-    backgroundColor: "inherit",
-  },
-  borderBottom: {
-    borderBottom: "1px solid #C8C8C8",
-    opacity: 0.7,
-    backgroundColor: "inherit",
-  },
-}));
-
-type TabPanelProps = {
-  children: JSX.Element;
-  value: number;
-  index: number;
-};
-
-const TabPanel = ({ children, value, index }: TabPanelProps) => (
-  <div
-    role="tabpanel"
-    hidden={value !== index}
-    id={`tabpanel-${index}`}
-    aria-labelledby={`tab-${index}`}
-  >
-    {value === index && <Box pt={3}>{children}</Box>}
-  </div>
-);
-
 const Sessions = () => {
-  const [tab, setTab] = useState<number>(0);
   const [sessions, setSessions] = useState<SessionListResponse[]>([]);
   const [classesMap, setClassesMap] = useState(
     new Map<number, ClassDetailResponse>()
   );
+  const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [currentSessionId, setCurrentSessionId] = useState<number>();
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
-  const styles = useStyles();
 
   const handleChangeClasses = async (id: number) => {
     const sessionClasses = await SessionAPI.getSessionClasses(id);
@@ -96,40 +65,29 @@ const Sessions = () => {
   ) => {
     setCurrentSessionId(e.target.value as number);
     handleChangeClasses(e.target.value as number);
-    setTab(0);
+    setClassTabIndex(ALL_CLASSES_TAB_INDEX);
   };
 
-  const handleTabChange = async (e: React.ChangeEvent<{}>, newTab: number) => {
-    setTab(newTab);
-  };
-
-  const tabProps = (index: number) => ({
-    id: `tab-${index}`,
-    "aria-controls": `tabpanel-${index}`,
-  });
+  const isOnAllClassesTab = classTabIndex === ALL_CLASSES_TAB_INDEX;
 
   const getFamilies = (): FamilyListResponse[] => {
-    if (tab === 0) {
+    if (isOnAllClassesTab) {
       let allClassesFamilies: FamilyListResponse[] = [];
       Array.from(classesMap.values()).forEach((classData) => {
         allClassesFamilies = allClassesFamilies.concat(classData.families);
       });
       return allClassesFamilies;
     }
-    const classData = classesMap.get(tab);
+    const classData = classesMap.get(classTabIndex);
     if (!classData) {
       return [];
     }
     return classData.families;
   };
 
-  const SessionFamilyTable = () => (
-    <FamilyTable
-      families={getFamilies()}
-      enrolmentFields={[DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]}
-      shouldDisplayDynamicFields={false}
-    />
-  );
+  const getEnrolmentFields = isOnAllClassesTab
+    ? [DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]
+    : [DefaultFields.STATUS];
 
   return (
     <>
@@ -174,41 +132,18 @@ const Sessions = () => {
           </>
         )}
       </Box>
-      <Box mt={4}>
-        <AppBar position="static" className={styles.appBar}>
-          <Tabs
-            TabIndicatorProps={{ style: { backgroundColor: "inherit" } }}
-            value={tab}
-            onChange={handleTabChange}
-            aria-label="Classes Tabs"
-          >
-            <Tab
-              value={0}
-              label="All Classes"
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              {...tabProps(0)}
-            />
-            {Array.from(classesMap.values()).map((classObj) => (
-              <Tab
-                value={classObj.id}
-                key={classObj.id}
-                label={classObj.name}
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...tabProps(classObj.id)}
-              />
-            ))}
-          </Tabs>
-          <Box flexGrow={1} className={styles.borderBottom} />
-        </AppBar>
-        <TabPanel key="all" value={tab} index={0}>
-          <SessionFamilyTable />
-        </TabPanel>
-        {Array.from(classesMap.values()).map((classObj) => (
-          <TabPanel key={classObj.id} value={tab} index={classObj.id}>
-            <SessionFamilyTable />
-          </TabPanel>
-        ))}
-      </Box>
+      <SessionDetailView
+        classes={Array.from(classesMap.values())}
+        classTabIndex={classTabIndex}
+        onChangeClassTabIndex={setClassTabIndex}
+        classDefaultView={
+          <FamilyTable
+            families={getFamilies()}
+            enrolmentFields={getEnrolmentFields}
+            shouldDisplayDynamicFields={false}
+          />
+        }
+      />
     </>
   );
 };
