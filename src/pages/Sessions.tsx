@@ -23,6 +23,9 @@ import SessionDetailView, {
 } from "../components/sessions/SessionDetailView";
 import { DefaultFields } from "../constants/DefaultFields";
 
+const isOnAllClassesTab = (classTabIndex: number) =>
+  classTabIndex === ALL_CLASSES_TAB_INDEX;
+
 type Params = {
   classId: string | undefined;
   sessionId: string | undefined;
@@ -103,18 +106,16 @@ const Sessions = () => {
     history.push(`/sessions/${e.target.value as number}`);
   };
 
-  const handleChangeClassTabIndex = (newClassId: number) => {
-    if (newClassId === ALL_CLASSES_TAB_INDEX) {
+  const handleChangeClassTabIndex = (newClassTabIndex: number) => {
+    if (isOnAllClassesTab(newClassTabIndex)) {
       history.push(`/sessions/${sessionId}`);
     } else {
-      history.push(`/sessions/${sessionId}/classes/${newClassId}`);
+      history.push(`/sessions/${sessionId}/classes/${newClassTabIndex}`);
     }
   };
 
-  const isOnAllClassesTab = classTabIndex === ALL_CLASSES_TAB_INDEX;
-
   const getFamilies = (): FamilyListResponse[] => {
-    if (selectedSession !== undefined && isOnAllClassesTab) {
+    if (selectedSession !== undefined && isOnAllClassesTab(classTabIndex)) {
       return selectedSession.families;
     }
     const classObj = classesMap.get(Number(classId));
@@ -124,7 +125,7 @@ const Sessions = () => {
     return [];
   };
 
-  const getEnrolmentFields = isOnAllClassesTab
+  const getEnrolmentFields = isOnAllClassesTab(classTabIndex)
     ? [DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]
     : [DefaultFields.STATUS];
 
