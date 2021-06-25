@@ -61,10 +61,7 @@ export type Attendance = {
 export type Class = {
   id: number;
   name: string;
-  session_id: number;
-  facilitator_id: number;
   attendance: Attendance[];
-  families: Family[];
 };
 
 export type InputProps = {
