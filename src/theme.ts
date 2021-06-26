@@ -68,6 +68,19 @@ const theme = createMuiTheme({
         },
       },
     },
+    MuiTableCell: {
+      root: {
+        '& [class*="MuiTableCell-footer"]': {
+          borderBottom: "none",
+        },
+      },
+    },
+    MuiTableContainer: {
+      root: {
+        border: "1px solid",
+        borderColor: defaultTheme.palette.divider,
+      },
+    },
     MuiTabs: {
       root: {
         backgroundColor: "white",

@@ -12,10 +12,14 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { FamilySearchResponse } from "../../../api/FamilyAPI";
+import { DefaultFields } from "../../../constants/DefaultFields";
 
 const useStyles = makeStyles(() => ({
   noResultsTableCell: {
     textAlign: "center",
+  },
+  tableContainer: {
+    maxHeight: 250,
   },
 }));
 
@@ -26,17 +30,21 @@ type Props = {
 const FamilySearchResultsTable = ({ families }: Props) => {
   const classes = useStyles();
   return (
-    <Box marginY={2} maxHeight={350}>
-      <TableContainer component={Paper} elevation={0}>
+    <Box marginY={2}>
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        className={classes.tableContainer}
+      >
         <Table stickyHeader aria-label="family search results table">
           <caption hidden>Family search results</caption>
           <TableHead>
             <TableRow>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Primary Phone Number</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell># of Children</TableCell>
+              <TableCell>{DefaultFields.FIRST_NAME.name}</TableCell>
+              <TableCell>{DefaultFields.LAST_NAME.name}</TableCell>
+              <TableCell>{DefaultFields.PHONE_NUMBER.name}</TableCell>
+              <TableCell>{DefaultFields.EMAIL.name}</TableCell>
+              <TableCell>{DefaultFields.NUM_CHILDREN.name}</TableCell>
             </TableRow>
           </TableHead>
           {families.length ? (

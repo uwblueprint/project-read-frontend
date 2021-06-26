@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Box,
   Button,
   Dialog,
   DialogContent,
@@ -25,13 +24,18 @@ const useStyles = makeStyles((theme) => ({
     top: theme.spacing(1),
   },
   dialogHeading: {
-    marginBottom: 8,
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
-  dialogTitle: {
-    marginBottom: 16,
+  dialogPaper: {
+    height: 750,
+  },
+  dialogSubheading: {
+    marginTop: theme.spacing(3),
   },
   registerButton: {
     borderRadius: 18,
+    marginTop: theme.spacing(2),
     paddingLeft: 24,
     paddingRight: 24,
   },
@@ -47,27 +51,35 @@ const RegistrationFormDialog = ({
   onClose,
 }: RegistrationFormDialogProps) => {
   const classes = useStyles();
-  const [displayForm, setDisplayForm] = useState(false);
-  const [displaySearch, setDisplaySearch] = useState(true);
-  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const [shouldDisplaySearch, setShouldDisplaySearch] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [displayResults, setDisplayResults] = useState(false);
   const [familyResults, setFamilyResults] = useState<FamilySearchResponse[]>(
     []
   );
+  const [shouldDisplayFamilyResults, setShouldDisplayFamilyResults] = useState(
+    false
+  );
 
-  const handleDisplayForm = () => {
-    setDisplayForm(true);
-    setDisplaySearch(false);
+  const resetSearch = () => {
+    setFirstName("");
+    setLastName("");
+    setShouldDisplayFamilyResults(false);
+    setFamilyResults([]);
   };
 
-  const handleHideForm = () => {
-    setDisplayForm(false);
-    setDisplaySearch(true);
+  useEffect(() => {
+    resetSearch();
+  }, [open, shouldDisplaySearch]);
+
+  const onSearchSubmit = async () => {
+    setShouldDisplayFamilyResults(true);
+    setFamilyResults(
+      await FamilyAPI.getFamiliesByParentName(firstName, lastName)
+    );
   };
 
-  const onFormSubmit = async (
+  const onRegistrationFormSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     data: FamilyStudentRequest
   ) => {
@@ -76,16 +88,9 @@ const RegistrationFormDialog = ({
     if (response.non_field_errors) {
       // eslint-disable-next-line no-alert
       alert(response.non_field_errors);
-    } else {
-      handleHideForm();
+      return;
     }
-  };
-
-  const onSearchSubmit = async () => {
-    setDisplayResults(true);
-    setFamilyResults(
-      await FamilyAPI.searchFamiliesByParent(firstName, lastName)
-    );
+    setShouldDisplaySearch(true);
   };
 
   return (
@@ -95,11 +100,10 @@ const RegistrationFormDialog = ({
       disableBackdropClick
       fullWidth
       maxWidth="md"
+      classes={{ paper: classes.dialogPaper }}
     >
       <DialogTitle disableTypography>
-        <Typography variant="h2" className={classes.dialogTitle}>
-          Add a client
-        </Typography>
+        <Typography variant="h2">Add a client</Typography>
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -108,48 +112,48 @@ const RegistrationFormDialog = ({
           <Close />
         </IconButton>
       </DialogTitle>
-
-      <DialogContent style={{ minHeight: "500px" }}>
-        {displaySearch && (
+      <DialogContent>
+        {shouldDisplaySearch ? (
           <>
             <Typography variant="h3" className={classes.dialogHeading}>
               Search for a client
             </Typography>
-            <Box marginBottom={3}>
-              <Typography variant="body1">
-                Make sure the client being registered isn’t already enrolled.
-              </Typography>
-              <StudentSearchBar
-                firstName={firstName}
-                lastName={lastName}
-                onChangeFirstName={setFirstName}
-                onChangeLastName={setLastName}
-                onSubmit={onSearchSubmit}
-              />
-            </Box>
-            {displayResults && (
-              <Box marginBottom={1}>
-                <Typography variant="h4">Search results</Typography>
+            <Typography variant="body1">
+              Make sure the client being registered isn’t already enrolled.
+            </Typography>
+            <StudentSearchBar
+              firstName={firstName}
+              lastName={lastName}
+              onChangeFirstName={setFirstName}
+              onChangeLastName={setLastName}
+              onSubmit={onSearchSubmit}
+            />
+            {shouldDisplayFamilyResults && (
+              <>
+                <Typography variant="h4" className={classes.dialogSubheading}>
+                  Search results
+                </Typography>
                 <FamilySearchResultsTable families={familyResults} />
-                <Typography variant="h4">Not found?</Typography>
-              </Box>
+                <Typography variant="h4" className={classes.dialogSubheading}>
+                  Not found?
+                </Typography>
+              </>
             )}
             <Button
-              onClick={handleDisplayForm}
+              onClick={() => setShouldDisplaySearch(false)}
               variant="outlined"
               className={classes.registerButton}
             >
               Register a new client
             </Button>
           </>
-        )}
-        {displayForm && (
+        ) : (
           <>
-            <Button onClick={handleHideForm}>
+            <Button onClick={() => setShouldDisplaySearch(true)}>
               <NavigateBefore />
               Go back
             </Button>
-            <RegistrationForm onSubmit={onFormSubmit} />
+            <RegistrationForm onSubmit={onRegistrationFormSubmit} />
           </>
         )}
       </DialogContent>

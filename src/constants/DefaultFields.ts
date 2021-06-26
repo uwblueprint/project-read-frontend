@@ -83,7 +83,7 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
   PHONE_NUMBER: {
     id: DefaultFieldKey.PHONE_NUMBER,
     is_default: true,
-    name: "Phone number",
+    name: "Primary phone number",
     question_type: QuestionTypes.TEXT,
     options: [],
   },

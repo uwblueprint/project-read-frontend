@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { Button, Box, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Search } from "@material-ui/icons";
+import { DefaultFields } from "../../../constants/DefaultFields";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   button: {
     boxShadow: "none",
     height: 55,
     minWidth: 55,
   },
   input: {
-    marginRight: 16,
+    marginRight: theme.spacing(2),
+    width: 328,
   },
 }));
 
@@ -45,19 +47,21 @@ const StudentSearchBar = ({
     <Box marginY={2}>
       <form onSubmit={handleSubmit}>
         <TextField
+          id={DefaultFields.FIRST_NAME.id}
           className={classes.input}
           error={hasError}
           helperText={hasError && "Please enter a value"}
           variant="outlined"
-          placeholder="First name"
+          placeholder={DefaultFields.FIRST_NAME.name}
           value={firstName}
           onChange={(e) => onChangeFirstName(e.target.value)}
         />
         <TextField
+          id={DefaultFields.LAST_NAME.id}
           className={classes.input}
           error={hasError}
           variant="outlined"
-          placeholder="Last name"
+          placeholder={DefaultFields.LAST_NAME.name}
           value={lastName}
           onChange={(e) => onChangeLastName(e.target.value)}
         />

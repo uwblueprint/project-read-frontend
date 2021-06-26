@@ -68,7 +68,7 @@ export type FamilyStudentRequest = FamilyRequest & {
 const getFamilies = (): Promise<FamilyListResponse[]> =>
   APIUtils.get("/families/");
 
-const searchFamiliesByParent = (
+const getFamiliesByParentName = (
   firstName: string,
   lastName: string
 ): Promise<FamilySearchResponse[]> =>
@@ -84,7 +84,7 @@ const postFamily = (data: FamilyStudentRequest) =>
 
 export default {
   getFamilies,
-  searchFamiliesByParent,
+  getFamiliesByParentName,
   getFamilyById,
   postFamily,
 };
