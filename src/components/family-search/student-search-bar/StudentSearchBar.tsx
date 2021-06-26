@@ -45,7 +45,7 @@ const StudentSearchBar = ({
 
   return (
     <Box marginY={2}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <TextField
           id={DefaultFields.FIRST_NAME.id}
           className={classes.input}
