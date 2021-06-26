@@ -1,28 +1,22 @@
 import React, { useState } from "react";
 import {
-  Button,
   Box,
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
   Typography,
-  TextField,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableFooter,
-  TableContainer,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Close, Search, NavigateBefore } from "@material-ui/icons";
+import { Close, NavigateBefore } from "@material-ui/icons";
 import RegistrationForm from "./RegistrationForm";
 import FamilyAPI, {
   FamilySearchResponse,
   FamilyStudentRequest,
 } from "../../api/FamilyAPI";
+import FamilySearchResultsTable from "../family-search/family-search-results-table";
+import StudentSearchBar from "../family-search/student-search-bar";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -30,14 +24,16 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
-  searchSection: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
+  dialogHeading: {
+    marginBottom: 8,
   },
-  searchButton: {
-    height: theme.spacing(5),
-    width: theme.spacing(4),
-    margin: "8px",
+  dialogTitle: {
+    marginBottom: 16,
+  },
+  registerButton: {
+    borderRadius: 18,
+    paddingLeft: 24,
+    paddingRight: 24,
   },
 }));
 
@@ -56,7 +52,6 @@ const RegistrationFormDialog = ({
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [validInput, setValidInput] = useState(true);
   const [displayResults, setDisplayResults] = useState(false);
   const [familyResults, setFamilyResults] = useState<FamilySearchResponse[]>(
     []
@@ -87,16 +82,10 @@ const RegistrationFormDialog = ({
   };
 
   const onSearchSubmit = async () => {
-    if (firstName || lastName) {
-      setDisplayResults(true);
-      setValidInput(true);
-      setFamilyResults(
-        await FamilyAPI.searchFamiliesByParent(firstName, lastName)
-      );
-    } else {
-      setDisplayResults(false);
-      setValidInput(false);
-    }
+    setDisplayResults(true);
+    setFamilyResults(
+      await FamilyAPI.searchFamiliesByParent(firstName, lastName)
+    );
   };
 
   return (
@@ -108,7 +97,9 @@ const RegistrationFormDialog = ({
       maxWidth="md"
     >
       <DialogTitle disableTypography>
-        <Typography variant="h2">Add a client</Typography>
+        <Typography variant="h2" className={classes.dialogTitle}>
+          Add a client
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -119,97 +110,40 @@ const RegistrationFormDialog = ({
       </DialogTitle>
 
       <DialogContent style={{ minHeight: "500px" }}>
-        {displaySearch ? (
+        {displaySearch && (
           <>
-            <Typography component="h2" variant="h6">
+            <Typography variant="h3" className={classes.dialogHeading}>
               Search for a client
             </Typography>
-            <Typography component="h1" variant="body1">
-              Make sure the client being registered isn’t already enrolled.
-            </Typography>
-            <Box>
-              <TextField // should these be FormFieldGroup components? Add feature to "wipe" user-entered when dialog closes so that each opening is a clean slate
-                error={!validInput}
-                helperText={validInput ? null : "Please enter a value"}
-                variant="outlined"
-                margin="dense"
-                placeholder="First name"
-                style={{ marginRight: "10px" }}
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+            <Box marginBottom={3}>
+              <Typography variant="body1">
+                Make sure the client being registered isn’t already enrolled.
+              </Typography>
+              <StudentSearchBar
+                firstName={firstName}
+                lastName={lastName}
+                onChangeFirstName={setFirstName}
+                onChangeLastName={setLastName}
+                onSubmit={onSearchSubmit}
               />
-              <TextField
-                error={!validInput}
-                variant="outlined"
-                margin="dense"
-                placeholder="Last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-              <Button
-                aria-label="search"
-                variant="contained"
-                color="primary"
-                onClick={onSearchSubmit}
-                className={classes.searchButton}
-              >
-                <Search />
-              </Button>
             </Box>
-            {displayResults ? (
-              <Box className={classes.searchSection}>
-                <Typography component="h1" variant="body1">
-                  Search Results
-                </Typography>
-                <TableContainer style={{ maxHeight: "350px" }}>
-                  <Table stickyHeader aria-label="sticky results table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>First Name</TableCell>
-                        <TableCell>Last Name</TableCell>
-                        <TableCell>Primary Phone Number</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell># of Children</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    {familyResults.length ? (
-                      <TableBody>
-                        {familyResults.map((family) => (
-                          <TableRow>
-                            <TableCell>{family.first_name}</TableCell>
-                            <TableCell>{family.last_name}</TableCell>
-                            <TableCell>{family.phone_number}</TableCell>
-                            <TableCell>{family.email}</TableCell>
-                            <TableCell>{family.num_children}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    ) : (
-                      <TableFooter>
-                        <TableRow>
-                          <TableCell
-                            colSpan={5}
-                            style={{ textAlign: "center" }}
-                          >
-                            No Results Found
-                          </TableCell>
-                        </TableRow>
-                      </TableFooter>
-                    )}
-                  </Table>
-                </TableContainer>
-                <Typography
-                  component="h1"
-                  variant="body1"
-                  className={classes.searchSection}
-                >
-                  Not found?
-                </Typography>
+            {displayResults && (
+              <Box marginBottom={1}>
+                <Typography variant="h4">Search results</Typography>
+                <FamilySearchResultsTable families={familyResults} />
+                <Typography variant="h4">Not found?</Typography>
               </Box>
-            ) : null}
+            )}
+            <Button
+              onClick={handleDisplayForm}
+              variant="outlined"
+              className={classes.registerButton}
+            >
+              Register a new client
+            </Button>
           </>
-        ) : null}
-        {displayForm ? (
+        )}
+        {displayForm && (
           <>
             <Button onClick={handleHideForm}>
               <NavigateBefore />
@@ -217,14 +151,6 @@ const RegistrationFormDialog = ({
             </Button>
             <RegistrationForm onSubmit={onFormSubmit} />
           </>
-        ) : (
-          <Button
-            onClick={handleDisplayForm}
-            variant="outlined"
-            style={{ borderRadius: "50px" }}
-          >
-            Register a new client
-          </Button>
         )}
       </DialogContent>
     </Dialog>
