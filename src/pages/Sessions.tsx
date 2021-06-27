@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -9,7 +10,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
-import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
+import SessionAPI, {
+  SessionListResponse,
+  SessionDetailResponse,
+} from "../api/SessionAPI";
 import ClassAPI, { ClassDetailResponse } from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
 import { FamilyListResponse } from "../api/FamilyAPI";
@@ -19,34 +23,45 @@ import SessionDetailView, {
 } from "../components/sessions/session-detail-view";
 import { DefaultFields } from "../constants/DefaultFields";
 
+const isOnAllClassesTab = (classTabIndex: number) =>
+  classTabIndex === ALL_CLASSES_TAB_INDEX;
+
+type Params = {
+  classId: string | undefined;
+  sessionId: string | undefined;
+};
+
 const Sessions = () => {
+  const history = useHistory();
+  const { classId, sessionId } = useParams<Params>();
   const [sessions, setSessions] = useState<SessionListResponse[]>([]);
+  const [
+    selectedSession,
+    setSelectedSession,
+  ] = useState<SessionDetailResponse>();
   const [classesMap, setClassesMap] = useState(
     new Map<number, ClassDetailResponse>()
   );
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
-  const [currentSessionId, setCurrentSessionId] = useState<number>();
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
 
-  const handleChangeClasses = async (id: number) => {
-    const sessionClasses = await SessionAPI.getSessionClasses(id);
-    const map = new Map<number, ClassDetailResponse>();
-    await Promise.all(
-      sessionClasses.map(async (sessionClass) => {
-        const classMapItem = await ClassAPI.getClass(sessionClass.id);
-        map.set(sessionClass.id, classMapItem);
-      })
-    );
-    setClassesMap(map);
+  const updateSelectedSession = async (id: number) => {
+    await setSelectedSession(await SessionAPI.getSession(id));
+    setIsLoadingSession(false);
   };
 
   useEffect(() => {
     const fetchSessions = async () => {
       const sessionsData = await SessionAPI.getSessions();
       setSessions(sessionsData);
-      if (sessionsData.length) {
-        setCurrentSessionId(sessionsData[0].id); // most recent session
-        handleChangeClasses(sessionsData[0].id);
+      if (sessionId !== undefined) {
+        // if a session id was provided in the url, set it to that
+        updateSelectedSession(Number(sessionId));
+      } else if (sessionsData.length) {
+        // redirect to the most recent session
+        history.push(`/sessions/${sessionsData[0].id}`);
+        updateSelectedSession(sessionsData[0].id);
       }
     };
     fetchSessions();
@@ -60,29 +75,54 @@ const Sessions = () => {
     setDisplayRegDialog(false);
   };
 
-  const handleChangeCurrentSessionId = (
+  useEffect(() => {
+    setIsLoadingSession(true);
+    if (sessionId !== undefined) {
+      updateSelectedSession(Number(sessionId));
+    }
+  }, [sessionId]);
+
+  useEffect(() => {
+    const fetchClass = async (id: number) => {
+      const classObj = await ClassAPI.getClass(id);
+      setClassesMap(
+        (prevMap) => new Map([...Array.from(prevMap), [classObj.id, classObj]])
+      );
+    };
+    if (classId === undefined) {
+      setClassTabIndex(ALL_CLASSES_TAB_INDEX);
+      return;
+    }
+    const classIdNumber = Number(classId);
+    if (!classesMap.has(classIdNumber)) {
+      fetchClass(classIdNumber);
+    }
+    setClassTabIndex(classIdNumber);
+  }, [classId]);
+
+  const handleChangeCurrentSessionId = async (
     e: React.ChangeEvent<{ value: unknown }>
   ) => {
-    setCurrentSessionId(e.target.value as number);
-    handleChangeClasses(e.target.value as number);
-    setClassTabIndex(ALL_CLASSES_TAB_INDEX);
+    history.push(`/sessions/${e.target.value as number}`);
   };
 
-  const isOnAllClassesTab = classTabIndex === ALL_CLASSES_TAB_INDEX;
+  const handleChangeClassTabIndex = (newClassTabIndex: number) => {
+    if (isOnAllClassesTab(newClassTabIndex)) {
+      history.push(`/sessions/${sessionId}`);
+    } else {
+      history.push(`/sessions/${sessionId}/classes/${newClassTabIndex}`);
+    }
+  };
 
   const getFamilies = (): FamilyListResponse[] => {
-    if (isOnAllClassesTab) {
-      let allClassesFamilies: FamilyListResponse[] = [];
-      Array.from(classesMap.values()).forEach((classObj) => {
-        allClassesFamilies = allClassesFamilies.concat(classObj.families);
-      });
-      return allClassesFamilies;
+    if (selectedSession !== undefined && isOnAllClassesTab(classTabIndex)) {
+      return selectedSession.families;
     }
     const classObj = classesMap.get(classTabIndex);
     return classObj !== undefined ? classObj.families : [];
   };
 
-  const getEnrolmentFields = isOnAllClassesTab
+  const getEnrolmentFields = isOnAllClassesTab(classTabIndex)
     ? [DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]
     : [DefaultFields.STATUS];
 
@@ -93,15 +133,15 @@ const Sessions = () => {
           <Box mr={3}>
             <Typography variant="h1">Session:</Typography>
           </Box>
-          <Box>
-            {currentSessionId && (
+          {selectedSession && (
+            <Box>
               <FormControl variant="outlined">
                 <InputLabel id="session">Session</InputLabel>
                 <Select
                   id="select"
                   label="session"
                   labelId="session"
-                  value={currentSessionId}
+                  value={selectedSession.id}
                   onChange={handleChangeCurrentSessionId}
                 >
                   {sessions.map((session) => (
@@ -111,10 +151,10 @@ const Sessions = () => {
                   ))}
                 </Select>
               </FormControl>
-            )}
-          </Box>
+            </Box>
+          )}
         </Box>
-        {currentSessionId && (
+        {selectedSession && (
           <>
             <Box flexShrink={0}>
               <Button variant="outlined" onClick={handleOpenFormDialog}>
@@ -129,18 +169,20 @@ const Sessions = () => {
           </>
         )}
       </Box>
-      <SessionDetailView
-        classes={Array.from(classesMap.values())}
-        classTabIndex={classTabIndex}
-        onChangeClassTabIndex={setClassTabIndex}
-        classDefaultView={
-          <FamilyTable
-            families={getFamilies()}
-            enrolmentFields={getEnrolmentFields}
-            shouldDisplayDynamicFields={false}
-          />
-        }
-      />
+      {!isLoadingSession && selectedSession && (
+        <SessionDetailView
+          classes={selectedSession.classes}
+          classTabIndex={classTabIndex}
+          onChangeClassTabIndex={handleChangeClassTabIndex}
+          classDefaultView={
+            <FamilyTable
+              families={getFamilies()}
+              enrolmentFields={getEnrolmentFields}
+              shouldDisplayDynamicFields={false}
+            />
+          }
+        />
+      )}
     </>
   );
 };
