@@ -16,7 +16,7 @@ import { FamilyListResponse } from "../api/FamilyAPI";
 import FamilyTable from "../components/families/FamilyTable";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
-} from "../components/sessions/SessionDetailView";
+} from "../components/sessions/session-detail-view";
 import { DefaultFields } from "../constants/DefaultFields";
 
 const Sessions = () => {
@@ -73,16 +73,13 @@ const Sessions = () => {
   const getFamilies = (): FamilyListResponse[] => {
     if (isOnAllClassesTab) {
       let allClassesFamilies: FamilyListResponse[] = [];
-      Array.from(classesMap.values()).forEach((classData) => {
-        allClassesFamilies = allClassesFamilies.concat(classData.families);
+      Array.from(classesMap.values()).forEach((classObj) => {
+        allClassesFamilies = allClassesFamilies.concat(classObj.families);
       });
       return allClassesFamilies;
     }
-    const classData = classesMap.get(classTabIndex);
-    if (!classData) {
-      return [];
-    }
-    return classData.families;
+    const classObj = classesMap.get(classTabIndex);
+    return classObj !== undefined ? classObj.families : [];
   };
 
   const getEnrolmentFields = isOnAllClassesTab
