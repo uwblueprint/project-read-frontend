@@ -53,6 +53,17 @@ export type Session = {
   year: number;
 };
 
+export type Attendance = {
+  date: string;
+  attendees: number[];
+};
+
+export type Class = {
+  id: number;
+  name: string;
+  attendance: Attendance[];
+};
+
 export type InputProps = {
   id: string;
   label: string;

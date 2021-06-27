@@ -118,7 +118,6 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
 });
 
 export const DefaultFamilyTableFields: DefaultField[] = [
-  // default view
   DefaultFields.FIRST_NAME,
   DefaultFields.LAST_NAME,
   DefaultFields.PHONE_NUMBER,
@@ -126,16 +125,6 @@ export const DefaultFamilyTableFields: DefaultField[] = [
   DefaultFields.NUM_CHILDREN,
   DefaultFields.CHILDREN,
   DefaultFields.PREFERRED_CONTACT,
-  // can expand to view
-  DefaultFields.CELL_NUMBER,
-  DefaultFields.HOME_NUMBER,
-  DefaultFields.PREFERRED_NUMBER,
-];
-
-export const DefaultFamilyTableEnrolmentFields: DefaultField[] = [
-  DefaultFields.ENROLLED,
-  DefaultFields.CURRENT_CLASS,
-  DefaultFields.STATUS,
 ];
 
 export const DefaultFamilyFormFields: DefaultField[] = [

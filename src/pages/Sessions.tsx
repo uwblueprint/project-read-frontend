@@ -8,16 +8,37 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
-
-import SessionAPI from "../api/SessionAPI";
+import { Add } from "@material-ui/icons/";
+import SessionAPI, { SessionListResponse } from "../api/SessionAPI";
+import ClassAPI, { ClassDetailResponse } from "../api/ClassAPI";
 import RegistrationDialog from "../components/registration/RegistrationDialog";
-import { Session } from "../types";
+import { FamilyListResponse } from "../api/FamilyAPI";
+import FamilyTable from "../components/families/FamilyTable";
+import SessionDetailView, {
+  ALL_CLASSES_TAB_INDEX,
+} from "../components/sessions/session-detail-view";
+import { DefaultFields } from "../constants/DefaultFields";
 
 const Sessions = () => {
-  const [sessions, setSessions] = useState<Session[]>([]);
+  const [sessions, setSessions] = useState<SessionListResponse[]>([]);
+  const [classesMap, setClassesMap] = useState(
+    new Map<number, ClassDetailResponse>()
+  );
+  const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [currentSessionId, setCurrentSessionId] = useState<number>();
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
+
+  const handleChangeClasses = async (id: number) => {
+    const sessionClasses = await SessionAPI.getSessionClasses(id);
+    const map = new Map<number, ClassDetailResponse>();
+    await Promise.all(
+      sessionClasses.map(async (sessionClass) => {
+        const classMapItem = await ClassAPI.getClass(sessionClass.id);
+        map.set(sessionClass.id, classMapItem);
+      })
+    );
+    setClassesMap(map);
+  };
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -25,6 +46,7 @@ const Sessions = () => {
       setSessions(sessionsData);
       if (sessionsData.length) {
         setCurrentSessionId(sessionsData[0].id); // most recent session
+        handleChangeClasses(sessionsData[0].id);
       }
     };
     fetchSessions();
@@ -42,50 +64,84 @@ const Sessions = () => {
     e: React.ChangeEvent<{ value: unknown }>
   ) => {
     setCurrentSessionId(e.target.value as number);
+    handleChangeClasses(e.target.value as number);
+    setClassTabIndex(ALL_CLASSES_TAB_INDEX);
   };
 
+  const isOnAllClassesTab = classTabIndex === ALL_CLASSES_TAB_INDEX;
+
+  const getFamilies = (): FamilyListResponse[] => {
+    if (isOnAllClassesTab) {
+      let allClassesFamilies: FamilyListResponse[] = [];
+      Array.from(classesMap.values()).forEach((classObj) => {
+        allClassesFamilies = allClassesFamilies.concat(classObj.families);
+      });
+      return allClassesFamilies;
+    }
+    const classObj = classesMap.get(classTabIndex);
+    return classObj !== undefined ? classObj.families : [];
+  };
+
+  const getEnrolmentFields = isOnAllClassesTab
+    ? [DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]
+    : [DefaultFields.STATUS];
+
   return (
-    <Box display="flex">
-      <Box display="flex" flexGrow={1} alignItems="center">
-        <Box mr={3}>
-          <Typography variant="h1">Session:</Typography>
-        </Box>
-        <Box>
-          {currentSessionId && (
-            <FormControl variant="outlined">
-              <InputLabel id="session">Session</InputLabel>
-              <Select
-                id="select"
-                label="session"
-                labelId="session"
-                value={currentSessionId}
-                onChange={handleChangeCurrentSessionId}
-              >
-                {sessions.map((session) => (
-                  <MenuItem key={session.id} value={session.id}>
-                    {session.season} {session.year}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-        </Box>
-      </Box>
-      {currentSessionId && (
-        <>
-          <Box flexShrink={0}>
-            <Button variant="outlined" onClick={handleOpenFormDialog}>
-              Add a client
-              <Add />
-            </Button>
+    <>
+      <Box display="flex">
+        <Box display="flex" flexGrow={1} alignItems="center">
+          <Box mr={3}>
+            <Typography variant="h1">Session:</Typography>
           </Box>
-          <RegistrationDialog
-            open={displayRegDialog}
-            onClose={handleCloseFormDialog}
+          <Box>
+            {currentSessionId && (
+              <FormControl variant="outlined">
+                <InputLabel id="session">Session</InputLabel>
+                <Select
+                  id="select"
+                  label="session"
+                  labelId="session"
+                  value={currentSessionId}
+                  onChange={handleChangeCurrentSessionId}
+                >
+                  {sessions.map((session) => (
+                    <MenuItem key={session.id} value={session.id}>
+                      {session.season} {session.year}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          </Box>
+        </Box>
+        {currentSessionId && (
+          <>
+            <Box flexShrink={0}>
+              <Button variant="outlined" onClick={handleOpenFormDialog}>
+                Add a client &nbsp;
+                <Add />
+              </Button>
+            </Box>
+            <RegistrationDialog
+              open={displayRegDialog}
+              onClose={handleCloseFormDialog}
+            />
+          </>
+        )}
+      </Box>
+      <SessionDetailView
+        classes={Array.from(classesMap.values())}
+        classTabIndex={classTabIndex}
+        onChangeClassTabIndex={setClassTabIndex}
+        classDefaultView={
+          <FamilyTable
+            families={getFamilies()}
+            enrolmentFields={getEnrolmentFields}
+            shouldDisplayDynamicFields={false}
           />
-        </>
-      )}
-    </Box>
+        }
+      />
+    </>
   );
 };
 
