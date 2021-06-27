@@ -9,8 +9,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
-import RegistrationForm from "./RegistrationForm";
+import RegistrationForm from "./registration-form";
 import FamilyAPI, { FamilyStudentRequest } from "../../api/FamilyAPI";
+import { SessionDetailResponse } from "../../api/SessionAPI";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -20,15 +21,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type RegistrationFormDialogProps = {
+type Props = {
   open: boolean;
   onClose: () => void;
+  session: SessionDetailResponse;
 };
 
-const RegistrationFormDialog = ({
-  open,
-  onClose,
-}: RegistrationFormDialogProps) => {
+const RegistrationDialog = ({ open, onClose, session }: Props) => {
   const classes = useStyles();
   const [displayForm, setDisplayForm] = useState(false);
 
@@ -79,7 +78,7 @@ const RegistrationFormDialog = ({
               <NavigateBefore />
               Go back
             </Button>
-            <RegistrationForm onSubmit={onFormSubmit} />
+            <RegistrationForm onSubmit={onFormSubmit} session={session} />
           </>
         ) : (
           <Button onClick={handleDisplayForm}>Register a new client</Button>
@@ -89,4 +88,4 @@ const RegistrationFormDialog = ({
   );
 };
 
-export default RegistrationFormDialog;
+export default RegistrationDialog;
