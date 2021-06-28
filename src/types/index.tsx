@@ -1,4 +1,5 @@
 import DefaultFieldKey from "../constants/DefaultFieldKey";
+import EnrolmentStatus from "../constants/EnrolmentStatus";
 import StudentRole from "../constants/StudentRole";
 
 type Field = {
@@ -40,7 +41,7 @@ export type Family = {
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.PREFERRED_NUMBER]: string;
-  [DefaultFieldKey.STATUS]: string;
+  [DefaultFieldKey.STATUS]: EnrolmentStatus;
   [DefaultFieldKey.WORK_NUMBER]: string;
   parent: Student;
 };

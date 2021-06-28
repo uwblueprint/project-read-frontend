@@ -83,8 +83,8 @@ const Sessions = () => {
   };
 
   const getEnrolmentFields = isOnAllClassesTab
-    ? [DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]
-    : [DefaultFields.STATUS];
+    ? [DefaultFields.CURRENT_CLASS]
+    : [];
 
   return (
     <>
