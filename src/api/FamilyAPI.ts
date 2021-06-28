@@ -32,6 +32,17 @@ export type FamilyListResponse = Pick<
   | "parent"
 >;
 
+export type FamilySearchResponse = Pick<
+  Family,
+  | DefaultFieldKey.EMAIL
+  | DefaultFieldKey.ID
+  | DefaultFieldKey.NUM_CHILDREN
+  | DefaultFieldKey.PHONE_NUMBER
+> & {
+  [DefaultFieldKey.FIRST_NAME]: string;
+  [DefaultFieldKey.LAST_NAME]: string;
+};
+
 export type FamilyRequest = Pick<
   Family,
   | DefaultFieldKey.ADDRESS
@@ -57,10 +68,23 @@ export type FamilyStudentRequest = FamilyRequest & {
 const getFamilies = (): Promise<FamilyListResponse[]> =>
   APIUtils.get("/families/");
 
+const getFamiliesByParentName = (
+  firstName: string,
+  lastName: string
+): Promise<FamilySearchResponse[]> =>
+  APIUtils.get(
+    `/families/search/?first_name=${firstName}&last_name=${lastName}`
+  );
+
 const getFamilyById = (id: number): Promise<FamilyDetailResponse> =>
   APIUtils.get(`/families/${id}`);
 
 const postFamily = (data: FamilyStudentRequest) =>
   APIUtils.post("/families/", data);
 
-export default { getFamilies, getFamilyById, postFamily };
+export default {
+  getFamilies,
+  getFamiliesByParentName,
+  getFamilyById,
+  postFamily,
+};
