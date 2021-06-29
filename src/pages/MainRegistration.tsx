@@ -19,11 +19,7 @@ const MainRegistration = () => {
       <Typography variant="h1">Main registration</Typography>
       <FamilyTable
         families={families}
-        enrolmentFields={[
-          DefaultFields.ENROLLED,
-          DefaultFields.CURRENT_CLASS,
-          DefaultFields.STATUS,
-        ]}
+        enrolmentFields={[DefaultFields.ENROLLED, DefaultFields.CURRENT_CLASS]}
         shouldDisplayDynamicFields
       />
     </>

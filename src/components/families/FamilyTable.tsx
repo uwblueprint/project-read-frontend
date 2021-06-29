@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, ReactNode } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import MUIDataTable, {
   MUIDataTableColumn,
   MUIDataTableOptions,
@@ -14,6 +14,8 @@ import {
 } from "../../constants/DefaultFields";
 import QuestionTypes from "../../constants/QuestionTypes";
 import { FamilyListResponse } from "../../api/FamilyAPI";
+import StatusChip from "../common/status-chip";
+import EnrolmentStatus from "../../constants/EnrolmentStatus";
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
@@ -23,11 +25,28 @@ const options: MUIDataTableOptions = {
   elevation: 0,
 };
 
-const noWrapText = (value: string): ReactNode => (
-  <Typography noWrap variant="body2">
-    {value}
-  </Typography>
-);
+const idColumn: MUIDataTableColumn = {
+  name: DefaultFields.ID.id.toString(),
+  label: DefaultFields.ID.name,
+  options: { display: "excluded", filter: false },
+};
+
+const statusColumn: MUIDataTableColumn = {
+  name: DefaultFields.STATUS.id.toString(),
+  label: DefaultFields.STATUS.name,
+  options: {
+    customBodyRender: (value) => (
+      <StatusChip status={value as EnrolmentStatus} />
+    ),
+    searchable: false,
+    setCellProps: () => ({
+      style: {
+        paddingTop: 10,
+        paddingBottom: 10,
+      },
+    }),
+  },
+};
 
 type FamilyTableRow = Pick<
   FamilyListResponse,
@@ -99,12 +118,6 @@ const FamilyTable = ({
       return familyRow;
     });
 
-  const idColumn: MUIDataTableColumn = {
-    name: DefaultFields.ID.id.toString(),
-    label: DefaultFields.ID.name,
-    options: { display: "excluded", filter: false },
-  };
-
   const getColumn = (
     field: DefaultField | DynamicField,
     isDynamic: boolean
@@ -115,16 +128,21 @@ const FamilyTable = ({
       display: field.is_default && (!isDynamic || shouldDisplayDynamicFields),
       filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
       searchable: field.question_type === QuestionTypes.TEXT,
-      customBodyRender: noWrapText,
+      customBodyRender: (value) => (
+        <Typography noWrap variant="body2">
+          {value}
+        </Typography>
+      ),
     },
   });
 
-  const getTableColumns: MUIDataTableColumn[] =
-    // apply noWrap text to each default column
-    [idColumn]
-      .concat(DefaultFamilyTableFields.map((field) => getColumn(field, false)))
-      .concat(parentDynamicFields.map((field) => getColumn(field, true)))
-      .concat(enrolmentFields.map((field) => getColumn(field, false)));
+  const getTableColumns: MUIDataTableColumn[] = [
+    idColumn,
+    ...DefaultFamilyTableFields.map((field) => getColumn(field, false)),
+    ...parentDynamicFields.map((field) => getColumn(field, true)),
+    ...enrolmentFields.map((field) => getColumn(field, false)),
+    statusColumn,
+  ];
 
   const handleOpenFamilyDetail = useCallback((rowData) => {
     setFamilyId(rowData[0]);
