@@ -4,13 +4,6 @@ import FieldInput from "./FieldInput";
 import { DefaultFields } from "../../../constants/DefaultFields";
 import StudentRole from "../../../constants/StudentRole";
 import { StudentRequest } from "../../../api/FamilyAPI";
-import DefaultFieldKey from "../../../constants/DefaultFieldKey";
-
-export const defaultStudentData: StudentRequest = {
-  [DefaultFieldKey.FIRST_NAME]: "",
-  [DefaultFieldKey.LAST_NAME]: "",
-  information: {},
-};
 
 type Props = {
   student: StudentRequest;

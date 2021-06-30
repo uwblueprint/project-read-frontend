@@ -4,24 +4,8 @@ import FieldInput from "./FieldInput";
 import { DefaultFields } from "../../../constants/DefaultFields";
 import StudentRole from "../../../constants/StudentRole";
 import { FamilyRequest, StudentRequest } from "../../../api/FamilyAPI";
-import DefaultFieldKey from "../../../constants/DefaultFieldKey";
 
 type FamilyParentRequest = FamilyRequest & { parent: StudentRequest };
-
-export const defaultFamilyParentData: FamilyParentRequest = {
-  [DefaultFieldKey.ADDRESS]: "",
-  [DefaultFieldKey.CELL_NUMBER]: "",
-  [DefaultFieldKey.EMAIL]: "",
-  [DefaultFieldKey.HOME_NUMBER]: "",
-  [DefaultFieldKey.PREFERRED_CONTACT]: "",
-  [DefaultFieldKey.PREFERRED_NUMBER]: "",
-  [DefaultFieldKey.WORK_NUMBER]: "",
-  parent: {
-    [DefaultFieldKey.FIRST_NAME]: "",
-    [DefaultFieldKey.LAST_NAME]: "",
-    information: {},
-  },
-};
 
 type Props = {
   family: FamilyParentRequest;
