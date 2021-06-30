@@ -135,8 +135,3 @@ export const DefaultFamilyFormFields: DefaultField[] = [
   DefaultFields.EMAIL,
   DefaultFields.PREFERRED_CONTACT,
 ];
-
-export const DefaultStudentFormFields: DefaultField[] = [
-  DefaultFields.FIRST_NAME,
-  DefaultFields.LAST_NAME,
-];

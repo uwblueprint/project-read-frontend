@@ -1,12 +1,9 @@
 import React, { useContext, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
+import DefaultFieldKey from "../../constants/DefaultFieldKey";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
-import FamilyParentFields, {
-  defaultFamilyParentData,
-} from "../common/fields/FamilyParentFields";
-import StudentFields, {
-  defaultStudentData,
-} from "../common/fields/StudentFields";
+import FamilyParentFields from "../common/fields/FamilyParentFields";
+import StudentFields from "../common/fields/StudentFields";
 import { FamilyStudentRequest } from "../../api/FamilyAPI";
 import StudentRole from "../../constants/StudentRole";
 
@@ -14,8 +11,25 @@ export enum TestId {
   RegistrationForm = "registration-form",
 }
 
+const defaultStudentData = {
+  [DefaultFieldKey.FIRST_NAME]: "",
+  [DefaultFieldKey.LAST_NAME]: "",
+  information: {},
+};
+
 const defaultFamilyData: FamilyStudentRequest = {
-  ...defaultFamilyParentData,
+  [DefaultFieldKey.ADDRESS]: "",
+  [DefaultFieldKey.CELL_NUMBER]: "",
+  [DefaultFieldKey.EMAIL]: "",
+  [DefaultFieldKey.HOME_NUMBER]: "",
+  [DefaultFieldKey.PREFERRED_CONTACT]: "",
+  [DefaultFieldKey.PREFERRED_NUMBER]: "",
+  [DefaultFieldKey.WORK_NUMBER]: "",
+  parent: {
+    [DefaultFieldKey.FIRST_NAME]: "",
+    [DefaultFieldKey.LAST_NAME]: "",
+    information: {},
+  },
   children: [{ ...defaultStudentData }],
   guests: [{ ...defaultStudentData }],
 };
