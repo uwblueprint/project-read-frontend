@@ -17,22 +17,12 @@ const StudentFields = ({ student, role, dynamicFields, onChange }: Props) => (
     <FieldInput
       field={{ ...DefaultFields.FIRST_NAME, role }}
       value={student.first_name}
-      onChange={(value) =>
-        onChange({
-          ...student,
-          first_name: value,
-        })
-      }
+      onChange={(value) => onChange({ ...student, first_name: value })}
     />
     <FieldInput
       field={{ ...DefaultFields.LAST_NAME, role }}
       value={student.last_name}
-      onChange={(value) =>
-        onChange({
-          ...student,
-          last_name: value,
-        })
-      }
+      onChange={(value) => onChange({ ...student, last_name: value })}
     />
     {dynamicFields.map((field) => (
       <FieldInput
@@ -42,7 +32,6 @@ const StudentFields = ({ student, role, dynamicFields, onChange }: Props) => (
         onChange={(value) =>
           onChange({
             ...student,
-
             information: {
               ...student.information,
               [field.id]: value,

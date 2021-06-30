@@ -4,14 +4,14 @@ import DefaultFieldKey from "../../constants/DefaultFieldKey";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
 import FamilyParentFields from "../common/fields/FamilyParentFields";
 import StudentFields from "../common/fields/StudentFields";
-import { FamilyStudentRequest } from "../../api/FamilyAPI";
+import { FamilyStudentRequest, StudentRequest } from "../../api/FamilyAPI";
 import StudentRole from "../../constants/StudentRole";
 
 export enum TestId {
   RegistrationForm = "registration-form",
 }
 
-const defaultStudentData = {
+const defaultStudentData: StudentRequest = {
   [DefaultFieldKey.FIRST_NAME]: "",
   [DefaultFieldKey.LAST_NAME]: "",
   information: {},
