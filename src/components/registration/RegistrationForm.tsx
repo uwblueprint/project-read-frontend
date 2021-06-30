@@ -1,45 +1,23 @@
 import React, { useContext, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
 import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
-import FormFieldGroup from "./FormFieldGroup";
-import {
-  DefaultFamilyFormFields,
-  DefaultStudentFormFields,
-} from "../../constants/DefaultFields";
+import FamilyParentFields, {
+  defaultFamilyParentData,
+} from "../common/fields/FamilyParentFields";
+import StudentFields, {
+  defaultStudentData,
+} from "../common/fields/StudentFields";
+import { FamilyStudentRequest } from "../../api/FamilyAPI";
 import StudentRole from "../../constants/StudentRole";
-import {
-  FamilyRequest,
-  FamilyStudentRequest,
-  StudentRequest,
-} from "../../api/FamilyAPI";
-import { DefaultFormField } from "../../hooks/useFormFields";
-import DefaultFieldKey from "../../constants/DefaultFieldKey";
 
 export enum TestId {
-  ChildrenDefaultFields = "children-default-fields",
-  ChildrenDynamicFields = "children-dynamic-fields",
-  FamilyDefaultFields = "family-default-fields",
-  GuestsDefaultFields = "guests-default-fields",
-  GuestsDynamicFields = "guests-dynamic-fields",
-  ParentDefaultFields = "parent-default-fields",
-  ParentDynamicFields = "parent-dynamic-fields",
   RegistrationForm = "registration-form",
 }
 
-const defaultFamilyRequestData: FamilyRequest = {
-  [DefaultFieldKey.ADDRESS]: "",
-  [DefaultFieldKey.CELL_NUMBER]: "",
-  [DefaultFieldKey.EMAIL]: "",
-  [DefaultFieldKey.HOME_NUMBER]: "",
-  [DefaultFieldKey.PREFERRED_CONTACT]: "",
-  [DefaultFieldKey.PREFERRED_NUMBER]: "",
-  [DefaultFieldKey.WORK_NUMBER]: "",
-};
-
-const defaultStudentRequestData: StudentRequest = {
-  [DefaultFieldKey.FIRST_NAME]: "",
-  [DefaultFieldKey.LAST_NAME]: "",
-  information: {},
+const defaultFamilyData: FamilyStudentRequest = {
+  ...defaultFamilyParentData,
+  children: [{ ...defaultStudentData }],
+  guests: [{ ...defaultStudentData }],
 };
 
 type RegistrationFormProps = {
@@ -56,42 +34,12 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
     parentDynamicFields,
   } = useContext(DynamicFieldsContext);
 
-  const [familyData, setFamilyData] = useState<FamilyRequest>({
-    ...defaultFamilyRequestData,
-  });
-  const [parentData, setParentData] = useState<StudentRequest>({
-    ...defaultStudentRequestData,
-  });
-  const [childData, setChildData] = useState<StudentRequest>({
-    ...defaultStudentRequestData,
-  });
-  const [guestData, setGuestData] = useState<StudentRequest>({
-    ...defaultStudentRequestData,
-  });
-
-  const getDefaultStudentFields = (role: StudentRole): DefaultFormField[] =>
-    DefaultStudentFormFields.map((defaultField) => ({
-      ...defaultField,
-      role,
-    }));
-
-  const getDefaultFamilyFields = (): DefaultFormField[] =>
-    DefaultFamilyFormFields.map((defaultField) => ({
-      ...defaultField,
-      role: StudentRole.PARENT,
-    }));
-
-  const getSubmissionData = (): FamilyStudentRequest => ({
-    ...familyData,
-    parent: { ...parentData },
-    children: [{ ...childData }],
-    guests: [{ ...guestData }],
-  });
+  const [family, setFamily] = useState<FamilyStudentRequest>(defaultFamilyData);
 
   return (
     <form
       data-testid={TestId.RegistrationForm}
-      onSubmit={(e) => onSubmit(e, getSubmissionData())}
+      onSubmit={(e) => onSubmit(e, family)}
     >
       <Typography variant="body1">
         Currently enrolling a <b>new family</b> for <b>the latest session</b>
@@ -100,59 +48,39 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
       <Typography component="h3" variant="h5">
         Basic information
       </Typography>
-      <FormFieldGroup
-        testId={TestId.ParentDefaultFields}
-        fields={getDefaultStudentFields(StudentRole.PARENT)}
-        onChange={(data) => setParentData(Object.assign(parentData, data))}
-      />
-      <FormFieldGroup
-        testId={TestId.FamilyDefaultFields}
-        fields={getDefaultFamilyFields()}
-        onChange={setFamilyData}
-      />
-      <FormFieldGroup
-        testId={TestId.ParentDynamicFields}
-        fields={parentDynamicFields}
-        onChange={(data) =>
-          setParentData(
-            Object.assign(parentData, { ...parentData, information: data })
-          )
-        }
+      <FamilyParentFields
+        family={family}
+        dynamicFields={parentDynamicFields}
+        onChange={(value) => setFamily((prev) => ({ ...prev, ...value }))}
       />
 
       <Typography component="h3" variant="h5">
         Children
       </Typography>
-      <FormFieldGroup
-        testId={TestId.ChildrenDefaultFields}
-        fields={getDefaultStudentFields(StudentRole.CHILD)}
-        onChange={(data) => setChildData(Object.assign(childData, data))}
-      />
-      <FormFieldGroup
-        testId={TestId.ChildrenDynamicFields}
-        fields={childDynamicFields}
-        onChange={(data) =>
-          setChildData(
-            Object.assign(childData, { ...childData, information: data })
-          )
+      <StudentFields
+        student={family.children[0]}
+        role={StudentRole.CHILD}
+        dynamicFields={childDynamicFields}
+        onChange={(value) =>
+          setFamily((prev) => ({
+            ...prev,
+            children: [{ ...prev.children[0], ...value }],
+          }))
         }
       />
 
       <Typography component="h3" variant="h5">
         Family members
       </Typography>
-      <FormFieldGroup
-        testId={TestId.GuestsDefaultFields}
-        fields={getDefaultStudentFields(StudentRole.GUEST)}
-        onChange={(data) => setGuestData(Object.assign(guestData, data))}
-      />
-      <FormFieldGroup
-        testId={TestId.GuestsDynamicFields}
-        fields={guestDynamicFields}
-        onChange={(data) =>
-          setGuestData(
-            Object.assign(guestData, { ...guestData, information: data })
-          )
+      <StudentFields
+        student={family.guests[0]}
+        role={StudentRole.GUEST}
+        dynamicFields={guestDynamicFields}
+        onChange={(value) =>
+          setFamily((prev) => ({
+            ...prev,
+            guests: [{ ...prev.guests[0], ...value }],
+          }))
         }
       />
 
