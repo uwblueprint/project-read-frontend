@@ -7,8 +7,8 @@ import moment from "moment";
 import { InputProps } from "types";
 
 type Props = InputProps & {
-  value: Date;
-  onChange: (value: Date) => void;
+  value: string;
+  onChange: (value: string) => void;
 };
 
 const DateInput = ({ id, label, value, onChange, inputWidth }: Props) => (
@@ -25,7 +25,7 @@ const DateInput = ({ id, label, value, onChange, inputWidth }: Props) => (
         inputVariant="outlined"
         format="MMMM D, yyyy"
         value={value}
-        onChange={(date) => onChange(moment(date).toDate())}
+        onChange={(date) => onChange(moment(date).format("YYYY-MM-DD"))}
         fullWidth
       />
     </Box>

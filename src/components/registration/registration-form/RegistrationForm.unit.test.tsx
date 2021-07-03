@@ -72,7 +72,7 @@ const TEST_GUEST_DOB = "Jan 1 2015";
 
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
-  name: "DOB",
+  name: "Favourite colour",
   question_type: QuestionTypes.TEXT,
   options: [],
 };
@@ -265,6 +265,7 @@ describe("when text fields are submitted", () => {
             first_name: TEST_CHILD_FIRST_NAME,
             information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
             last_name: TEST_LAST_NAME,
+            date_of_birth: TEST_CHILD_DOB,
           },
         ],
         email: TEST_PARENT_EMAIL,
@@ -273,6 +274,7 @@ describe("when text fields are submitted", () => {
             first_name: TEST_GUEST_FIRST_NAME,
             information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
             last_name: TEST_LAST_NAME,
+            date_of_birth: TEST_GUEST_DOB,
           },
         ],
         home_number: TEST_PARENT_HOME_NUMBER,
@@ -280,6 +282,7 @@ describe("when text fields are submitted", () => {
           first_name: TEST_PARENT_FIRST_NAME,
           information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
           last_name: TEST_LAST_NAME,
+          date_of_birth: TEST_PARENT_DOB,
         },
         preferred_comms: "",
         preferred_number: "",

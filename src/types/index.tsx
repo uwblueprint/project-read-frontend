@@ -29,6 +29,7 @@ export type Student = {
 export type Family = {
   [DefaultFieldKey.ADDRESS]: string;
   [DefaultFieldKey.CELL_NUMBER]: string;
+  [DefaultFieldKey.DATE_OF_BIRTH]: string;
   [DefaultFieldKey.EMAIL]: string;
   [DefaultFieldKey.HOME_NUMBER]: string;
   [DefaultFieldKey.ID]: number;
