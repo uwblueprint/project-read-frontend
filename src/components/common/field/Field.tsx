@@ -1,5 +1,6 @@
 import React from "react";
 
+import DateInput from "components/common/inputs/DateInput";
 import SelectInput from "components/common/inputs/SelectInput";
 import TextInput from "components/common/inputs/TextInput";
 import QuestionTypes from "constants/QuestionTypes";
@@ -36,6 +37,17 @@ const Field = ({ field, onChange, value }: Props) => {
           testId={`${field.role} ${field.name}`}
           onChange={onChange}
           options={field.options}
+          value={value}
+        />
+      );
+    case QuestionTypes.DATE:
+      return (
+        <DateInput
+          id={`${field.role} ${field.name}`}
+          inputWidth={FORM_FIELD_WIDTH}
+          label={field.name}
+          onChange={onChange}
+          testId={`${field.role} ${field.name}`}
           value={value}
         />
       );
