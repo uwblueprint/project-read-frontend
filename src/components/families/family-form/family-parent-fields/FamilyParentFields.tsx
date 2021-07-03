@@ -31,6 +31,16 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => (
       value={family.parent.last_name}
     />
     <Field
+      field={{ ...DefaultFields.DATE_OF_BIRTH, role: StudentRole.PARENT }}
+      onChange={(value) =>
+        onChange({
+          ...family,
+          parent: { ...family.parent, date_of_birth: value },
+        })
+      }
+      value={family.parent.date_of_birth}
+    />
+    <Field
       field={{ ...DefaultFields.HOME_NUMBER, role: StudentRole.PARENT }}
       onChange={(value) => onChange({ ...family, home_number: value })}
       value={family.home_number}

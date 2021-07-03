@@ -1,6 +1,10 @@
 import React from "react";
 
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { fireEvent, render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import moment from "moment";
 
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
@@ -26,7 +30,9 @@ describe("when the registration form is opened", () => {
 
   beforeEach(() => {
     ({ getByRole, getByTestId, getByText } = render(
-      <RegistrationForm onSubmit={() => {}} session={session} />
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <RegistrationForm onSubmit={() => {}} session={session} />
+      </MuiPickersUtilsProvider>
     ));
   });
 
@@ -60,19 +66,22 @@ describe("when the registration form is opened", () => {
 const TEST_LAST_NAME = "Fish";
 const TEST_PARENT_ADDRESS = "42 Wallaby Way";
 const TEST_PARENT_CELL_NUMBER = "123";
-const TEST_PARENT_DOB = "Jan 1 1990";
+const TEST_PARENT_DOB = "01011990";
 const TEST_PARENT_EMAIL = "marlin@test.com";
 const TEST_PARENT_FIRST_NAME = "Marlin";
 const TEST_PARENT_HOME_NUMBER = "456";
 const TEST_PARENT_WORK_NUMBER = "789";
+const TEST_PARENT_FAV_COLOUR = "red";
 const TEST_CHILD_FIRST_NAME = "Nemo";
-const TEST_CHILD_DOB = "Jan 1 2020";
+const TEST_CHILD_DOB = "01012018";
+const TEST_CHILD_FAV_COLOUR = "blue";
 const TEST_GUEST_FIRST_NAME = "Dory";
-const TEST_GUEST_DOB = "Jan 1 2015";
+const TEST_GUEST_DOB = "01011987";
+const TEST_GUEST_FAV_COLOUR = "periwinkle";
 
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
-  name: "DOB",
+  name: "Favourite colour",
   question_type: QuestionTypes.TEXT,
   options: [],
 };
@@ -111,15 +120,17 @@ describe("when text fields are submitted", () => {
       year: 2021,
     };
     const { getByTestId, queryByTestId } = render(
-      <DynamicFieldsContext.Provider
-        value={{
-          parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
-          childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
-          guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
-        }}
-      >
-        <RegistrationForm onSubmit={() => {}} session={session} />
-      </DynamicFieldsContext.Provider>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <DynamicFieldsContext.Provider
+          value={{
+            parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+            childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+            guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+          }}
+        >
+          <RegistrationForm onSubmit={() => {}} session={session} />
+        </DynamicFieldsContext.Provider>
+      </MuiPickersUtilsProvider>
     );
 
     expect(
@@ -148,16 +159,18 @@ describe("when text fields are submitted", () => {
       year: 2021,
     };
     const onSubmit = jest.fn((e) => e.preventDefault());
-    const { getByRole, getByTestId } = render(
-      <DynamicFieldsContext.Provider
-        value={{
-          parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
-          childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
-          guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
-        }}
-      >
-        <RegistrationForm onSubmit={onSubmit} session={session} />
-      </DynamicFieldsContext.Provider>
+    const { getByLabelText, getByRole, getByTestId } = render(
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <DynamicFieldsContext.Provider
+          value={{
+            parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+            childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+            guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+          }}
+        >
+          <RegistrationForm onSubmit={onSubmit} session={session} />
+        </DynamicFieldsContext.Provider>
+      </MuiPickersUtilsProvider>
     );
 
     // basic information section
@@ -173,6 +186,13 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    const parentDobInput = getByLabelText(
+      `${StudentRole.PARENT} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    parentDobInput.setSelectionRange(0, parentDobInput.value.length);
+    userEvent.type(parentDobInput, TEST_PARENT_DOB);
+
     fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${DefaultFields.HOME_NUMBER.name}`),
       {
@@ -206,7 +226,7 @@ describe("when text fields are submitted", () => {
     fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_PARENT_DOB },
+        target: { value: TEST_PARENT_FAV_COLOUR },
       }
     );
 
@@ -223,10 +243,17 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    const childDobInput = getByLabelText(
+      `${StudentRole.CHILD} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    childDobInput.setSelectionRange(0, childDobInput.value.length);
+    userEvent.type(childDobInput, TEST_CHILD_DOB);
+
     fireEvent.change(
       getByTestId(`${StudentRole.CHILD} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_CHILD_DOB },
+        target: { value: TEST_CHILD_FAV_COLOUR },
       }
     );
 
@@ -243,10 +270,17 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    const guestDobInput = getByLabelText(
+      `${StudentRole.GUEST} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    guestDobInput.setSelectionRange(0, guestDobInput.value.length);
+    userEvent.type(guestDobInput, TEST_GUEST_DOB);
+
     fireEvent.change(
       getByTestId(`${StudentRole.GUEST} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_GUEST_DOB },
+        target: { value: TEST_GUEST_FAV_COLOUR },
       }
     );
 
@@ -263,23 +297,38 @@ describe("when text fields are submitted", () => {
         children: [
           {
             first_name: TEST_CHILD_FIRST_NAME,
-            information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
+            information: {
+              [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR,
+            },
             last_name: TEST_LAST_NAME,
+            date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
           },
         ],
         email: TEST_PARENT_EMAIL,
         guests: [
           {
             first_name: TEST_GUEST_FIRST_NAME,
-            information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
+            information: {
+              [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR,
+            },
             last_name: TEST_LAST_NAME,
+            date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
           },
         ],
         home_number: TEST_PARENT_HOME_NUMBER,
         parent: {
           first_name: TEST_PARENT_FIRST_NAME,
-          information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
+          information: {
+            [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR,
+          },
           last_name: TEST_LAST_NAME,
+          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
         },
         preferred_comms: "",
         preferred_number: "",

@@ -39,6 +39,13 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     question_type: QuestionTypes.MULTIPLE_CHOICE,
     options: [],
   },
+  DATE_OF_BIRTH: {
+    id: DefaultFieldKey.DATE_OF_BIRTH,
+    is_default: false,
+    name: "Date of birth",
+    question_type: QuestionTypes.DATE,
+    options: [],
+  },
   EMAIL: {
     id: DefaultFieldKey.EMAIL,
     is_default: true,
