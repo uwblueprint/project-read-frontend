@@ -1,5 +1,7 @@
 import React from "react";
 
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { fireEvent, render } from "@testing-library/react";
 
 import { SessionDetailResponse } from "api/types";
@@ -149,15 +151,17 @@ describe("when text fields are submitted", () => {
     };
     const onSubmit = jest.fn((e) => e.preventDefault());
     const { getByRole, getByTestId } = render(
-      <DynamicFieldsContext.Provider
-        value={{
-          parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
-          childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
-          guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
-        }}
-      >
-        <RegistrationForm onSubmit={onSubmit} session={session} />
-      </DynamicFieldsContext.Provider>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <DynamicFieldsContext.Provider
+          value={{
+            parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+            childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+            guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+          }}
+        >
+          <RegistrationForm onSubmit={onSubmit} session={session} />
+        </DynamicFieldsContext.Provider>
+      </MuiPickersUtilsProvider>
     );
 
     // basic information section
