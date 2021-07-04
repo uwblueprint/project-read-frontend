@@ -1,16 +1,7 @@
 import { Class, Session } from "types";
 
 import * as APIUtils from "./APIUtils";
-import { FamilyListResponse } from "./FamilyAPI";
-
-export type ClassListResponse = Pick<Class, "id" | "name">;
-
-export type SessionListResponse = Pick<Session, "id" | "season" | "year">;
-
-export type SessionDetailResponse = Session & {
-  classes: ClassListResponse[];
-  families: FamilyListResponse[];
-};
+import { SessionListResponse, SessionDetailResponse } from "./types";
 
 const getSessions = (): Promise<SessionListResponse[]> =>
   APIUtils.get("/sessions");

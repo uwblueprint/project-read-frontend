@@ -1,5 +1,4 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import EnrolmentStatus from "constants/EnrolmentStatus";
 import StudentRole from "constants/StudentRole";
 
 type Field = {
@@ -60,14 +59,6 @@ export type Class = {
   id: number;
   name: string;
   attendance: Attendance[];
-};
-
-export type Enrolment = {
-  id: number;
-  session: Session;
-  preferred_class: Class;
-  enrolled_class: Class;
-  status: EnrolmentStatus;
 };
 
 export type InputProps = {

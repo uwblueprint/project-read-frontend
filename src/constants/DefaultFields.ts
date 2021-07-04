@@ -34,7 +34,7 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
   },
   CURRENT_PREFERRED_CLASS: {
     id: DefaultFieldKey.CURRENT_PREFERRED_CLASS,
-    is_default: true,
+    is_default: false,
     name: "Preferred Class",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
     options: [],

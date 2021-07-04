@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-import { FamilySearchResponse } from "api/FamilyAPI";
+import { FamilySearchResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
 
 const useStyles = makeStyles(() => ({

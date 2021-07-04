@@ -6,8 +6,7 @@ import MUIDataTable, {
   MUIDataTableOptions,
 } from "mui-datatables";
 
-import { FamilyListResponse } from "api/FamilyAPI";
-import StatusChip from "components/common/status-chip";
+import { FamilyListResponse } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import {
   DefaultFamilyTableFields,
@@ -15,10 +14,8 @@ import {
 } from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
 import QuestionTypes from "constants/QuestionTypes";
-import { DynamicFieldsContext } from "context/DynamicFieldsContext";
-import { DefaultField, DynamicField } from "types";
 
-import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
+import StatusChip from "../common/status-chip";
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
@@ -112,22 +109,24 @@ const FamilyTable = ({
       });
 
       const enrolment = current_enrolment || {
-        id: null,
-        session: { name: "none" },
-        preferred_class: { name: "none" },
-        enrolled_class: { name: "none" },
+        preferred_class: { name: "N/A" },
+        enrolled_class: { name: "N/A" },
         status: EnrolmentStatus.UNASSIGNED,
       };
-      const enrolled = current_enrolment ? "True" : "False";
+      const enrolledClassName = enrolment.enrolled_class
+        ? enrolment.enrolled_class.name
+        : "N/A";
+      const preferredClassName = enrolment.preferred_class
+        ? enrolment.preferred_class.name
+        : "N/A";
       const familyRow: FamilyTableRow = {
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
         [DefaultFieldKey.CHILDREN]: childrenInfo,
         [DefaultFieldKey.STATUS]: enrolment.status,
-        [DefaultFieldKey.ENROLLED]: enrolled,
-        [DefaultFieldKey.CURRENT_CLASS]: enrolment.enrolled_class.name,
-        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]:
-          enrolment.preferred_class.name,
+        [DefaultFieldKey.ENROLLED]: current_enrolment ? "True" : "False",
+        [DefaultFieldKey.CURRENT_CLASS]: enrolledClassName,
+        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: preferredClassName,
         ...args,
       };
       parentDynamicFields.forEach((field) => {
