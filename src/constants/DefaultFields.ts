@@ -143,8 +143,8 @@ export const DefaultFamilyTableFields: DefaultField[] = [
 ];
 
 export const FamilyEnrolmentFields: DefaultField[] = [
-  DefaultFields.CURRENT_PREFERRED_CLASS,
   DefaultFields.ENROLLED,
+  DefaultFields.CURRENT_PREFERRED_CLASS,
   DefaultFields.CURRENT_CLASS,
 ];
 
