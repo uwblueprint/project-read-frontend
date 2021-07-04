@@ -9,11 +9,12 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
-import RegistrationForm from "./RegistrationForm";
+import RegistrationForm from "./registration-form";
 import FamilyAPI, {
   FamilySearchResponse,
   FamilyStudentRequest,
 } from "../../api/FamilyAPI";
+import { SessionDetailResponse } from "../../api/SessionAPI";
 import FamilySearchResultsTable from "../family-search/family-search-results-table";
 import StudentSearchBar from "../family-search/student-search-bar";
 
@@ -41,15 +42,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type RegistrationFormDialogProps = {
+type Props = {
   open: boolean;
   onClose: () => void;
+  session: SessionDetailResponse;
 };
 
-const RegistrationFormDialog = ({
-  open,
-  onClose,
-}: RegistrationFormDialogProps) => {
+const RegistrationDialog = ({ open, onClose, session }: Props) => {
   const classes = useStyles();
   const [shouldDisplaySearch, setShouldDisplaySearch] = useState(true);
   const [firstName, setFirstName] = useState("");
@@ -153,7 +152,10 @@ const RegistrationFormDialog = ({
               <NavigateBefore />
               Go back
             </Button>
-            <RegistrationForm onSubmit={onRegistrationFormSubmit} />
+            <RegistrationForm
+              onSubmit={onRegistrationFormSubmit}
+              session={session}
+            />
           </>
         )}
       </DialogContent>
@@ -161,4 +163,4 @@ const RegistrationFormDialog = ({
   );
 };
 
-export default RegistrationFormDialog;
+export default RegistrationDialog;

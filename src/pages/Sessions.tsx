@@ -165,6 +165,7 @@ const Sessions = () => {
             <RegistrationDialog
               open={displayRegDialog}
               onClose={handleCloseFormDialog}
+              session={selectedSession}
             />
           </>
         )}
