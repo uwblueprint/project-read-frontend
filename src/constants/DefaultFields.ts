@@ -21,7 +21,7 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
   CURRENT_CLASS: {
     id: DefaultFieldKey.CURRENT_CLASS,
     is_default: true,
-    name: "Class",
+    name: "Current Class",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
     options: [],
   },
@@ -35,7 +35,7 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
   CURRENT_PREFERRED_CLASS: {
     id: DefaultFieldKey.CURRENT_PREFERRED_CLASS,
     is_default: true,
-    name: "Preferrences",
+    name: "Preferred Class",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
     options: [],
   },
@@ -142,12 +142,10 @@ export const DefaultFamilyTableFields: DefaultField[] = [
   DefaultFields.PREFERRED_CONTACT,
 ];
 
-export const FamilySidebarEnrolmentFields: DefaultField[] = [
-  DefaultFields.STATUS,
-  DefaultFields.CURRENT_SESSION,
-  DefaultFields.CURRENT_CLASS,
+export const FamilyEnrolmentFields: DefaultField[] = [
   DefaultFields.CURRENT_PREFERRED_CLASS,
   DefaultFields.ENROLLED,
+  DefaultFields.CURRENT_CLASS,
 ];
 
 export const DefaultFamilyFormFields: DefaultField[] = [

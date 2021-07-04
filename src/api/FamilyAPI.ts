@@ -1,5 +1,5 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import { Family, Student } from "types";
+import { Enrolment, Family, Student } from "types";
 
 import * as APIUtils from "./APIUtils";
 
@@ -17,21 +17,21 @@ export type FamilyDetailResponse = Pick<
 > & {
   children: Student[];
   guests: Student[];
+  current_enrolment: Enrolment | null;
 };
 
 export type FamilyListResponse = Pick<
   Family,
   | DefaultFieldKey.CHILDREN
-  | DefaultFieldKey.CURRENT_CLASS
   | DefaultFieldKey.EMAIL
-  | DefaultFieldKey.ENROLLED
   | DefaultFieldKey.ID
   | DefaultFieldKey.NUM_CHILDREN
   | DefaultFieldKey.PHONE_NUMBER
   | DefaultFieldKey.PREFERRED_CONTACT
-  | DefaultFieldKey.STATUS
   | "parent"
->;
+> & {
+  current_enrolment: Enrolment | null;
+};
 
 export type FamilySearchResponse = Pick<
   Family,

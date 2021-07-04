@@ -53,17 +53,18 @@ const statusColumn: MUIDataTableColumn = {
 
 type FamilyTableRow = Pick<
   FamilyListResponse,
-  | DefaultFieldKey.CURRENT_CLASS
   | DefaultFieldKey.EMAIL
-  | DefaultFieldKey.ENROLLED
   | DefaultFieldKey.ID
   | DefaultFieldKey.NUM_CHILDREN
   | DefaultFieldKey.PHONE_NUMBER
   | DefaultFieldKey.PREFERRED_CONTACT
-  | DefaultFieldKey.STATUS
 > & {
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
+  [DefaultFieldKey.STATUS]: EnrolmentStatus;
+  [DefaultFieldKey.ENROLLED]: string;
+  [DefaultFieldKey.CURRENT_CLASS]: string;
+  [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: string;
   [DefaultFieldKey.CHILDREN]: string;
   [key: number]: string | number; // dynamic fields
 };
@@ -95,7 +96,7 @@ const FamilyTable = ({
   const [familyId, setFamilyId] = useState<number>();
 
   const getTableRows = (): FamilyTableRow[] =>
-    families.map(({ parent, children, ...args }) => {
+    families.map(({ parent, children, current_enrolment, ...args }) => {
       let childrenInfo = "";
       children.forEach((child, i) => {
         if (child.date_of_birth != null) {
@@ -109,10 +110,24 @@ const FamilyTable = ({
           childrenInfo += ", ";
         }
       });
+
+      const enrolment = current_enrolment || {
+        id: null,
+        session: { name: "none" },
+        preferred_class: { name: "none" },
+        enrolled_class: { name: "none" },
+        status: EnrolmentStatus.UNASSIGNED,
+      };
+      const enrolled = current_enrolment ? "True" : "False";
       const familyRow: FamilyTableRow = {
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
         [DefaultFieldKey.CHILDREN]: childrenInfo,
+        [DefaultFieldKey.STATUS]: enrolment.status,
+        [DefaultFieldKey.ENROLLED]: enrolled,
+        [DefaultFieldKey.CURRENT_CLASS]: enrolment.enrolled_class.name,
+        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]:
+          enrolment.preferred_class.name,
         ...args,
       };
       parentDynamicFields.forEach((field) => {

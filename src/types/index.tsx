@@ -30,9 +30,7 @@ export type Student = {
 export type Family = {
   [DefaultFieldKey.ADDRESS]: string;
   [DefaultFieldKey.CELL_NUMBER]: string;
-  [DefaultFieldKey.CURRENT_CLASS]: string;
   [DefaultFieldKey.EMAIL]: string;
-  [DefaultFieldKey.ENROLLED]: string;
   [DefaultFieldKey.HOME_NUMBER]: string;
   [DefaultFieldKey.ID]: number;
   [DefaultFieldKey.NOTES]: string;
@@ -41,7 +39,6 @@ export type Family = {
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.PREFERRED_NUMBER]: string;
-  [DefaultFieldKey.STATUS]: EnrolmentStatus;
   [DefaultFieldKey.WORK_NUMBER]: string;
   parent: Student;
 };
@@ -63,6 +60,14 @@ export type Class = {
   id: number;
   name: string;
   attendance: Attendance[];
+};
+
+export type Enrolment = {
+  id: number;
+  session: Session;
+  preferred_class: Class;
+  enrolled_class: Class;
+  status: EnrolmentStatus;
 };
 
 export type InputProps = {

@@ -67,18 +67,6 @@ const FamilyDetailsSidebar = ({
           <Typography variant="h2">
             {family.parent.first_name} {family.parent.last_name}
           </Typography>
-          <Typography variant="h3" className={classes.heading}>
-            Enrolment
-          </Typography>
-          {FamilySidebarEnrolmentFields.map((enrolmentField) => (
-            <Typography
-              variant="body2"
-              className={classes.pb}
-              key={enrolmentField.id}
-            >
-              <b>{enrolmentField.name}:</b> {(family as any)[enrolmentField.id]}
-            </Typography>
-          ))}
           <Divider variant="fullWidth" />
           <Typography variant="h3" className={classes.heading}>
             Basic Information
