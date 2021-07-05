@@ -22,6 +22,7 @@ import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "../components/sessions/SessionDetailView";
 import { DefaultFields } from "../constants/DefaultFields";
+import AttendanceTable from "../components/sessions/SessionDetailView/AttendanceTable";
 
 const isOnAllClassesTab = (classTabIndex: number) =>
   classTabIndex === ALL_CLASSES_TAB_INDEX;
@@ -125,6 +126,15 @@ const Sessions = () => {
     return [];
   };
 
+  const getClasses = (): ClassDetailResponse[] =>
+    // if (selectedSession !== undefined && isOnAllClassesTab(classTabIndex)) {
+    //   return selectedSession.families;
+    // }
+    // const classObj = classesMap.get(Number(classId));
+    // if (classObj !== undefined) {
+    //   return classObj.families;
+    // }
+    [];
   const getEnrolmentFields = isOnAllClassesTab(classTabIndex)
     ? [DefaultFields.CURRENT_CLASS, DefaultFields.STATUS]
     : [DefaultFields.STATUS];
@@ -135,6 +145,7 @@ const Sessions = () => {
         <Box display="flex" flexGrow={1} alignItems="center">
           <Box mr={3}>
             <Typography variant="h1">Session:</Typography>
+            <AttendanceTable classes={getClasses()} />
           </Box>
           {selectedSession && (
             <Box>
