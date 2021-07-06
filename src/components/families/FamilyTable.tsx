@@ -59,7 +59,7 @@ type FamilyTableRow = Pick<
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
   [DefaultFieldKey.STATUS]: EnrolmentStatus;
-  [DefaultFieldKey.ENROLLED]: string;
+  [DefaultFieldKey.IS_ENROLLED]: string;
   [DefaultFieldKey.CURRENT_CLASS]: string;
   [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: string;
   [DefaultFieldKey.CHILDREN]: string;
@@ -109,24 +109,22 @@ const FamilyTable = ({
       });
 
       const enrolment = current_enrolment || {
-        preferred_class: { name: "N/A" },
-        enrolled_class: { name: "N/A" },
+        enrolled_class: null,
+        preferred_class: null,
         status: EnrolmentStatus.UNASSIGNED,
       };
-      const enrolledClassName = enrolment.enrolled_class
-        ? enrolment.enrolled_class.name
-        : "N/A";
-      const preferredClassName = enrolment.preferred_class
-        ? enrolment.preferred_class.name
-        : "N/A";
       const familyRow: FamilyTableRow = {
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
         [DefaultFieldKey.CHILDREN]: childrenInfo,
         [DefaultFieldKey.STATUS]: enrolment.status,
-        [DefaultFieldKey.ENROLLED]: current_enrolment ? "True" : "False",
-        [DefaultFieldKey.CURRENT_CLASS]: enrolledClassName,
-        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: preferredClassName,
+        [DefaultFieldKey.IS_ENROLLED]: current_enrolment ? "True" : "False",
+        [DefaultFieldKey.CURRENT_CLASS]: enrolment.enrolled_class
+          ? enrolment.enrolled_class.name
+          : "N/A",
+        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: enrolment.preferred_class
+          ? enrolment.preferred_class.name
+          : "N/A",
         ...args,
       };
       parentDynamicFields.forEach((field) => {

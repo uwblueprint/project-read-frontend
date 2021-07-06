@@ -4,6 +4,10 @@ import { Class, Session, Family, Student, DynamicField } from "../../types";
 
 export type ClassListResponse = Pick<Class, "id" | "name">;
 
+export type ClassDetailResponse = Class & {
+  families: FamilyListResponse[];
+};
+
 export type SessionListResponse = Pick<Session, "id" | "season" | "year">;
 
 export type SessionDetailResponse = Session & {
@@ -11,8 +15,12 @@ export type SessionDetailResponse = Session & {
   families: FamilyListResponse[];
 };
 
-export type ClassDetailResponse = Class & {
-  families: FamilyListResponse[];
+export type Enrolment = {
+  id: number;
+  session: SessionListResponse | null;
+  preferred_class: ClassListResponse | null;
+  enrolled_class: ClassListResponse | null;
+  status: EnrolmentStatus;
 };
 
 export type FamilyDetailResponse = Pick<
@@ -43,14 +51,6 @@ export type FamilyListResponse = Pick<
   | "parent"
 > & {
   current_enrolment: Enrolment | null;
-};
-
-export type Enrolment = {
-  id: number;
-  session: SessionListResponse | null;
-  preferred_class: ClassListResponse | null;
-  enrolled_class: ClassListResponse | null;
-  status: EnrolmentStatus;
 };
 
 export type FamilySearchResponse = Pick<

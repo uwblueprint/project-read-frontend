@@ -5,10 +5,16 @@ import { Typography } from "@material-ui/core";
 import FamilyAPI from "api/FamilyAPI";
 import { FamilyListResponse } from "api/types";
 import FamilyTable from "components/families/FamilyTable";
-import { FamilyEnrolmentFields } from "constants/DefaultFields";
+import { DefaultFields } from "constants/DefaultFields";
+import { DefaultField } from "types";
 
 const MainRegistration = () => {
   const [families, setFamilies] = useState<FamilyListResponse[]>([]);
+  const FamilyEnrolmentFields: DefaultField[] = [
+    DefaultFields.IS_ENROLLED,
+    DefaultFields.CURRENT_PREFERRED_CLASS,
+    DefaultFields.CURRENT_CLASS,
+  ];
 
   useEffect(() => {
     async function fetchFamilies() {

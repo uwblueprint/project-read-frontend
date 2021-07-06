@@ -6,7 +6,7 @@ enum DefaultFieldKey {
   CURRENT_SESSION = "session",
   CURRENT_PREFERRED_CLASS = "preferred_class",
   EMAIL = "email",
-  ENROLLED = "is_enrolled",
+  IS_ENROLLED = "is_enrolled",
   FIRST_NAME = "first_name",
   HOME_NUMBER = "home_number",
   ID = "id",

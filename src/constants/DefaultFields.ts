@@ -46,8 +46,8 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     question_type: QuestionTypes.TEXT,
     options: [],
   },
-  ENROLLED: {
-    id: DefaultFieldKey.ENROLLED,
+  IS_ENROLLED: {
+    id: DefaultFieldKey.IS_ENROLLED,
     is_default: true,
     name: "Enrolled",
     question_type: QuestionTypes.MULTIPLE_CHOICE,
@@ -140,12 +140,6 @@ export const DefaultFamilyTableFields: DefaultField[] = [
   DefaultFields.NUM_CHILDREN,
   DefaultFields.CHILDREN,
   DefaultFields.PREFERRED_CONTACT,
-];
-
-export const FamilyEnrolmentFields: DefaultField[] = [
-  DefaultFields.ENROLLED,
-  DefaultFields.CURRENT_PREFERRED_CLASS,
-  DefaultFields.CURRENT_CLASS,
 ];
 
 export const DefaultFamilyFormFields: DefaultField[] = [
