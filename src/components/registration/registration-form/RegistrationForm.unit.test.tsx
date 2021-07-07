@@ -1,21 +1,43 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import RegistrationForm, { TestId } from "./RegistrationForm";
-import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
-import StudentRole from "../../constants/StudentRole";
-import QuestionTypes from "../../constants/QuestionTypes";
-import { DefaultFields } from "../../constants/DefaultFields";
+import { DynamicFieldsContext } from "../../../context/DynamicFieldsContext";
+import StudentRole from "../../../constants/StudentRole";
+import QuestionTypes from "../../../constants/QuestionTypes";
+import { DefaultFields } from "../../../constants/DefaultFields";
+import { SessionDetailResponse } from "../../../api/SessionAPI";
 
 describe("when the registration form is opened", () => {
+  let getByRole: any;
+  let getByTestId: any;
+  let getByText: any;
+  const session: SessionDetailResponse = {
+    classes: [],
+    families: [],
+    fields: [],
+    id: 1,
+    season: "Fall",
+    start_date: "2021-09-01",
+    year: 2021,
+  };
+
+  beforeEach(() => {
+    ({ getByRole, getByTestId, getByText } = render(
+      <RegistrationForm onSubmit={() => {}} session={session} />
+    ));
+  });
+
   it("renders the form", () => {
-    const { getByTestId } = render(<RegistrationForm onSubmit={() => {}} />);
     expect(getByTestId(TestId.RegistrationForm)).toBeInTheDocument();
   });
 
-  it("renders the basic information section", () => {
-    const { getByTestId, getByText } = render(
-      <RegistrationForm onSubmit={() => {}} />
+  it("displays the session name", () => {
+    expect(getByTestId(TestId.SessionLabel)).toHaveTextContent(
+      "Currently enrolling a new family for Fall 2021"
     );
+  });
+
+  it("renders the basic information section", () => {
     expect(getByText("Basic information")).toBeInTheDocument();
     expect(getByTestId(TestId.ParentDefaultFields)).toBeInTheDocument();
     expect(getByTestId(TestId.FamilyDefaultFields)).toBeInTheDocument();
@@ -23,25 +45,18 @@ describe("when the registration form is opened", () => {
   });
 
   it("renders the children section", () => {
-    const { getByTestId, getByText } = render(
-      <RegistrationForm onSubmit={() => {}} />
-    );
     expect(getByText("Children")).toBeInTheDocument();
     expect(getByTestId(TestId.ChildrenDefaultFields)).toBeInTheDocument();
     expect(getByTestId(TestId.ChildrenDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the family members section", () => {
-    const { getByTestId, getByText } = render(
-      <RegistrationForm onSubmit={() => {}} />
-    );
     expect(getByText("Family members")).toBeInTheDocument();
     expect(getByTestId(TestId.GuestsDefaultFields)).toBeInTheDocument();
     expect(getByTestId(TestId.GuestsDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the submit button", () => {
-    const { getByRole } = render(<RegistrationForm onSubmit={() => {}} />);
     expect(getByRole("button", { name: "Done" })).toBeInTheDocument();
   });
 });
@@ -62,6 +77,7 @@ const TEST_DYNAMIC_FIELD = {
   is_default: false,
   name: "DOB",
   question_type: QuestionTypes.TEXT,
+  options: [],
 };
 
 const TEST_PARENT_DYNAMIC_FIELD = {
@@ -83,7 +99,57 @@ const TEST_GUEST_DYNAMIC_FIELD = {
 };
 
 describe("when text fields are submitted", () => {
+  it("displays them as form fields", () => {
+    const session: SessionDetailResponse = {
+      classes: [],
+      families: [],
+      fields: [
+        TEST_PARENT_DYNAMIC_FIELD.id,
+        TEST_CHILD_DYNAMIC_FIELD.id,
+        // guest field not included
+      ],
+      id: 1,
+      season: "Fall",
+      start_date: "2021-09-01",
+      year: 2021,
+    };
+    const { getByTestId, queryByTestId } = render(
+      <DynamicFieldsContext.Provider
+        value={{
+          parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+          childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+          guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+        }}
+      >
+        <RegistrationForm onSubmit={() => {}} session={session} />
+      </DynamicFieldsContext.Provider>
+    );
+
+    expect(
+      getByTestId(`${StudentRole.PARENT} ${TEST_PARENT_DYNAMIC_FIELD.name}`)
+    ).toBeInTheDocument();
+    expect(
+      getByTestId(`${StudentRole.CHILD} ${TEST_CHILD_DYNAMIC_FIELD.name}`)
+    ).toBeInTheDocument();
+    expect(
+      queryByTestId(`${StudentRole.GUEST} ${TEST_GUEST_DYNAMIC_FIELD.name}`)
+    ).not.toBeInTheDocument();
+  });
+
   it("structures the data in the required format", () => {
+    const session: SessionDetailResponse = {
+      classes: [],
+      families: [],
+      fields: [
+        TEST_PARENT_DYNAMIC_FIELD.id,
+        TEST_CHILD_DYNAMIC_FIELD.id,
+        TEST_GUEST_DYNAMIC_FIELD.id,
+      ],
+      id: 1,
+      season: "Fall",
+      start_date: "2021-09-01",
+      year: 2021,
+    };
     const onSubmit = jest.fn((e) => e.preventDefault());
     const { getByRole, getByTestId } = render(
       <DynamicFieldsContext.Provider
@@ -93,7 +159,7 @@ describe("when text fields are submitted", () => {
           guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
         }}
       >
-        <RegistrationForm onSubmit={onSubmit} />
+        <RegistrationForm onSubmit={onSubmit} session={session} />
       </DynamicFieldsContext.Provider>
     );
 

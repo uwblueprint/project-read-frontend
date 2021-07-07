@@ -1,19 +1,21 @@
 import React, { useContext, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
-import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
-import FormFieldGroup from "./FormFieldGroup";
+import { DynamicFieldsContext } from "../../../context/DynamicFieldsContext";
+import FormFieldGroup from "../FormFieldGroup";
 import {
   DefaultFamilyFormFields,
   DefaultStudentFormFields,
-} from "../../constants/DefaultFields";
-import StudentRole from "../../constants/StudentRole";
+} from "../../../constants/DefaultFields";
+import StudentRole from "../../../constants/StudentRole";
 import {
   FamilyRequest,
   FamilyStudentRequest,
   StudentRequest,
-} from "../../api/FamilyAPI";
-import { DefaultFormField } from "../../hooks/useFormFields";
-import DefaultFieldKey from "../../constants/DefaultFieldKey";
+} from "../../../api/FamilyAPI";
+import { DefaultFormField } from "../../../hooks/useFormFields";
+import DefaultFieldKey from "../../../constants/DefaultFieldKey";
+import { SessionDetailResponse } from "../../../api/SessionAPI";
+import { DynamicField } from "../../../types";
 
 export enum TestId {
   ChildrenDefaultFields = "children-default-fields",
@@ -24,6 +26,7 @@ export enum TestId {
   ParentDefaultFields = "parent-default-fields",
   ParentDynamicFields = "parent-dynamic-fields",
   RegistrationForm = "registration-form",
+  SessionLabel = "session-label",
 }
 
 const defaultFamilyRequestData: FamilyRequest = {
@@ -47,9 +50,10 @@ type RegistrationFormProps = {
     e: React.FormEvent<HTMLFormElement>,
     data: FamilyStudentRequest
   ) => void;
+  session: SessionDetailResponse;
 };
 
-const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
+const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
   const {
     childDynamicFields,
     guestDynamicFields,
@@ -81,6 +85,11 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
       role: StudentRole.PARENT,
     }));
 
+  const getSessionDynamicFields = (dynamicFields: DynamicField[]) =>
+    dynamicFields.filter((dynamicField) =>
+      session.fields.includes(dynamicField.id)
+    );
+
   const getSubmissionData = (): FamilyStudentRequest => ({
     ...familyData,
     parent: { ...parentData },
@@ -93,8 +102,11 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
       data-testid={TestId.RegistrationForm}
       onSubmit={(e) => onSubmit(e, getSubmissionData())}
     >
-      <Typography variant="body1">
-        Currently enrolling a <b>new family</b> for <b>the latest session</b>
+      <Typography variant="body1" data-testid={TestId.SessionLabel}>
+        Currently enrolling a <b>new family</b> for{" "}
+        <b>
+          {session.season} {session.year}
+        </b>
       </Typography>
 
       <Typography component="h3" variant="h5">
@@ -112,7 +124,7 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
       />
       <FormFieldGroup
         testId={TestId.ParentDynamicFields}
-        fields={parentDynamicFields}
+        fields={getSessionDynamicFields(parentDynamicFields)}
         onChange={(data) =>
           setParentData(
             Object.assign(parentData, { ...parentData, information: data })
@@ -130,7 +142,7 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
       />
       <FormFieldGroup
         testId={TestId.ChildrenDynamicFields}
-        fields={childDynamicFields}
+        fields={getSessionDynamicFields(childDynamicFields)}
         onChange={(data) =>
           setChildData(
             Object.assign(childData, { ...childData, information: data })
@@ -148,7 +160,7 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
       />
       <FormFieldGroup
         testId={TestId.GuestsDynamicFields}
-        fields={guestDynamicFields}
+        fields={getSessionDynamicFields(guestDynamicFields)}
         onChange={(data) =>
           setGuestData(
             Object.assign(guestData, { ...guestData, information: data })
