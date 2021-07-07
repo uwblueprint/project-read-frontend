@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   Button,
   Dialog,
@@ -9,14 +10,16 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
-import RegistrationForm from "./registration-form";
+
 import FamilyAPI, {
   FamilySearchResponse,
   FamilyStudentRequest,
-} from "../../api/FamilyAPI";
-import { SessionDetailResponse } from "../../api/SessionAPI";
-import FamilySearchResultsTable from "../family-search/family-search-results-table";
-import StudentSearchBar from "../family-search/student-search-bar";
+} from "api/FamilyAPI";
+import { SessionDetailResponse } from "api/SessionAPI";
+import FamilySearchResultsTable from "components/family-search/family-search-results-table";
+import StudentSearchBar from "components/family-search/student-search-bar";
+
+import RegistrationForm from "./registration-form";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {

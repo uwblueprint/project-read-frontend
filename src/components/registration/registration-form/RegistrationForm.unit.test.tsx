@@ -1,11 +1,14 @@
 import React from "react";
+
 import { fireEvent, render } from "@testing-library/react";
+
+import { SessionDetailResponse } from "api/SessionAPI";
+import { DefaultFields } from "constants/DefaultFields";
+import QuestionTypes from "constants/QuestionTypes";
+import StudentRole from "constants/StudentRole";
+import { DynamicFieldsContext } from "context/DynamicFieldsContext";
+
 import RegistrationForm, { TestId } from "./RegistrationForm";
-import { DynamicFieldsContext } from "../../../context/DynamicFieldsContext";
-import StudentRole from "../../../constants/StudentRole";
-import QuestionTypes from "../../../constants/QuestionTypes";
-import { DefaultFields } from "../../../constants/DefaultFields";
-import { SessionDetailResponse } from "../../../api/SessionAPI";
 
 describe("when the registration form is opened", () => {
   let getByRole: any;

@@ -1,5 +1,6 @@
-import DefaultFieldKey from "../constants/DefaultFieldKey";
-import { Family, Student } from "../types";
+import DefaultFieldKey from "constants/DefaultFieldKey";
+import { Family, Student } from "types";
+
 import * as APIUtils from "./APIUtils";
 
 export type FamilyDetailResponse = Pick<

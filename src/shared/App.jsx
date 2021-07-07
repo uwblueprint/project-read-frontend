@@ -1,17 +1,19 @@
 import React from "react";
+
+import { ThemeProvider } from "@material-ui/core/styles";
 import {
   Redirect,
   Route,
   Switch,
   BrowserRouter as Router,
 } from "react-router-dom";
-import { ThemeProvider } from "@material-ui/core/styles";
 
-import { AuthProvider } from "../context/auth";
-import Login from "../pages/Login";
-import ProjectREAD from "./ProjectREAD";
+import { AuthProvider } from "context/auth";
+import Login from "pages/Login";
+import theme from "theme";
+
 import PrivateRoute from "./PrivateRoute";
-import theme from "../theme";
+import ProjectREAD from "./ProjectREAD";
 
 function App() {
   return (

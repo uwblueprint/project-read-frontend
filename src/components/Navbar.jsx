@@ -1,8 +1,9 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+
 import { AppBar, Button, IconButton, Toolbar } from "@material-ui/core";
-import { AccountCircle } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { AccountCircle } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   navbar: {

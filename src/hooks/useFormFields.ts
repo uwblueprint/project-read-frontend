@@ -1,7 +1,8 @@
 import { useState } from "react";
-import DefaultFieldKey from "../constants/DefaultFieldKey";
-import StudentRole from "../constants/StudentRole";
-import { DefaultField, DynamicField } from "../types";
+
+import DefaultFieldKey from "constants/DefaultFieldKey";
+import StudentRole from "constants/StudentRole";
+import { DefaultField, DynamicField } from "types";
 
 export type DefaultFormField = DefaultField & { role: StudentRole };
 export type FormFieldKey = number | DefaultFieldKey;

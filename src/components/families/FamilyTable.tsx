@@ -1,21 +1,24 @@
 import React, { useContext, useState, useCallback } from "react";
+
+import { Typography } from "@material-ui/core";
 import MUIDataTable, {
   MUIDataTableColumn,
   MUIDataTableOptions,
 } from "mui-datatables";
-import { Typography } from "@material-ui/core";
-import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
-import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
-import { DefaultField, DynamicField } from "../../types";
-import DefaultFieldKey from "../../constants/DefaultFieldKey";
+
+import { FamilyListResponse } from "api/FamilyAPI";
+import StatusChip from "components/common/status-chip";
+import DefaultFieldKey from "constants/DefaultFieldKey";
 import {
   DefaultFamilyTableFields,
   DefaultFields,
-} from "../../constants/DefaultFields";
-import QuestionTypes from "../../constants/QuestionTypes";
-import { FamilyListResponse } from "../../api/FamilyAPI";
-import StatusChip from "../common/status-chip";
-import EnrolmentStatus from "../../constants/EnrolmentStatus";
+} from "constants/DefaultFields";
+import EnrolmentStatus from "constants/EnrolmentStatus";
+import QuestionTypes from "constants/QuestionTypes";
+import { DynamicFieldsContext } from "context/DynamicFieldsContext";
+import { DefaultField, DynamicField } from "types";
+
+import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 
 const options: MUIDataTableOptions = {
   responsive: "standard",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+
 import {
   Box,
   Button,
@@ -10,18 +10,20 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
+import { useHistory, useParams } from "react-router-dom";
+
+import ClassAPI, { ClassDetailResponse } from "api/ClassAPI";
+import { FamilyListResponse } from "api/FamilyAPI";
 import SessionAPI, {
   SessionListResponse,
   SessionDetailResponse,
-} from "../api/SessionAPI";
-import ClassAPI, { ClassDetailResponse } from "../api/ClassAPI";
-import RegistrationDialog from "../components/registration/RegistrationDialog";
-import { FamilyListResponse } from "../api/FamilyAPI";
-import FamilyTable from "../components/families/FamilyTable";
+} from "api/SessionAPI";
+import FamilyTable from "components/families/FamilyTable";
+import RegistrationDialog from "components/registration/RegistrationDialog";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
-} from "../components/sessions/session-detail-view";
-import { DefaultFields } from "../constants/DefaultFields";
+} from "components/sessions/session-detail-view";
+import { DefaultFields } from "constants/DefaultFields";
 
 const isOnAllClassesTab = (classTabIndex: number) =>
   classTabIndex === ALL_CLASSES_TAB_INDEX;

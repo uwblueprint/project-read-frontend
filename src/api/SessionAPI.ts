@@ -1,5 +1,6 @@
+import { Class, Session } from "types";
+
 import * as APIUtils from "./APIUtils";
-import { Class, Session } from "../types";
 import { FamilyListResponse } from "./FamilyAPI";
 
 export type ClassListResponse = Pick<Class, "id" | "name">;

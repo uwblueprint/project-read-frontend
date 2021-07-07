@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createContext, ReactNode } from "react";
-import DynamicFieldAPI from "../api/DynamicFieldAPI";
-import { DynamicField } from "../types";
+
+import DynamicFieldAPI from "api/DynamicFieldAPI";
+import { DynamicField } from "types";
 
 type DynamicFields = {
   childDynamicFields: DynamicField[];

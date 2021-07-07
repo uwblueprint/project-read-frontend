@@ -1,13 +1,15 @@
 import React from "react";
-import { Redirect, Switch } from "react-router-dom";
-import { Container } from "@material-ui/core";
-import MomentUtils from "@date-io/moment";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
-import { DynamicFieldsProvider } from "../context/DynamicFieldsContext";
-import Navbar from "../components/Navbar";
-import MainRegistration from "../pages/MainRegistration";
-import Sessions from "../pages/Sessions";
+import MomentUtils from "@date-io/moment";
+import { Container } from "@material-ui/core";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { Redirect, Switch } from "react-router-dom";
+
+import Navbar from "components/Navbar";
+import { DynamicFieldsProvider } from "context/DynamicFieldsContext";
+import MainRegistration from "pages/MainRegistration";
+import Sessions from "pages/Sessions";
+
 import PrivateRoute from "./PrivateRoute";
 
 function ProjectREAD() {

@@ -1,7 +1,9 @@
 import React from "react";
+
 import { Box, AppBar, Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ClassListResponse } from "../../../api/SessionAPI";
+
+import { ClassListResponse } from "api/SessionAPI";
 
 export const ALL_CLASSES_TAB_INDEX = 0;
 
