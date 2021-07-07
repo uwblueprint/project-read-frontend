@@ -1,6 +1,9 @@
 import React from "react";
+
 import { render } from "@testing-library/react";
-import EnrolmentStatus from "../../../constants/EnrolmentStatus";
+
+import EnrolmentStatus from "constants/EnrolmentStatus";
+
 import StatusChip from "./StatusChip";
 
 describe("StatusChip", () => {

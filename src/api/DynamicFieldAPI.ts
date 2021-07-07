@@ -1,4 +1,5 @@
-import { DynamicField } from "../types";
+import { DynamicField } from "types";
+
 import * as APIUtils from "./APIUtils";
 
 export type DynamicFieldsResponse = {

@@ -1,6 +1,8 @@
 import React from "react";
+
 import { Box, InputLabel, OutlinedInput } from "@material-ui/core";
-import { StringInputProps } from "../../../types";
+
+import { StringInputProps } from "types";
 
 const TextInput = ({
   id,

@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
-import QuestionTypes from "../../constants/QuestionTypes";
-import { DynamicField } from "../../types";
+
+import SelectInput from "components/common/inputs/SelectInput";
+import TextInput from "components/common/inputs/TextInput";
+import QuestionTypes from "constants/QuestionTypes";
 import useFormFields, {
   DefaultFormField,
   FormFieldData,
-} from "../../hooks/useFormFields";
-import SelectInput from "../common/inputs/SelectInput";
-import TextInput from "../common/inputs/TextInput";
+} from "hooks/useFormFields";
+import { DynamicField } from "types";
 
 const FORM_FIELD_WIDTH = 328;
 

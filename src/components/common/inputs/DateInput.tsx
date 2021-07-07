@@ -1,8 +1,10 @@
 import React from "react";
-import moment from "moment";
+
 import { Box, InputLabel } from "@material-ui/core";
 import { DatePicker } from "@material-ui/pickers";
-import { InputProps } from "../../../types";
+import moment from "moment";
+
+import { InputProps } from "types";
 
 type Props = InputProps & {
   value: Date;

@@ -1,6 +1,7 @@
+import { Class } from "types/index";
+
 import * as APIUtils from "./APIUtils";
 import { FamilyListResponse } from "./FamilyAPI";
-import { Class } from "../types/index";
 
 export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];

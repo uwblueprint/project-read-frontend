@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+
 import { Typography } from "@material-ui/core";
-import FamilyAPI, { FamilyListResponse } from "../api/FamilyAPI";
-import FamilyTable from "../components/families/FamilyTable";
-import { DefaultFields } from "../constants/DefaultFields";
+
+import FamilyAPI, { FamilyListResponse } from "api/FamilyAPI";
+import FamilyTable from "components/families/FamilyTable";
+import { DefaultFields } from "constants/DefaultFields";
 
 const MainRegistration = () => {
   const [families, setFamilies] = useState<FamilyListResponse[]>([]);

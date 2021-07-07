@@ -1,6 +1,6 @@
-import DefaultFieldKey from "../constants/DefaultFieldKey";
-import EnrolmentStatus from "../constants/EnrolmentStatus";
-import StudentRole from "../constants/StudentRole";
+import DefaultFieldKey from "constants/DefaultFieldKey";
+import EnrolmentStatus from "constants/EnrolmentStatus";
+import StudentRole from "constants/StudentRole";
 
 type Field = {
   is_default: boolean;

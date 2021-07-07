@@ -3,7 +3,7 @@ import React from "react";
 import { Chip, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-import EnrolmentStatus from "../../../constants/EnrolmentStatus";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 
 const StatusColourMap = new Map([
   [EnrolmentStatus.CLASS_ALLOCATED, "#A2D185"],

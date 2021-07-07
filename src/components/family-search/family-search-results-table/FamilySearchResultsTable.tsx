@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Box,
   Paper,
@@ -11,8 +12,9 @@ import {
   TableContainer,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import { FamilySearchResponse } from "../../../api/FamilyAPI";
-import { DefaultFields } from "../../../constants/DefaultFields";
+
+import { FamilySearchResponse } from "api/FamilyAPI";
+import { DefaultFields } from "constants/DefaultFields";
 
 const useStyles = makeStyles(() => ({
   noResultsTableCell: {

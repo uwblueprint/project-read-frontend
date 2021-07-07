@@ -1,4 +1,5 @@
-import { DefaultField } from "../types";
+import { DefaultField } from "types";
+
 import DefaultFieldKey from "./DefaultFieldKey";
 import QuestionTypes from "./QuestionTypes";
 

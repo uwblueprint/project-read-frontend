@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
+
 import { Drawer, Divider, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { DefaultFamilyFormFields } from "../../constants/DefaultFields";
-import { DynamicFieldsContext } from "../../context/DynamicFieldsContext";
-import DefaultFieldKey from "../../constants/DefaultFieldKey";
-import FamilyAPI, { FamilyDetailResponse } from "../../api/FamilyAPI";
+
+import FamilyAPI, { FamilyDetailResponse } from "api/FamilyAPI";
+import DefaultFieldKey from "constants/DefaultFieldKey";
+import { DefaultFamilyFormFields } from "constants/DefaultFields";
+import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
 const drawerWidth = 400;
 

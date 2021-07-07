@@ -1,4 +1,4 @@
-import app from "../firebase/config";
+import app from "firebase/config";
 
 const url = process.env.REACT_APP_API_URL;
 

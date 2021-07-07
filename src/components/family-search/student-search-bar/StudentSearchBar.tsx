@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+
 import { Button, Box, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Search } from "@material-ui/icons";
-import { DefaultFields } from "../../../constants/DefaultFields";
+
+import { DefaultFields } from "constants/DefaultFields";
 
 const useStyles = makeStyles((theme) => ({
   button: {

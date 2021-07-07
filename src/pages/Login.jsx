@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { Redirect } from "react-router-dom";
+
 import firebase from "firebase";
 import { FirebaseAuth } from "react-firebaseui";
+import { Redirect } from "react-router-dom";
 
-import { AuthContext } from "../context/auth";
+import { AuthContext } from "context/auth";
 
 function Login(props) {
   const { user } = useContext(AuthContext);
