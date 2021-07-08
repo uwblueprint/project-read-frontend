@@ -9,6 +9,7 @@ const FORM_FIELD_WIDTH = 328;
 
 export enum TestId {
   NameInput = "name-input",
+  SessionConfig = "session-config",
 }
 
 type Props = {
@@ -24,7 +25,7 @@ const SessionConfig = ({
   startDate,
   onChangeStartDate,
 }: Props) => (
-  <div>
+  <div data-testid={TestId.SessionConfig}>
     <Typography variant="h2">Session information</Typography>
     <TextInput
       testId={TestId.NameInput}
