@@ -25,6 +25,8 @@ import SessionDetailView, {
 } from "components/sessions/session-detail-view";
 import { DefaultFields } from "constants/DefaultFields";
 
+const NEW_SESSION = -1;
+
 const isOnAllClassesTab = (classTabIndex: number) =>
   classTabIndex === ALL_CLASSES_TAB_INDEX;
 
@@ -105,7 +107,12 @@ const Sessions = () => {
   const handleChangeCurrentSessionId = async (
     e: React.ChangeEvent<{ value: unknown }>
   ) => {
-    history.push(`/sessions/${e.target.value as number}`);
+    const newSessionId = e.target.value as number;
+    if (newSessionId === NEW_SESSION) {
+      history.push("/sessions/create");
+    } else {
+      history.push(`/sessions/${newSessionId}`);
+    }
   };
 
   const handleChangeClassTabIndex = (newClassTabIndex: number) => {
@@ -151,6 +158,7 @@ const Sessions = () => {
                       {session.season} {session.year}
                     </MenuItem>
                   ))}
+                  <MenuItem value={NEW_SESSION}>Add new session</MenuItem>
                 </Select>
               </FormControl>
             </Box>
