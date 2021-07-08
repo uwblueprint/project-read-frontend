@@ -4,13 +4,16 @@ import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { fireEvent, render } from "@testing-library/react";
 
+import { TestId as SessionConfigTestId } from "components/sessions/session-config/SessionConfig";
+
 import CreateSession from "./CreateSession";
 
 describe("CreateSession", () => {
   let getByRole: any;
+  let getByTestId: any;
 
   beforeEach(() => {
-    ({ getByRole } = render(
+    ({ getByRole, getByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <CreateSession />
       </MuiPickersUtilsProvider>
@@ -21,6 +24,12 @@ describe("CreateSession", () => {
     it("renders the step title", () => {
       expect(
         getByRole("heading", { name: "Create a new session" })
+      ).toBeInTheDocument();
+    });
+
+    it("renders the step content", () => {
+      expect(
+        getByTestId(SessionConfigTestId.SessionConfig)
       ).toBeInTheDocument();
     });
 

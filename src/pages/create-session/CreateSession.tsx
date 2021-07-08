@@ -11,6 +11,8 @@ import {
 import { NavigateBefore } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
+import SessionConfig from "components/sessions/session-config";
+
 enum CreateSessionStepLabel {
   ADD_CLASSES = "Add classes",
   CONFIGURE_FORM = "Configure form",
@@ -25,7 +27,7 @@ const steps = [
 
 const CreateSession = () => {
   const history = useHistory();
-  const [session] = useState({
+  const [session, setSession] = useState({
     name: "",
     startDate: new Date(),
   });
@@ -60,7 +62,27 @@ const CreateSession = () => {
     [CreateSessionStepLabel.CONFIGURE_SESSION]: "Create a new session",
   };
 
-  const stepContent = () => null;
+  const stepContent = () => {
+    switch (activeStep) {
+      case CreateSessionStepLabel.CONFIGURE_SESSION:
+        return (
+          <SessionConfig
+            sessionName={session.name}
+            onChangeSessionName={(name) => setSession({ ...session, name })}
+            startDate={session.startDate}
+            onChangeStartDate={(startDate) =>
+              setSession({ ...session, startDate })
+            }
+          />
+        );
+      case CreateSessionStepLabel.CONFIGURE_FORM:
+      // fall through
+      case CreateSessionStepLabel.ADD_CLASSES:
+      // fall through
+      default:
+        return null;
+    }
+  };
 
   return (
     <div>
