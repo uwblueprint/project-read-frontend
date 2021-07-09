@@ -18,18 +18,17 @@ export type DynamicField = Field & {
 };
 
 export type Student = {
+  [DefaultFieldKey.DATE_OF_BIRTH]: string;
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
   id: number;
   information: Record<number, string>; // dynamic fields
   role: StudentRole;
-  date_of_birth: string;
 };
 
 export type Family = {
   [DefaultFieldKey.ADDRESS]: string;
   [DefaultFieldKey.CELL_NUMBER]: string;
-  [DefaultFieldKey.DATE_OF_BIRTH]: string;
   [DefaultFieldKey.EMAIL]: string;
   [DefaultFieldKey.HOME_NUMBER]: string;
   [DefaultFieldKey.ID]: number;
