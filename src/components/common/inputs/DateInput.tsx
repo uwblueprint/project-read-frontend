@@ -44,10 +44,7 @@ const DateInput = ({
           )
         }
         fullWidth
-        KeyboardButtonProps={{
-          "aria-label": "change date",
-          ...{ "data-testid": testId },
-        }}
+        inputProps={{ "aria-label": testId }}
       />
     </Box>
   </Box>

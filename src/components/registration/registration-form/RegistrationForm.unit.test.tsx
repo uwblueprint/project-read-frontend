@@ -3,6 +3,7 @@ import React from "react";
 import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { fireEvent, render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
@@ -63,17 +64,17 @@ describe("when the registration form is opened", () => {
 const TEST_LAST_NAME = "Fish";
 const TEST_PARENT_ADDRESS = "42 Wallaby Way";
 const TEST_PARENT_CELL_NUMBER = "123";
-const TEST_PARENT_DOB = "Jan 1 1990";
+const TEST_PARENT_DOB = "0101990";
 const TEST_PARENT_EMAIL = "marlin@test.com";
 const TEST_PARENT_FIRST_NAME = "Marlin";
 const TEST_PARENT_HOME_NUMBER = "456";
 const TEST_PARENT_WORK_NUMBER = "789";
 const TEST_PARENT_FAV_COLOUR = "red";
 const TEST_CHILD_FIRST_NAME = "Nemo";
-const TEST_CHILD_DOB = "Jan 1 2020";
+const TEST_CHILD_DOB = "01012020";
 const TEST_CHILD_FAV_COLOUR = "blue";
 const TEST_GUEST_FIRST_NAME = "Dory";
-const TEST_GUEST_DOB = "Jan 1 2015";
+const TEST_GUEST_DOB = "01012015";
 const TEST_GUEST_FAV_COLOUR = "periwinkle";
 
 const TEST_DYNAMIC_FIELD = {
@@ -156,7 +157,7 @@ describe("when text fields are submitted", () => {
       year: 2021,
     };
     const onSubmit = jest.fn((e) => e.preventDefault());
-    const { getByText, getByRole, getByTestId } = render(
+    const { getByLabelText, getByRole, getByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DynamicFieldsContext.Provider
           value={{
@@ -184,10 +185,11 @@ describe("when text fields are submitted", () => {
       }
     );
 
-    fireEvent.click(
-      getByTestId(`${StudentRole.PARENT} ${DefaultFields.DATE_OF_BIRTH.name}`)
-    );
-    fireEvent.click(getByText("2"));
+    const parentDobInput = getByLabelText(
+      `${StudentRole.PARENT} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    parentDobInput.setSelectionRange(0, parentDobInput.value.length);
+    userEvent.type(parentDobInput, TEST_PARENT_DOB);
 
     fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${DefaultFields.HOME_NUMBER.name}`),
@@ -240,10 +242,11 @@ describe("when text fields are submitted", () => {
       }
     );
 
-    fireEvent.click(
-      getByTestId(`${StudentRole.CHILD} ${DefaultFields.DATE_OF_BIRTH.name}`)
-    );
-    fireEvent.click(getByText("2"));
+    const childDobInput = getByLabelText(
+      `${StudentRole.CHILD} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    childDobInput.setSelectionRange(0, childDobInput.value.length);
+    userEvent.type(childDobInput, TEST_CHILD_DOB);
 
     fireEvent.change(
       getByTestId(`${StudentRole.CHILD} ${TEST_DYNAMIC_FIELD.name}`),
@@ -266,10 +269,11 @@ describe("when text fields are submitted", () => {
       }
     );
 
-    fireEvent.click(
-      getByTestId(`${StudentRole.GUEST} ${DefaultFields.DATE_OF_BIRTH.name}`)
-    );
-    fireEvent.click(getByText("2"));
+    const guestDobInput = getByLabelText(
+      `${StudentRole.GUEST} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    guestDobInput.setSelectionRange(0, guestDobInput.value.length);
+    userEvent.type(guestDobInput, TEST_GUEST_DOB);
 
     fireEvent.change(
       getByTestId(`${StudentRole.GUEST} ${TEST_DYNAMIC_FIELD.name}`),
