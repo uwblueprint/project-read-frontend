@@ -6,11 +6,6 @@ import moment from "moment";
 
 import { InputProps } from "types";
 
-export enum TestId {
-  Input = "input",
-  KeyboardButton = "keyboard-button",
-}
-
 type Props = InputProps & {
   value: string;
   onChange: (value: string) => void;
