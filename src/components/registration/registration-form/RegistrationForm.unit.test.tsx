@@ -25,10 +25,11 @@ describe("when the registration form is opened", () => {
     start_date: "2021-09-01",
     year: 2021,
   };
-
   beforeEach(() => {
     ({ getByRole, getByTestId, getByText } = render(
-      <RegistrationForm onSubmit={() => {}} session={session} />
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <RegistrationForm onSubmit={() => {}} session={session} />
+      </MuiPickersUtilsProvider>
     ));
   });
 
@@ -67,10 +68,13 @@ const TEST_PARENT_EMAIL = "marlin@test.com";
 const TEST_PARENT_FIRST_NAME = "Marlin";
 const TEST_PARENT_HOME_NUMBER = "456";
 const TEST_PARENT_WORK_NUMBER = "789";
+const TEST_PARENT_FAV_COLOUR = "red";
 const TEST_CHILD_FIRST_NAME = "Nemo";
 const TEST_CHILD_DOB = "Jan 1 2020";
+const TEST_CHILD_FAV_COLOUR = "blue";
 const TEST_GUEST_FIRST_NAME = "Dory";
 const TEST_GUEST_DOB = "Jan 1 2015";
+const TEST_GUEST_FAV_COLOUR = "periwinkle";
 
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
@@ -113,15 +117,17 @@ describe("when text fields are submitted", () => {
       year: 2021,
     };
     const { getByTestId, queryByTestId } = render(
-      <DynamicFieldsContext.Provider
-        value={{
-          parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
-          childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
-          guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
-        }}
-      >
-        <RegistrationForm onSubmit={() => {}} session={session} />
-      </DynamicFieldsContext.Provider>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <DynamicFieldsContext.Provider
+          value={{
+            parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+            childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+            guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+          }}
+        >
+          <RegistrationForm onSubmit={() => {}} session={session} />
+        </DynamicFieldsContext.Provider>
+      </MuiPickersUtilsProvider>
     );
 
     expect(
@@ -150,7 +156,7 @@ describe("when text fields are submitted", () => {
       year: 2021,
     };
     const onSubmit = jest.fn((e) => e.preventDefault());
-    const { getByRole, getByTestId } = render(
+    const { getByText, getByRole, getByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DynamicFieldsContext.Provider
           value={{
@@ -177,6 +183,12 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    fireEvent.click(
+      getByTestId(`${StudentRole.PARENT} ${DefaultFields.DATE_OF_BIRTH.name}`)
+    );
+    fireEvent.click(getByText("2"));
+
     fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${DefaultFields.HOME_NUMBER.name}`),
       {
@@ -210,7 +222,7 @@ describe("when text fields are submitted", () => {
     fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_PARENT_DOB },
+        target: { value: TEST_PARENT_FAV_COLOUR },
       }
     );
 
@@ -227,10 +239,16 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    fireEvent.click(
+      getByTestId(`${StudentRole.CHILD} ${DefaultFields.DATE_OF_BIRTH.name}`)
+    );
+    fireEvent.click(getByText("2"));
+
     fireEvent.change(
       getByTestId(`${StudentRole.CHILD} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_CHILD_DOB },
+        target: { value: TEST_CHILD_FAV_COLOUR },
       }
     );
 
@@ -247,10 +265,16 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    fireEvent.click(
+      getByTestId(`${StudentRole.GUEST} ${DefaultFields.DATE_OF_BIRTH.name}`)
+    );
+    fireEvent.click(getByText("2"));
+
     fireEvent.change(
       getByTestId(`${StudentRole.GUEST} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_GUEST_DOB },
+        target: { value: TEST_GUEST_FAV_COLOUR },
       }
     );
 
