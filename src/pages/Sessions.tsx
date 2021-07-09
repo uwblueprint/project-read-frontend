@@ -10,22 +10,22 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
+import { useHistory, useParams } from "react-router-dom";
 
+import ClassAPI from "api/ClassAPI";
+import SessionAPI from "api/SessionAPI";
+import {
+  ClassDetailResponse,
+  SessionListResponse,
+  SessionDetailResponse,
+  FamilyListResponse,
+} from "api/types";
+import FamilyTable from "components/families/FamilyTable";
+import RegistrationDialog from "components/registration/RegistrationDialog";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
 import { DefaultFields } from "constants/DefaultFields";
-
-import ClassAPI from "../api/ClassAPI";
-import SessionAPI from "../api/SessionAPI";
-import {
-  SessionListResponse,
-  SessionDetailResponse,
-  ClassDetailResponse,
-  FamilyListResponse,
-} from "../api/types";
-import FamilyTable from "../components/families/FamilyTable";
-import RegistrationDialog from "../components/registration/RegistrationDialog";
 
 const isOnAllClassesTab = (classTabIndex: number) =>
   classTabIndex === ALL_CLASSES_TAB_INDEX;

@@ -1,5 +1,3 @@
-import { Class, Session } from "types";
-
 import * as APIUtils from "./APIUtils";
 import { SessionListResponse, SessionDetailResponse } from "./types";
 

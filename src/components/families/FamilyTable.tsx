@@ -14,8 +14,11 @@ import {
 } from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
 import QuestionTypes from "constants/QuestionTypes";
+import { DynamicFieldsContext } from "context/DynamicFieldsContext";
+import { DefaultField, DynamicField } from "types";
 
 import StatusChip from "../common/status-chip";
+import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
