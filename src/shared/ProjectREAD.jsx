@@ -7,6 +7,7 @@ import { Redirect, Switch } from "react-router-dom";
 
 import Navbar from "components/Navbar";
 import { DynamicFieldsProvider } from "context/DynamicFieldsContext";
+import CreateSession from "pages/create-session";
 import MainRegistration from "pages/MainRegistration";
 import Sessions from "pages/Sessions";
 
@@ -20,6 +21,11 @@ function ProjectREAD() {
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <Switch>
             <PrivateRoute exact path="/" component={MainRegistration} />
+            <PrivateRoute
+              exact
+              path="/sessions/create"
+              component={CreateSession}
+            />
             <PrivateRoute
               exact
               path={[
