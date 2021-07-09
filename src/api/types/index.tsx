@@ -1,6 +1,6 @@
-import DefaultFieldKey from "../../constants/DefaultFieldKey";
-import EnrolmentStatus from "../../constants/EnrolmentStatus";
-import { Class, Session, Family, Student, DynamicField } from "../../types";
+import DefaultFieldKey from "constants/DefaultFieldKey";
+import EnrolmentStatus from "constants/EnrolmentStatus";
+import { Class, Session, Family, Student, DynamicField } from "types";
 
 export type ClassListResponse = Pick<Class, "id" | "name">;
 
