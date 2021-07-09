@@ -4,6 +4,7 @@ import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import moment from "moment";
 
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
@@ -26,6 +27,7 @@ describe("when the registration form is opened", () => {
     start_date: "2021-09-01",
     year: 2021,
   };
+
   beforeEach(() => {
     ({ getByRole, getByTestId, getByText } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -64,17 +66,17 @@ describe("when the registration form is opened", () => {
 const TEST_LAST_NAME = "Fish";
 const TEST_PARENT_ADDRESS = "42 Wallaby Way";
 const TEST_PARENT_CELL_NUMBER = "123";
-const TEST_PARENT_DOB = "0101990";
+const TEST_PARENT_DOB = "01011990";
 const TEST_PARENT_EMAIL = "marlin@test.com";
 const TEST_PARENT_FIRST_NAME = "Marlin";
 const TEST_PARENT_HOME_NUMBER = "456";
 const TEST_PARENT_WORK_NUMBER = "789";
 const TEST_PARENT_FAV_COLOUR = "red";
 const TEST_CHILD_FIRST_NAME = "Nemo";
-const TEST_CHILD_DOB = "01012020";
+const TEST_CHILD_DOB = "01012018";
 const TEST_CHILD_FAV_COLOUR = "blue";
 const TEST_GUEST_FIRST_NAME = "Dory";
-const TEST_GUEST_DOB = "01012015";
+const TEST_GUEST_DOB = "01011987";
 const TEST_GUEST_FAV_COLOUR = "periwinkle";
 
 const TEST_DYNAMIC_FIELD = {
@@ -295,26 +297,38 @@ describe("when text fields are submitted", () => {
         children: [
           {
             first_name: TEST_CHILD_FIRST_NAME,
-            information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
+            information: {
+              [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR,
+            },
             last_name: TEST_LAST_NAME,
-            date_of_birth: TEST_CHILD_DOB,
+            date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
           },
         ],
         email: TEST_PARENT_EMAIL,
         guests: [
           {
             first_name: TEST_GUEST_FIRST_NAME,
-            information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
+            information: {
+              [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR,
+            },
             last_name: TEST_LAST_NAME,
-            date_of_birth: TEST_GUEST_DOB,
+            date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
           },
         ],
         home_number: TEST_PARENT_HOME_NUMBER,
         parent: {
           first_name: TEST_PARENT_FIRST_NAME,
-          information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
+          information: {
+            [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR,
+          },
           last_name: TEST_LAST_NAME,
-          date_of_birth: TEST_PARENT_DOB,
+          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
         },
         preferred_comms: "",
         preferred_number: "",
