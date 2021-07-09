@@ -11,14 +11,15 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
 
-import FamilyAPI, {
+import FamilyAPI from "api/FamilyAPI";
+import {
   FamilySearchResponse,
   FamilyStudentRequest,
-} from "api/FamilyAPI";
-import { SessionDetailResponse } from "api/SessionAPI";
-import FamilySearchResultsTable from "components/family-search/family-search-results-table";
-import StudentSearchBar from "components/family-search/student-search-bar";
+  SessionDetailResponse,
+} from "api/types";
 
+import FamilySearchResultsTable from "../family-search/family-search-results-table";
+import StudentSearchBar from "../family-search/student-search-bar";
 import RegistrationForm from "./registration-form";
 
 const useStyles = makeStyles((theme) => ({

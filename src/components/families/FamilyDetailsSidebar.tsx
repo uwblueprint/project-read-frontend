@@ -3,7 +3,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { Drawer, Divider, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import FamilyAPI, { FamilyDetailResponse } from "api/FamilyAPI";
+import FamilyAPI from "api/FamilyAPI";
+import { FamilyDetailResponse } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import { DefaultFamilyFormFields } from "constants/DefaultFields";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
