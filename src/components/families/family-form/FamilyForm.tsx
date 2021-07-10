@@ -68,7 +68,9 @@ export const studentFormDataToStudentRequest = (
 };
 
 type Props = {
+  dense: boolean;
   family: FamilyStudentFormData;
+  isEditing: boolean;
   childDynamicFields: DynamicField[];
   guestDynamicFields: DynamicField[];
   parentDynamicFields: DynamicField[];
@@ -76,7 +78,9 @@ type Props = {
 };
 
 const FamilyForm = ({
+  dense,
   family,
+  isEditing,
   childDynamicFields,
   guestDynamicFields,
   parentDynamicFields,
@@ -138,8 +142,10 @@ const FamilyForm = ({
         Basic information
       </Typography>
       <FamilyParentFields
+        dense={dense}
         dynamicFields={parentDynamicFields}
         family={family}
+        isEditing={isEditing}
         onChange={(value) => onChange({ ...family, ...value })}
       />
 
@@ -147,29 +153,37 @@ const FamilyForm = ({
         Children
       </Typography>
       <StudentForm
+        dense={dense}
         dynamicFields={childDynamicFields}
+        isEditing={isEditing}
         studentData={family.children}
         updateStudent={updateStudent}
         handleDeleteStudent={handleDeleteStudent}
         role={StudentRole.CHILD}
       />
-      <Button onClick={() => handleAddStudent(StudentRole.CHILD)}>
-        Add Child
-      </Button>
+      {isEditing && (
+        <Button onClick={() => handleAddStudent(StudentRole.CHILD)}>
+          Add Child
+        </Button>
+      )}
 
       <Typography component="h3" variant="h5">
         Family members
       </Typography>
       <StudentForm
+        dense={dense}
         dynamicFields={guestDynamicFields}
+        isEditing={isEditing}
         studentData={family.guests}
         updateStudent={updateStudent}
         handleDeleteStudent={handleDeleteStudent}
         role={StudentRole.GUEST}
       />
-      <Button onClick={() => handleAddStudent(StudentRole.GUEST)}>
-        Add Family Member
-      </Button>
+      {isEditing && (
+        <Button onClick={() => handleAddStudent(StudentRole.GUEST)}>
+          Add Family Member
+        </Button>
+      )}
     </>
   );
 };

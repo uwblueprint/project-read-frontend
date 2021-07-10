@@ -63,12 +63,12 @@ export type Class = {
 
 export type InputProps = {
   id: string;
-  label: string;
-  inputWidth?: number;
-  testId?: string;
+  label?: string;
+  testId: string;
 };
 
 export type StringInputProps = InputProps & {
+  className: string;
   value: string;
   onChange: (value: string) => void;
 };

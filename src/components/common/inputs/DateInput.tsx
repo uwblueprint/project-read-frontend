@@ -11,12 +11,12 @@ type Props = InputProps & {
   onChange: (value: Date) => void;
 };
 
-const DateInput = ({ id, label, value, onChange, inputWidth }: Props) => (
+const DateInput = ({ id, label, value, onChange }: Props) => (
   <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
     <Box paddingRight={2} width={150}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
     </Box>
-    <Box width={inputWidth}>
+    <Box width={328}>
       <DatePicker
         id={id}
         autoOk

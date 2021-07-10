@@ -7,28 +7,43 @@ import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
 
 type Props = {
+  dense: boolean;
   dynamicFields: DynamicField[];
+  isEditing: boolean;
   onChange: (data: StudentRequest) => void;
   role: StudentRole;
   student: StudentRequest;
 };
 
-const StudentFields = ({ dynamicFields, onChange, role, student }: Props) => (
+const StudentFields = ({
+  dense,
+  dynamicFields,
+  isEditing,
+  onChange,
+  role,
+  student,
+}: Props) => (
   <>
     <Field
+      dense={dense}
       field={{ ...DefaultFields.FIRST_NAME, role }}
+      isEditing={isEditing}
       onChange={(value) => onChange({ ...student, first_name: value })}
       value={student.first_name}
     />
     <Field
+      dense={dense}
       field={{ ...DefaultFields.LAST_NAME, role }}
+      isEditing={isEditing}
       onChange={(value) => onChange({ ...student, last_name: value })}
       value={student.last_name}
     />
     {dynamicFields.map((field) => (
       <Field
         key={field.id}
+        dense={dense}
         field={field}
+        isEditing={isEditing}
         onChange={(value) =>
           onChange({
             ...student,

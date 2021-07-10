@@ -18,7 +18,9 @@ export enum TestId {
 export type StudentFormData = StudentRequest & { index: number };
 
 type Props = {
+  dense: boolean;
   dynamicFields: DynamicField[];
+  isEditing: boolean;
   studentData: StudentFormData[];
   updateStudent: (
     id: number,
@@ -33,7 +35,9 @@ type Props = {
 };
 
 const StudentForm = ({
+  dense,
   dynamicFields,
+  isEditing,
   studentData,
   updateStudent,
   handleDeleteStudent,
@@ -47,13 +51,16 @@ const StudentForm = ({
           <Typography component="h4" variant="h6">
             {roleName} {i + 1}
           </Typography>
-          {(role === StudentRole.GUEST || studentData.length > 1) && (
-            <Button onClick={() => handleDeleteStudent(student.index, role)}>
-              Delete {roleName}
-            </Button>
-          )}
+          {isEditing &&
+            (role === StudentRole.GUEST || studentData.length > 1) && (
+              <Button onClick={() => handleDeleteStudent(student.index, role)}>
+                Delete {roleName}
+              </Button>
+            )}
           <StudentFields
+            dense={dense}
             dynamicFields={dynamicFields}
+            isEditing={isEditing}
             onChange={(data) => updateStudent(i, data, role)}
             role={role}
             student={student}

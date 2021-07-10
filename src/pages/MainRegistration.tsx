@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 import { Typography } from "@material-ui/core";
 
+import FamilyList from "components/families/family-list";
+
 import FamilyAPI from "../api/FamilyAPI";
 import { FamilyListResponse } from "../api/types";
-import FamilyTable from "../components/families/FamilyTable";
 import { DefaultFields } from "../constants/DefaultFields";
 
 const MainRegistration = () => {
@@ -20,7 +21,7 @@ const MainRegistration = () => {
   return (
     <>
       <Typography variant="h1">Main registration</Typography>
-      <FamilyTable
+      <FamilyList
         families={families}
         enrolmentFields={[
           DefaultFields.CURRENT_PREFERRED_CLASS,

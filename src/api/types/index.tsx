@@ -73,7 +73,9 @@ export type FamilyRequest = Pick<
   | DefaultFieldKey.PREFERRED_CONTACT
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
->;
+> & {
+  [DefaultFieldKey.ID]?: number;
+};
 
 export type StudentRequest = Pick<
   Student,

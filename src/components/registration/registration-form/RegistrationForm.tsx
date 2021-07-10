@@ -103,7 +103,9 @@ const RegistrationForm = ({
       </Typography>
 
       <FamilyForm
+        dense={false}
         family={family}
+        isEditing
         childDynamicFields={getSessionDynamicFields(childDynamicFields)}
         guestDynamicFields={getSessionDynamicFields(guestDynamicFields)}
         parentDynamicFields={getSessionDynamicFields(parentDynamicFields)}

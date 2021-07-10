@@ -1,13 +1,22 @@
 import React, { useEffect, useState, useContext } from "react";
 
-import { Drawer, Divider, Typography, TextField } from "@material-ui/core";
+import {
+  Drawer,
+  Divider,
+  Typography,
+  TextField,
+  Button,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import FamilyAPI from "api/FamilyAPI";
 import { FamilyDetailResponse } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import { DefaultFamilyFormFields } from "constants/DefaultFields";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
+
+import FamilyForm, {
+  familyResponseToFamilyFormData,
+  FamilyStudentFormData,
+} from "../family-form";
 
 const drawerWidth = 400;
 
@@ -32,25 +41,40 @@ const useStyles = makeStyles(() => ({
 
 type FamilyDetailsSidebarProps = {
   isOpen: boolean;
-  familyId: number;
+  family: FamilyDetailResponse;
   handleClose: () => void;
 };
 
 const FamilyDetailsSidebar = ({
   isOpen,
-  familyId,
+  family,
   handleClose,
 }: FamilyDetailsSidebarProps) => {
-  const { parentDynamicFields } = useContext(DynamicFieldsContext);
-  const [family, setFamily] = useState<FamilyDetailResponse>();
   const classes = useStyles();
+  const {
+    childDynamicFields,
+    guestDynamicFields,
+    parentDynamicFields,
+  } = useContext(DynamicFieldsContext);
+  const [familyFormData, setFamilyFormData] = useState<FamilyStudentFormData>();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const resetFamilyFormData = () => {
+    if (family) {
+      setFamilyFormData(familyResponseToFamilyFormData(family));
+    }
+  };
 
   useEffect(() => {
-    async function fetchFamily() {
-      setFamily(await FamilyAPI.getFamilyById(familyId));
+    resetFamilyFormData();
+  }, [family]);
+
+  const handleToggleEdit = () => {
+    if (isEditing) {
+      resetFamilyFormData();
     }
-    if (familyId) fetchFamily();
-  }, [familyId]);
+    setIsEditing(!isEditing);
+  };
 
   return (
     <Drawer
@@ -63,34 +87,22 @@ const FamilyDetailsSidebar = ({
       open={isOpen}
       onClose={handleClose}
     >
-      {family && (
+      {family && familyFormData && (
         <div>
           <Typography variant="h2">
             {family.parent.first_name} {family.parent.last_name}
           </Typography>
           <Divider variant="fullWidth" />
-          <Typography variant="h3" className={classes.heading}>
-            Basic Information
-          </Typography>
-          {DefaultFamilyFormFields.map((defaultField) => (
-            <Typography
-              variant="body2"
-              className={classes.pb}
-              key={defaultField.name}
-            >
-              <b>{defaultField.name}:</b> {(family as any)[defaultField.id]}
-            </Typography>
-          ))}
-          {parentDynamicFields.map((parentField) => (
-            <Typography
-              variant="body2"
-              className={classes.pb}
-              key={parentField.id}
-            >
-              <b>{parentField.name}:</b>{" "}
-              {family.parent.information[parentField.id]}
-            </Typography>
-          ))}
+          <Button onClick={handleToggleEdit}>Edit</Button>
+          <FamilyForm
+            dense
+            family={familyFormData}
+            isEditing={isEditing}
+            childDynamicFields={childDynamicFields}
+            guestDynamicFields={guestDynamicFields}
+            parentDynamicFields={parentDynamicFields}
+            onChange={setFamilyFormData}
+          />
           <Typography variant="h3" className={classes.heading}>
             Notes
           </Typography>
