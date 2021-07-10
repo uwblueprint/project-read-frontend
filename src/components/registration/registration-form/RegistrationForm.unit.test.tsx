@@ -64,20 +64,23 @@ describe("when the registration form is opened", () => {
 });
 
 const TEST_LAST_NAME = "Fish";
+
 const TEST_PARENT_ADDRESS = "42 Wallaby Way";
 const TEST_PARENT_CELL_NUMBER = "123";
 const TEST_PARENT_DOB = "01011990";
 const TEST_PARENT_EMAIL = "marlin@test.com";
+const TEST_PARENT_FAV_COLOUR = "red";
 const TEST_PARENT_FIRST_NAME = "Marlin";
 const TEST_PARENT_HOME_NUMBER = "456";
 const TEST_PARENT_WORK_NUMBER = "789";
-const TEST_PARENT_FAV_COLOUR = "red";
+
+const TEST_CHILD_FAV_COLOUR = "blue";
 const TEST_CHILD_FIRST_NAME = "Nemo";
 const TEST_CHILD_DOB = "01012018";
-const TEST_CHILD_FAV_COLOUR = "blue";
+
+const TEST_GUEST_FAV_COLOUR = "periwinkle";
 const TEST_GUEST_FIRST_NAME = "Dory";
 const TEST_GUEST_DOB = "01011987";
-const TEST_GUEST_FAV_COLOUR = "periwinkle";
 
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
