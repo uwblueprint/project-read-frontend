@@ -14,11 +14,16 @@ import {
 import { makeStyles } from "@material-ui/styles";
 
 import { FamilySearchResponse } from "api/types";
+import RoundedOutlinedButton from "components/common/rounded-outlined-button/RoundedOutlinedButton";
 import { DefaultFields } from "constants/DefaultFields";
 
 const useStyles = makeStyles(() => ({
   noResultsTableCell: {
     textAlign: "center",
+  },
+  selectButtonTableCell: {
+    paddingBottom: 8,
+    paddingTop: 8,
   },
   tableContainer: {
     maxHeight: 250,
@@ -27,9 +32,10 @@ const useStyles = makeStyles(() => ({
 
 type Props = {
   families: FamilySearchResponse[];
+  onSelectFamily: (id: number) => void;
 };
 
-const FamilySearchResultsTable = ({ families }: Props) => {
+const FamilySearchResultsTable = ({ families, onSelectFamily }: Props) => {
   const classes = useStyles();
   return (
     <Box marginY={2}>
@@ -47,17 +53,27 @@ const FamilySearchResultsTable = ({ families }: Props) => {
               <TableCell>{DefaultFields.PHONE_NUMBER.name}</TableCell>
               <TableCell>{DefaultFields.EMAIL.name}</TableCell>
               <TableCell>{DefaultFields.NUM_CHILDREN.name}</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           {families.length ? (
             <TableBody>
               {families.map((family) => (
-                <TableRow>
+                <TableRow key={family.id}>
                   <TableCell>{family.first_name}</TableCell>
                   <TableCell>{family.last_name}</TableCell>
                   <TableCell>{family.phone_number}</TableCell>
                   <TableCell>{family.email}</TableCell>
                   <TableCell>{family.num_children}</TableCell>
+                  <TableCell className={classes.selectButtonTableCell}>
+                    <RoundedOutlinedButton
+                      onClick={() => {
+                        onSelectFamily(family.id);
+                      }}
+                    >
+                      Select
+                    </RoundedOutlinedButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

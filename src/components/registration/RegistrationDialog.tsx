@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import {
+  Box,
   Button,
   Dialog,
   DialogContent,
@@ -13,13 +14,14 @@ import { Close, NavigateBefore } from "@material-ui/icons";
 
 import FamilyAPI from "api/FamilyAPI";
 import {
+  FamilyDetailResponse,
   FamilySearchResponse,
-  FamilyStudentRequest,
   SessionDetailResponse,
 } from "api/types";
+import RoundedOutlinedButton from "components/common/rounded-outlined-button";
+import FamilySearchResultsTable from "components/family-search/family-search-results-table";
+import StudentSearchBar from "components/family-search/student-search-bar";
 
-import FamilySearchResultsTable from "../family-search/family-search-results-table";
-import StudentSearchBar from "../family-search/student-search-bar";
 import RegistrationForm from "./registration-form";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,12 +39,6 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogSubheading: {
     marginTop: theme.spacing(3),
-  },
-  registerButton: {
-    borderRadius: 18,
-    marginTop: theme.spacing(2),
-    paddingLeft: 24,
-    paddingRight: 24,
   },
 }));
 
@@ -63,37 +59,37 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
   const [shouldDisplayFamilyResults, setShouldDisplayFamilyResults] = useState(
     false
   );
+  const [
+    selectedFamily,
+    setSelectedFamily,
+  ] = useState<FamilyDetailResponse | null>(null);
 
   const resetSearch = () => {
     setFirstName("");
     setLastName("");
     setShouldDisplayFamilyResults(false);
     setFamilyResults([]);
+    setSelectedFamily(null);
   };
 
   useEffect(() => {
     resetSearch();
   }, [open, shouldDisplaySearch]);
 
-  const onSearchSubmit = async () => {
+  const onSubmitSearch = async () => {
     setShouldDisplayFamilyResults(true);
     setFamilyResults(
       await FamilyAPI.getFamiliesByParentName(firstName, lastName)
     );
   };
 
-  const onRegistrationFormSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    data: FamilyStudentRequest
-  ) => {
-    e.preventDefault();
-    const response = await FamilyAPI.postFamily(data);
-    if (response.non_field_errors) {
-      // eslint-disable-next-line no-alert
-      alert(response.non_field_errors);
-      return;
-    }
+  const onSubmitRegistrationForm = () => {
     setShouldDisplaySearch(true);
+  };
+
+  const onSelectFamily = async (id: number) => {
+    setSelectedFamily(await FamilyAPI.getFamilyById(id));
+    setShouldDisplaySearch(false);
   };
 
   return (
@@ -129,26 +125,29 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
               lastName={lastName}
               onChangeFirstName={setFirstName}
               onChangeLastName={setLastName}
-              onSubmit={onSearchSubmit}
+              onSubmit={onSubmitSearch}
             />
             {shouldDisplayFamilyResults && (
               <>
                 <Typography variant="h4" className={classes.dialogSubheading}>
                   Search results
                 </Typography>
-                <FamilySearchResultsTable families={familyResults} />
+                <FamilySearchResultsTable
+                  families={familyResults}
+                  onSelectFamily={onSelectFamily}
+                />
                 <Typography variant="h4" className={classes.dialogSubheading}>
                   Not found?
                 </Typography>
               </>
             )}
-            <Button
-              onClick={() => setShouldDisplaySearch(false)}
-              variant="outlined"
-              className={classes.registerButton}
-            >
-              Register a new client
-            </Button>
+            <Box marginTop={2}>
+              <RoundedOutlinedButton
+                onClick={() => setShouldDisplaySearch(false)}
+              >
+                Register a new client
+              </RoundedOutlinedButton>
+            </Box>
           </>
         ) : (
           <>
@@ -157,7 +156,8 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
               Go back
             </Button>
             <RegistrationForm
-              onSubmit={onRegistrationFormSubmit}
+              existingFamily={selectedFamily}
+              onSubmit={onSubmitRegistrationForm}
               session={session}
             />
           </>

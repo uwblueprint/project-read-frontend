@@ -2,12 +2,15 @@ import React, { useContext, useState } from "react";
 
 import { Button, Typography } from "@material-ui/core";
 
+import FamilyAPI from "api/FamilyAPI";
 import {
   FamilyStudentRequest,
   StudentRequest,
   SessionDetailResponse,
+  FamilyDetailResponse,
 } from "api/types";
 import FamilyForm, {
+  familyResponseToFamilyFormData,
   FamilyStudentFormData,
   studentFormDataToStudentRequest,
 } from "components/families/family-form";
@@ -40,14 +43,16 @@ const defaultFamilyData: FamilyStudentFormData = {
 };
 
 type RegistrationFormProps = {
-  onSubmit: (
-    e: React.FormEvent<HTMLFormElement>,
-    data: FamilyStudentRequest
-  ) => void;
+  existingFamily: FamilyDetailResponse | null;
+  onSubmit: () => void;
   session: SessionDetailResponse;
 };
 
-const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
+const RegistrationForm = ({
+  existingFamily,
+  onSubmit,
+  session,
+}: RegistrationFormProps) => {
   const {
     childDynamicFields,
     guestDynamicFields,
@@ -55,29 +60,41 @@ const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
   } = useContext(DynamicFieldsContext);
 
   const [family, setFamily] = useState<FamilyStudentFormData>(
-    defaultFamilyData
+    existingFamily !== null
+      ? familyResponseToFamilyFormData(existingFamily)
+      : defaultFamilyData
   );
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const requestData: FamilyStudentRequest = {
+      ...family,
+      children: family.children.map((child) =>
+        studentFormDataToStudentRequest(child)
+      ),
+      guests: family.guests.map((guest) =>
+        studentFormDataToStudentRequest(guest)
+      ),
+    };
+    if (existingFamily === null) {
+      const response = await FamilyAPI.postFamily(requestData);
+      if (response.non_field_errors) {
+        // eslint-disable-next-line no-alert
+        alert(response.non_field_errors);
+        return;
+      }
+    }
+    // TODO: if there was an existing family, make a PUT request
+    onSubmit();
+  };
 
   const getSessionDynamicFields = (dynamicFields: DynamicField[]) =>
     dynamicFields.filter((dynamicField) =>
       session.fields.includes(dynamicField.id)
     );
 
-  const getSubmissionData = (): FamilyStudentRequest => ({
-    ...family,
-    children: family.children.map((child) =>
-      studentFormDataToStudentRequest(child)
-    ),
-    guests: family.guests.map((guest) =>
-      studentFormDataToStudentRequest(guest)
-    ),
-  });
-
   return (
-    <form
-      data-testid={TestId.RegistrationForm}
-      onSubmit={(e) => onSubmit(e, getSubmissionData())}
-    >
+    <form data-testid={TestId.RegistrationForm} onSubmit={handleSubmit}>
       <Typography variant="body1" data-testid={TestId.SessionLabel}>
         Currently enrolling a <b>new family</b> for{" "}
         <b>
