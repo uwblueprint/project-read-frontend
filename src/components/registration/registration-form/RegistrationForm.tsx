@@ -7,10 +7,8 @@ import {
   StudentRequest,
   SessionDetailResponse,
 } from "api/types";
-import FamilyParentFields from "components/common/family-parent-fields";
-import StudentFields from "components/common/student-fields";
+import FamilyForm from "components/families/family-form";
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
 
@@ -72,43 +70,12 @@ const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
         </b>
       </Typography>
 
-      <Typography component="h3" variant="h5">
-        Basic information
-      </Typography>
-      <FamilyParentFields
-        dynamicFields={getSessionDynamicFields(parentDynamicFields)}
+      <FamilyForm
         family={family}
-        onChange={(value) => setFamily((prev) => ({ ...prev, ...value }))}
-      />
-
-      <Typography component="h3" variant="h5">
-        Children
-      </Typography>
-      <StudentFields
-        dynamicFields={getSessionDynamicFields(childDynamicFields)}
-        onChange={(value) =>
-          setFamily((prev) => ({
-            ...prev,
-            children: [{ ...prev.children[0], ...value }],
-          }))
-        }
-        role={StudentRole.CHILD}
-        student={family.children[0]}
-      />
-
-      <Typography component="h3" variant="h5">
-        Family members
-      </Typography>
-      <StudentFields
-        dynamicFields={getSessionDynamicFields(guestDynamicFields)}
-        onChange={(value) =>
-          setFamily((prev) => ({
-            ...prev,
-            guests: [{ ...prev.guests[0], ...value }],
-          }))
-        }
-        role={StudentRole.GUEST}
-        student={family.guests[0]}
+        childDynamicFields={getSessionDynamicFields(childDynamicFields)}
+        guestDynamicFields={getSessionDynamicFields(guestDynamicFields)}
+        parentDynamicFields={getSessionDynamicFields(parentDynamicFields)}
+        onChange={setFamily}
       />
 
       <Button type="submit" variant="contained" color="primary">
