@@ -2,7 +2,7 @@ import React from "react";
 
 import { fireEvent, render } from "@testing-library/react";
 
-import { SessionDetailResponse } from "api/SessionAPI";
+import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
 import QuestionTypes from "constants/QuestionTypes";
 import StudentRole from "constants/StudentRole";
@@ -42,21 +42,14 @@ describe("when the registration form is opened", () => {
 
   it("renders the basic information section", () => {
     expect(getByText("Basic information")).toBeInTheDocument();
-    expect(getByTestId(TestId.ParentDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(TestId.FamilyDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(TestId.ParentDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the children section", () => {
     expect(getByText("Children")).toBeInTheDocument();
-    expect(getByTestId(TestId.ChildrenDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(TestId.ChildrenDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the family members section", () => {
     expect(getByText("Family members")).toBeInTheDocument();
-    expect(getByTestId(TestId.GuestsDefaultFields)).toBeInTheDocument();
-    expect(getByTestId(TestId.GuestsDynamicFields)).toBeInTheDocument();
   });
 
   it("renders the submit button", () => {
@@ -65,6 +58,7 @@ describe("when the registration form is opened", () => {
 });
 
 const TEST_LAST_NAME = "Fish";
+const TEST_PARENT_ADDRESS = "42 Wallaby Way";
 const TEST_PARENT_CELL_NUMBER = "123";
 const TEST_PARENT_DOB = "Jan 1 1990";
 const TEST_PARENT_EMAIL = "marlin@test.com";
@@ -204,6 +198,12 @@ describe("when text fields are submitted", () => {
       }
     );
     fireEvent.change(
+      getByTestId(`${StudentRole.PARENT} ${DefaultFields.ADDRESS.name}`),
+      {
+        target: { value: TEST_PARENT_ADDRESS },
+      }
+    );
+    fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${TEST_DYNAMIC_FIELD.name}`),
       {
         target: { value: TEST_PARENT_DOB },
@@ -258,6 +258,7 @@ describe("when text fields are submitted", () => {
         type: "submit",
       }),
       {
+        address: TEST_PARENT_ADDRESS,
         cell_number: TEST_PARENT_CELL_NUMBER,
         children: [
           {
