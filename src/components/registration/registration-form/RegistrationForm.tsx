@@ -96,7 +96,20 @@ const RegistrationForm = ({
   return (
     <form data-testid={TestId.RegistrationForm} onSubmit={handleSubmit}>
       <Typography variant="body1" data-testid={TestId.SessionLabel}>
-        Currently enrolling a <b>new family</b> for{" "}
+        Currently enrolling{" "}
+        {existingFamily !== null ? (
+          <span>
+            the family of{" "}
+            <b>
+              {family.parent.first_name} {family.parent.last_name}
+            </b>
+          </span>
+        ) : (
+          <span>
+            a <b>new family</b>
+          </span>
+        )}{" "}
+        for{" "}
         <b>
           {session.season} {session.year}
         </b>

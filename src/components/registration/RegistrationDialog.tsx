@@ -64,27 +64,24 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
     setSelectedFamily,
   ] = useState<FamilyDetailResponse | null>(null);
 
-  const resetSearch = () => {
+  const resetDialog = () => {
     setFirstName("");
     setLastName("");
     setShouldDisplayFamilyResults(false);
     setFamilyResults([]);
     setSelectedFamily(null);
+    setShouldDisplaySearch(true);
   };
 
   useEffect(() => {
-    resetSearch();
-  }, [open, shouldDisplaySearch]);
+    resetDialog();
+  }, [open]);
 
   const onSubmitSearch = async () => {
     setShouldDisplayFamilyResults(true);
     setFamilyResults(
       await FamilyAPI.getFamiliesByParentName(firstName, lastName)
     );
-  };
-
-  const onSubmitRegistrationForm = () => {
-    setShouldDisplaySearch(true);
   };
 
   const onSelectFamily = async (id: number) => {
@@ -151,13 +148,13 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
           </>
         ) : (
           <>
-            <Button onClick={() => setShouldDisplaySearch(true)}>
+            <Button onClick={resetDialog}>
               <NavigateBefore />
               Go back
             </Button>
             <RegistrationForm
               existingFamily={selectedFamily}
-              onSubmit={onSubmitRegistrationForm}
+              onSubmit={resetDialog}
               session={session}
             />
           </>
