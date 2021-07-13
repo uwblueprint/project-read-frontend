@@ -12,12 +12,14 @@ import {
 import { Add } from "@material-ui/icons/";
 import { useHistory, useParams } from "react-router-dom";
 
-import ClassAPI, { ClassDetailResponse } from "api/ClassAPI";
-import { FamilyListResponse } from "api/FamilyAPI";
-import SessionAPI, {
+import ClassAPI from "api/ClassAPI";
+import SessionAPI from "api/SessionAPI";
+import {
+  ClassDetailResponse,
   SessionListResponse,
   SessionDetailResponse,
-} from "api/SessionAPI";
+  FamilyListResponse,
+} from "api/types";
 import FamilyTable from "components/families/FamilyTable";
 import RegistrationDialog from "components/registration/RegistrationDialog";
 import SessionDetailView, {

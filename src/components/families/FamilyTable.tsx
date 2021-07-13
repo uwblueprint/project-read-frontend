@@ -6,8 +6,7 @@ import MUIDataTable, {
   MUIDataTableOptions,
 } from "mui-datatables";
 
-import { FamilyListResponse } from "api/FamilyAPI";
-import StatusChip from "components/common/status-chip";
+import { FamilyListResponse } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import {
   DefaultFamilyTableFields,
@@ -18,6 +17,7 @@ import QuestionTypes from "constants/QuestionTypes";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField } from "types";
 
+import StatusChip from "../common/status-chip";
 import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 
 const options: MUIDataTableOptions = {
@@ -53,17 +53,18 @@ const statusColumn: MUIDataTableColumn = {
 
 type FamilyTableRow = Pick<
   FamilyListResponse,
-  | DefaultFieldKey.CURRENT_CLASS
   | DefaultFieldKey.EMAIL
-  | DefaultFieldKey.ENROLLED
   | DefaultFieldKey.ID
   | DefaultFieldKey.NUM_CHILDREN
   | DefaultFieldKey.PHONE_NUMBER
   | DefaultFieldKey.PREFERRED_CONTACT
-  | DefaultFieldKey.STATUS
 > & {
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
+  [DefaultFieldKey.STATUS]: EnrolmentStatus;
+  [DefaultFieldKey.IS_ENROLLED]: string;
+  [DefaultFieldKey.CURRENT_CLASS]: string;
+  [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: string;
   [DefaultFieldKey.CHILDREN]: string;
   [key: number]: string | number; // dynamic fields
 };
@@ -95,7 +96,7 @@ const FamilyTable = ({
   const [familyId, setFamilyId] = useState<number>();
 
   const getTableRows = (): FamilyTableRow[] =>
-    families.map(({ parent, children, ...args }) => {
+    families.map(({ parent, children, current_enrolment, ...args }) => {
       let childrenInfo = "";
       children.forEach((child, i) => {
         if (child.date_of_birth != null) {
@@ -109,10 +110,24 @@ const FamilyTable = ({
           childrenInfo += ", ";
         }
       });
+
+      const enrolment = current_enrolment || {
+        enrolled_class: null,
+        preferred_class: null,
+        status: EnrolmentStatus.UNASSIGNED,
+      };
       const familyRow: FamilyTableRow = {
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
         [DefaultFieldKey.CHILDREN]: childrenInfo,
+        [DefaultFieldKey.STATUS]: enrolment.status,
+        [DefaultFieldKey.IS_ENROLLED]: current_enrolment ? "True" : "False",
+        [DefaultFieldKey.CURRENT_CLASS]: enrolment.enrolled_class
+          ? enrolment.enrolled_class.name
+          : "N/A",
+        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: enrolment.preferred_class
+          ? enrolment.preferred_class.name
+          : "N/A",
         ...args,
       };
       parentDynamicFields.forEach((field) => {

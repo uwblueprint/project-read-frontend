@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 import { Typography } from "@material-ui/core";
 
-import FamilyAPI, { FamilyListResponse } from "api/FamilyAPI";
-import FamilyTable from "components/families/FamilyTable";
-import { DefaultFields } from "constants/DefaultFields";
+import FamilyAPI from "../api/FamilyAPI";
+import { FamilyListResponse } from "../api/types";
+import FamilyTable from "../components/families/FamilyTable";
+import { DefaultFields } from "../constants/DefaultFields";
 
 const MainRegistration = () => {
   const [families, setFamilies] = useState<FamilyListResponse[]>([]);
@@ -21,7 +22,11 @@ const MainRegistration = () => {
       <Typography variant="h1">Main registration</Typography>
       <FamilyTable
         families={families}
-        enrolmentFields={[DefaultFields.ENROLLED, DefaultFields.CURRENT_CLASS]}
+        enrolmentFields={[
+          DefaultFields.CURRENT_PREFERRED_CLASS,
+          DefaultFields.IS_ENROLLED,
+          DefaultFields.CURRENT_CLASS,
+        ]}
         shouldDisplayDynamicFields
       />
     </>

@@ -25,6 +25,20 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     question_type: QuestionTypes.MULTIPLE_CHOICE,
     options: [],
   },
+  CURRENT_SESSION: {
+    id: DefaultFieldKey.CURRENT_SESSION,
+    is_default: true,
+    name: "Session",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
+    options: [],
+  },
+  CURRENT_PREFERRED_CLASS: {
+    id: DefaultFieldKey.CURRENT_PREFERRED_CLASS,
+    is_default: false,
+    name: "Preferred Class",
+    question_type: QuestionTypes.MULTIPLE_CHOICE,
+    options: [],
+  },
   EMAIL: {
     id: DefaultFieldKey.EMAIL,
     is_default: true,
@@ -32,8 +46,8 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     question_type: QuestionTypes.TEXT,
     options: [],
   },
-  ENROLLED: {
-    id: DefaultFieldKey.ENROLLED,
+  IS_ENROLLED: {
+    id: DefaultFieldKey.IS_ENROLLED,
     is_default: true,
     name: "Enrolled",
     question_type: QuestionTypes.MULTIPLE_CHOICE,

@@ -6,8 +6,8 @@ import {
   FamilyRequest,
   FamilyStudentRequest,
   StudentRequest,
-} from "api/FamilyAPI";
-import { SessionDetailResponse } from "api/SessionAPI";
+  SessionDetailResponse,
+} from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import {
   DefaultFamilyFormFields,
