@@ -1,6 +1,6 @@
 import React from "react";
 
-import DateInput from "components/common/inputs/DateInput";
+import DateInput from "components/common/date-input";
 import SelectInput from "components/common/inputs/SelectInput";
 import TextInput from "components/common/inputs/TextInput";
 import QuestionTypes from "constants/QuestionTypes";
