@@ -11,9 +11,10 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
 
+import EnrolmentAPI from "api/EnrolmentAPI";
 import FamilyAPI from "api/FamilyAPI";
 import {
-  FamilySessionRequest,
+  FamilyEnrolmentRequest,
   FamilySearchResponse,
   SessionDetailResponse,
 } from "api/types";
@@ -84,10 +85,10 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
 
   const onRegistrationFormSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
-    data: FamilySessionRequest
+    data: FamilyEnrolmentRequest
   ) => {
     e.preventDefault();
-    const response = await FamilyAPI.postFamily(data);
+    const response = await EnrolmentAPI.postEnrolment(data);
     if (response.non_field_errors) {
       // eslint-disable-next-line no-alert
       alert(response.non_field_errors);

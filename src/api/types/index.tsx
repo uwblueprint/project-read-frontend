@@ -86,10 +86,10 @@ export type FamilyStudentRequest = FamilyRequest & {
   parent: StudentRequest;
 };
 
-export type FamilySessionRequest = {
+export type FamilyEnrolmentRequest = {
   family: FamilyStudentRequest;
-  session: SessionListResponse["id"] | null;
-  preferred_class: ClassListResponse["id"] | null;
+  session: number;
+  preferred_class: number | null;
 };
 
 export type DynamicFieldsResponse = {
