@@ -1,7 +1,8 @@
 import React from "react";
 
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 
+import FamilyAPI from "api/FamilyAPI";
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
 import QuestionTypes from "constants/QuestionTypes";
@@ -26,7 +27,11 @@ describe("when the registration form is opened", () => {
 
   beforeEach(() => {
     ({ getByRole, getByTestId, getByText } = render(
-      <RegistrationForm onSubmit={() => {}} session={session} />
+      <RegistrationForm
+        existingFamily={null}
+        onSubmit={() => {}}
+        session={session}
+      />
     ));
   });
 
@@ -118,7 +123,11 @@ describe("when text fields are submitted", () => {
           guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
         }}
       >
-        <RegistrationForm onSubmit={() => {}} session={session} />
+        <RegistrationForm
+          existingFamily={null}
+          onSubmit={() => {}}
+          session={session}
+        />
       </DynamicFieldsContext.Provider>
     );
 
@@ -133,7 +142,7 @@ describe("when text fields are submitted", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("structures the data in the required format", () => {
+  it("structures the data in the required format", async () => {
     const session: SessionDetailResponse = {
       classes: [],
       families: [],
@@ -147,7 +156,9 @@ describe("when text fields are submitted", () => {
       start_date: "2021-09-01",
       year: 2021,
     };
-    const onSubmit = jest.fn((e) => e.preventDefault());
+
+    jest.spyOn(FamilyAPI, "postFamily").mockResolvedValue({});
+    const onSubmit = jest.fn(() => {});
     const { getByRole, getByTestId } = render(
       <DynamicFieldsContext.Provider
         value={{
@@ -156,7 +167,11 @@ describe("when text fields are submitted", () => {
           guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
         }}
       >
-        <RegistrationForm onSubmit={onSubmit} session={session} />
+        <RegistrationForm
+          existingFamily={null}
+          onSubmit={onSubmit}
+          session={session}
+        />
       </DynamicFieldsContext.Provider>
     );
 
@@ -253,39 +268,36 @@ describe("when text fields are submitted", () => {
 
     fireEvent.click(getByRole("button", { name: "Done" }));
 
-    expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(onSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: "submit",
-      }),
-      {
-        address: TEST_PARENT_ADDRESS,
-        cell_number: TEST_PARENT_CELL_NUMBER,
-        children: [
-          {
-            first_name: TEST_CHILD_FIRST_NAME,
-            information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
-            last_name: TEST_LAST_NAME,
-          },
-        ],
-        email: TEST_PARENT_EMAIL,
-        guests: [
-          {
-            first_name: TEST_GUEST_FIRST_NAME,
-            information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
-            last_name: TEST_LAST_NAME,
-          },
-        ],
-        home_number: TEST_PARENT_HOME_NUMBER,
-        parent: {
-          first_name: TEST_PARENT_FIRST_NAME,
-          information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
+    await waitFor(() => expect(FamilyAPI.postFamily).toHaveBeenCalledTimes(1));
+    expect(FamilyAPI.postFamily).toHaveBeenCalledWith({
+      address: TEST_PARENT_ADDRESS,
+      cell_number: TEST_PARENT_CELL_NUMBER,
+      children: [
+        {
+          first_name: TEST_CHILD_FIRST_NAME,
+          information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
           last_name: TEST_LAST_NAME,
         },
-        preferred_comms: "",
-        preferred_number: "",
-        work_number: TEST_PARENT_WORK_NUMBER,
-      }
-    );
+      ],
+      email: TEST_PARENT_EMAIL,
+      guests: [
+        {
+          first_name: TEST_GUEST_FIRST_NAME,
+          information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
+          last_name: TEST_LAST_NAME,
+        },
+      ],
+      home_number: TEST_PARENT_HOME_NUMBER,
+      parent: {
+        first_name: TEST_PARENT_FIRST_NAME,
+        information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
+        last_name: TEST_LAST_NAME,
+      },
+      preferred_comms: "",
+      preferred_number: "",
+      work_number: TEST_PARENT_WORK_NUMBER,
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 });
