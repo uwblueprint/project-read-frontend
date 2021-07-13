@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 
 import { Drawer, Divider, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import FamilyAPI from "api/FamilyAPI";
 import { FamilyDetailResponse } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import { DefaultFamilyFormFields } from "constants/DefaultFields";
@@ -30,27 +29,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type FamilyDetailsSidebarProps = {
+type Props = {
   isOpen: boolean;
-  familyId: number;
-  handleClose: () => void;
+  family: FamilyDetailResponse;
+  onClose: () => void;
 };
 
-const FamilyDetailsSidebar = ({
-  isOpen,
-  familyId,
-  handleClose,
-}: FamilyDetailsSidebarProps) => {
-  const { parentDynamicFields } = useContext(DynamicFieldsContext);
-  const [family, setFamily] = useState<FamilyDetailResponse>();
+const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
   const classes = useStyles();
-
-  useEffect(() => {
-    async function fetchFamily() {
-      setFamily(await FamilyAPI.getFamilyById(familyId));
-    }
-    if (familyId) fetchFamily();
-  }, [familyId]);
+  const { parentDynamicFields } = useContext(DynamicFieldsContext);
 
   return (
     <Drawer
@@ -61,7 +48,7 @@ const FamilyDetailsSidebar = ({
         paper: classes.drawerPaper,
       }}
       open={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
     >
       {family && (
         <div>
@@ -110,4 +97,4 @@ const FamilyDetailsSidebar = ({
   );
 };
 
-export default FamilyDetailsSidebar;
+export default FamilySidebar;
