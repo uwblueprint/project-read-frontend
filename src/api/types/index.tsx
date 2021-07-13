@@ -86,6 +86,12 @@ export type FamilyStudentRequest = FamilyRequest & {
   parent: StudentRequest;
 };
 
+export type FamilySessionRequest = {
+  family: FamilyStudentRequest;
+  session: SessionListResponse["id"] | null;
+  preferred_class: ClassListResponse["id"] | null;
+};
+
 export type DynamicFieldsResponse = {
   parent_fields: DynamicField[];
   child_fields: DynamicField[];

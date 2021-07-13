@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
 
 import {
+  FamilySessionRequest,
   FamilyStudentRequest,
   StudentRequest,
   SessionDetailResponse,
@@ -39,7 +40,7 @@ const defaultFamilyData: FamilyStudentRequest = {
 type RegistrationFormProps = {
   onSubmit: (
     e: React.FormEvent<HTMLFormElement>,
-    data: FamilyStudentRequest
+    data: FamilySessionRequest
   ) => void;
   session: SessionDetailResponse;
 };
@@ -61,7 +62,13 @@ const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
   return (
     <form
       data-testid={TestId.RegistrationForm}
-      onSubmit={(e) => onSubmit(e, family)}
+      onSubmit={(e) =>
+        onSubmit(e, {
+          family,
+          session: session.id,
+          preferred_class: null, // Change this in later task
+        })
+      }
     >
       <Typography variant="body1" data-testid={TestId.SessionLabel}>
         Currently enrolling a <b>new family</b> for{" "}

@@ -13,8 +13,8 @@ import { Close, NavigateBefore } from "@material-ui/icons";
 
 import FamilyAPI from "api/FamilyAPI";
 import {
+  FamilySessionRequest,
   FamilySearchResponse,
-  FamilyStudentRequest,
   SessionDetailResponse,
 } from "api/types";
 
@@ -84,9 +84,10 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
 
   const onRegistrationFormSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
-    data: FamilyStudentRequest
+    data: FamilySessionRequest
   ) => {
     e.preventDefault();
+    console.log(data);
     const response = await FamilyAPI.postFamily(data);
     if (response.non_field_errors) {
       // eslint-disable-next-line no-alert
