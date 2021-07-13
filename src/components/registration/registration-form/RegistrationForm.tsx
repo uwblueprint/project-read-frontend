@@ -66,7 +66,7 @@ const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
         onSubmit(e, {
           family,
           session: session.id,
-          preferred_class: null, // TODO: remove this once we implement preferred_class in the reg form
+          preferred_class: null, // TODO: change this once we implement preferred_class in the reg form
         })
       }
     >
