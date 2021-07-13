@@ -258,32 +258,36 @@ describe("when text fields are submitted", () => {
         type: "submit",
       }),
       {
-        address: TEST_PARENT_ADDRESS,
-        cell_number: TEST_PARENT_CELL_NUMBER,
-        children: [
-          {
-            first_name: TEST_CHILD_FIRST_NAME,
-            information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
+        family: {
+          address: TEST_PARENT_ADDRESS,
+          cell_number: TEST_PARENT_CELL_NUMBER,
+          children: [
+            {
+              first_name: TEST_CHILD_FIRST_NAME,
+              information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
+              last_name: TEST_LAST_NAME,
+            },
+          ],
+          email: TEST_PARENT_EMAIL,
+          guests: [
+            {
+              first_name: TEST_GUEST_FIRST_NAME,
+              information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
+              last_name: TEST_LAST_NAME,
+            },
+          ],
+          home_number: TEST_PARENT_HOME_NUMBER,
+          parent: {
+            first_name: TEST_PARENT_FIRST_NAME,
+            information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
             last_name: TEST_LAST_NAME,
           },
-        ],
-        email: TEST_PARENT_EMAIL,
-        guests: [
-          {
-            first_name: TEST_GUEST_FIRST_NAME,
-            information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
-            last_name: TEST_LAST_NAME,
-          },
-        ],
-        home_number: TEST_PARENT_HOME_NUMBER,
-        parent: {
-          first_name: TEST_PARENT_FIRST_NAME,
-          information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
-          last_name: TEST_LAST_NAME,
+          preferred_comms: "",
+          preferred_number: "",
+          work_number: TEST_PARENT_WORK_NUMBER,
         },
-        preferred_comms: "",
-        preferred_number: "",
-        work_number: TEST_PARENT_WORK_NUMBER,
+        preferred_class: null,
+        session: session.id,
       }
     );
   });
