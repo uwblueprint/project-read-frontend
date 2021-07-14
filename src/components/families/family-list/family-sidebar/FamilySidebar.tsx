@@ -50,49 +50,47 @@ const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
       open={isOpen}
       onClose={onClose}
     >
-      {family && (
-        <div>
-          <Typography variant="h2">
-            {family.parent.first_name} {family.parent.last_name}
+      <div>
+        <Typography variant="h2">
+          {family.parent.first_name} {family.parent.last_name}
+        </Typography>
+        <Divider variant="fullWidth" />
+        <Typography variant="h3" className={classes.heading}>
+          Basic Information
+        </Typography>
+        {DefaultFamilyFormFields.map((defaultField) => (
+          <Typography
+            variant="body2"
+            className={classes.pb}
+            key={defaultField.name}
+          >
+            <b>{defaultField.name}:</b> {(family as any)[defaultField.id]}
           </Typography>
-          <Divider variant="fullWidth" />
-          <Typography variant="h3" className={classes.heading}>
-            Basic Information
+        ))}
+        {parentDynamicFields.map((parentField) => (
+          <Typography
+            variant="body2"
+            className={classes.pb}
+            key={parentField.id}
+          >
+            <b>{parentField.name}:</b>{" "}
+            {family.parent.information[parentField.id]}
           </Typography>
-          {DefaultFamilyFormFields.map((defaultField) => (
-            <Typography
-              variant="body2"
-              className={classes.pb}
-              key={defaultField.name}
-            >
-              <b>{defaultField.name}:</b> {(family as any)[defaultField.id]}
-            </Typography>
-          ))}
-          {parentDynamicFields.map((parentField) => (
-            <Typography
-              variant="body2"
-              className={classes.pb}
-              key={parentField.id}
-            >
-              <b>{parentField.name}:</b>{" "}
-              {family.parent.information[parentField.id]}
-            </Typography>
-          ))}
-          <Typography variant="h3" className={classes.heading}>
-            Notes
-          </Typography>
-          <form>
-            <TextField
-              id={DefaultFieldKey.NOTES}
-              InputLabelProps={{ shrink: true }}
-              label="Notes"
-              value={(family as any)[DefaultFieldKey.NOTES]}
-              fullWidth
-              variant="filled"
-            />
-          </form>
-        </div>
-      )}
+        ))}
+        <Typography variant="h3" className={classes.heading}>
+          Notes
+        </Typography>
+        <form>
+          <TextField
+            id={DefaultFieldKey.NOTES}
+            InputLabelProps={{ shrink: true }}
+            label="Notes"
+            value={(family as any)[DefaultFieldKey.NOTES]}
+            fullWidth
+            variant="filled"
+          />
+        </form>
+      </div>
     </Drawer>
   );
 };
