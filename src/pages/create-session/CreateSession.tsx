@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { NavigateBefore } from "@material-ui/icons";
+import moment from "moment";
 import { useHistory } from "react-router-dom";
 
 import SessionConfig from "components/sessions/session-config";
@@ -29,7 +30,7 @@ const CreateSession = () => {
   const history = useHistory();
   const [session, setSession] = useState({
     name: "",
-    startDate: new Date(),
+    startDate: "",
   });
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeStep = steps[activeStepIndex];
@@ -70,9 +71,12 @@ const CreateSession = () => {
             sessionName={session.name}
             onChangeSessionName={(name) => setSession({ ...session, name })}
             startDate={session.startDate}
-            onChangeStartDate={(startDate) =>
-              setSession({ ...session, startDate })
-            }
+            onChangeStartDate={(startDate) => {
+              const date = moment(startDate).isValid()
+                ? moment(startDate).format("YYYY-MM-DD")
+                : "";
+              setSession({ ...session, startDate: date });
+            }}
           />
         );
       case CreateSessionStepLabel.CONFIGURE_FORM:
