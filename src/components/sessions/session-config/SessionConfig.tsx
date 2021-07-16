@@ -15,8 +15,8 @@ export enum TestId {
 type Props = {
   sessionName: string;
   onChangeSessionName: (name: string) => void;
-  startDate: string;
-  onChangeStartDate: (date: string) => void;
+  startDate: Date | null;
+  onChangeStartDate: (date: Date | null) => void;
 };
 
 const SessionConfig = ({

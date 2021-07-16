@@ -27,9 +27,12 @@ const steps = [
 
 const CreateSession = () => {
   const history = useHistory();
-  const [session, setSession] = useState({
+  const [session, setSession] = useState<{
+    name: string;
+    startDate: Date | null;
+  }>({
     name: "",
-    startDate: "",
+    startDate: null,
   });
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeStep = steps[activeStepIndex];

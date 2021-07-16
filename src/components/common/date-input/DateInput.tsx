@@ -12,8 +12,8 @@ export enum TestId {
 }
 
 type Props = InputProps & {
-  value: string | null;
-  onChange: (value: string) => void;
+  value: Date | null;
+  onChange: (value: Date | null) => void;
 };
 
 const DateInput = ({
@@ -37,9 +37,9 @@ const DateInput = ({
         variant="dialog"
         inputVariant="outlined"
         format="MM/DD/yyyy"
-        value={value === "" ? null : value}
+        value={value}
         onChange={(date) =>
-          onChange(date ? moment(date).format("YYYY-MM-DD") : "")
+          onChange(date ? moment(date, "YYYY-MM-DD").toDate() : null)
         }
         fullWidth
         KeyboardButtonProps={{

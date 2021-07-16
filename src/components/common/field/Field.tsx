@@ -1,5 +1,7 @@
 import React from "react";
 
+import moment from "moment";
+
 import DateInput from "components/common/date-input";
 import SelectInput from "components/common/inputs/SelectInput";
 import TextInput from "components/common/inputs/TextInput";
@@ -46,9 +48,11 @@ const Field = ({ field, onChange, value }: Props) => {
           id={`${field.role} ${field.name}`}
           inputWidth={FORM_FIELD_WIDTH}
           label={field.name}
-          onChange={onChange}
+          onChange={(val) =>
+            onChange(val ? moment(val).format("YYYY-MM-DD") : "")
+          }
           testId={`${field.role} ${field.name}`}
-          value={value}
+          value={value === "" ? null : moment(value, "YYYY-MM-DD").toDate()}
         />
       );
     default:

@@ -1,5 +1,7 @@
 import React from "react";
 
+import moment from "moment";
+
 import { StudentRequest } from "api/types";
 import Field from "components/common/field";
 import { DefaultFields } from "constants/DefaultFields";
@@ -27,8 +29,15 @@ const StudentFields = ({ dynamicFields, onChange, role, student }: Props) => (
     />
     <Field
       field={{ ...DefaultFields.DATE_OF_BIRTH, role }}
-      onChange={(value) => onChange({ ...student, date_of_birth: value })}
-      value={student.date_of_birth}
+      onChange={(value) => {
+        const dob = value ? moment(value, "YYYY-MM-DD").toDate() : null;
+        onChange({ ...student, date_of_birth: dob });
+      }}
+      value={
+        student.date_of_birth
+          ? moment(student.date_of_birth).format("YYYY-MM-DD")
+          : ""
+      }
     />
     {dynamicFields.map((field) => (
       <Field

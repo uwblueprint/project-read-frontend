@@ -18,7 +18,7 @@ export enum TestId {
 }
 
 const defaultStudentData: StudentRequest = {
-  [DefaultFieldKey.DATE_OF_BIRTH]: "",
+  [DefaultFieldKey.DATE_OF_BIRTH]: null,
   [DefaultFieldKey.FIRST_NAME]: "",
   [DefaultFieldKey.LAST_NAME]: "",
   information: {},
