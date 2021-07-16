@@ -19,47 +19,43 @@ export type StudentFormData = StudentRequest & { index: number };
 
 type Props = {
   dynamicFields: DynamicField[];
-  studentData: StudentFormData[];
-  updateStudent: (
-    id: number,
-    data: StudentRequest,
-    role: StudentRole.CHILD | StudentRole.GUEST
-  ) => void;
-  handleDeleteStudent: (
-    id: number,
-    role: StudentRole.CHILD | StudentRole.GUEST
-  ) => void;
+  onAddStudent: () => void;
+  onDeleteStudent: (id: number) => void;
+  onUpdateStudent: (id: number, data: StudentRequest) => void;
   role: StudentRole.CHILD | StudentRole.GUEST;
+  students: StudentFormData[];
 };
 
 const StudentForm = ({
   dynamicFields,
-  studentData,
-  updateStudent,
-  handleDeleteStudent,
+  onAddStudent,
+  onDeleteStudent,
+  onUpdateStudent,
   role,
+  students,
 }: Props) => {
   const roleName = role === StudentRole.CHILD ? "Child" : "Family Member";
   return (
     <>
-      {studentData.map((student, i) => (
+      {students.map((student, i) => (
         <div key={student.index}>
           <Typography component="h4" variant="h6">
             {roleName} {i + 1}
           </Typography>
-          {(role === StudentRole.GUEST || studentData.length > 1) && (
-            <Button onClick={() => handleDeleteStudent(student.index, role)}>
+          {(role === StudentRole.GUEST || students.length > 1) && (
+            <Button onClick={() => onDeleteStudent(student.index)}>
               Delete {roleName}
             </Button>
           )}
           <StudentFields
             dynamicFields={dynamicFields}
-            onChange={(data) => updateStudent(i, data, role)}
+            onChange={(data) => onUpdateStudent(i, data)}
             role={role}
             student={student}
           />
         </div>
       ))}
+      <Button onClick={onAddStudent}>Add {roleName}</Button>
     </>
   );
 };

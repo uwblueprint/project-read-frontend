@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 import { FamilyDetailResponse, FamilyRequest, StudentRequest } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
@@ -19,7 +19,7 @@ export enum TestId {
   SessionLabel = "session-label",
 }
 
-export type FamilyStudentFormData = FamilyRequest & {
+export type FamilyFormData = FamilyRequest & {
   children: StudentFormData[];
   guests: StudentFormData[];
   parent: StudentRequest;
@@ -50,7 +50,7 @@ const studentRequestToStudentFormData = (
 
 export const familyResponseToFamilyFormData = (
   family: FamilyDetailResponse
-): FamilyStudentFormData => ({
+): FamilyFormData => ({
   ...family,
   children: family.children.map((child) =>
     studentRequestToStudentFormData(child, StudentRole.CHILD)
@@ -68,11 +68,11 @@ export const studentFormDataToStudentRequest = (
 };
 
 type Props = {
-  family: FamilyStudentFormData;
+  family: FamilyFormData;
   childDynamicFields: DynamicField[];
   guestDynamicFields: DynamicField[];
   parentDynamicFields: DynamicField[];
-  onChange: (family: FamilyStudentFormData) => void;
+  onChange: (family: FamilyFormData) => void;
 };
 
 const FamilyForm = ({
@@ -82,9 +82,7 @@ const FamilyForm = ({
   parentDynamicFields,
   onChange,
 }: Props) => {
-  const handleAddStudent = (
-    role: StudentRole.GUEST | StudentRole.CHILD
-  ): void => {
+  const addStudent = (role: StudentRole.GUEST | StudentRole.CHILD): void => {
     if (role === StudentRole.CHILD) {
       onChange({
         ...family,
@@ -119,7 +117,7 @@ const FamilyForm = ({
     }
   };
 
-  const handleDeleteStudent = (
+  const deleteStudent = (
     index: number,
     role: StudentRole.CHILD | StudentRole.GUEST
   ): void => {
@@ -148,28 +146,28 @@ const FamilyForm = ({
       </Typography>
       <StudentForm
         dynamicFields={childDynamicFields}
-        studentData={family.children}
-        updateStudent={updateStudent}
-        handleDeleteStudent={handleDeleteStudent}
+        onAddStudent={() => addStudent(StudentRole.CHILD)}
+        onDeleteStudent={(id) => deleteStudent(id, StudentRole.CHILD)}
+        onUpdateStudent={(id, data) =>
+          updateStudent(id, data, StudentRole.CHILD)
+        }
         role={StudentRole.CHILD}
+        students={family.children}
       />
-      <Button onClick={() => handleAddStudent(StudentRole.CHILD)}>
-        Add Child
-      </Button>
 
       <Typography component="h3" variant="h5">
         Family members
       </Typography>
       <StudentForm
         dynamicFields={guestDynamicFields}
-        studentData={family.guests}
-        updateStudent={updateStudent}
-        handleDeleteStudent={handleDeleteStudent}
+        onAddStudent={() => addStudent(StudentRole.GUEST)}
+        onDeleteStudent={(id) => deleteStudent(id, StudentRole.GUEST)}
+        onUpdateStudent={(id, data) =>
+          updateStudent(id, data, StudentRole.GUEST)
+        }
         role={StudentRole.GUEST}
+        students={family.guests}
       />
-      <Button onClick={() => handleAddStudent(StudentRole.GUEST)}>
-        Add Family Member
-      </Button>
     </>
   );
 };

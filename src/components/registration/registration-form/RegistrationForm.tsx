@@ -8,7 +8,7 @@ import {
   SessionDetailResponse,
 } from "api/types";
 import FamilyForm, {
-  FamilyStudentFormData,
+  FamilyFormData,
   studentFormDataToStudentRequest,
 } from "components/families/family-form";
 import DefaultFieldKey from "constants/DefaultFieldKey";
@@ -26,7 +26,7 @@ const defaultStudentData: StudentRequest = {
   information: {},
 };
 
-const defaultFamilyData: FamilyStudentFormData = {
+const defaultFamilyData: FamilyFormData = {
   [DefaultFieldKey.ADDRESS]: "",
   [DefaultFieldKey.CELL_NUMBER]: "",
   [DefaultFieldKey.EMAIL]: "",
@@ -54,9 +54,7 @@ const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
     parentDynamicFields,
   } = useContext(DynamicFieldsContext);
 
-  const [family, setFamily] = useState<FamilyStudentFormData>(
-    defaultFamilyData
-  );
+  const [family, setFamily] = useState<FamilyFormData>(defaultFamilyData);
 
   const getSessionDynamicFields = (dynamicFields: DynamicField[]) =>
     dynamicFields.filter((dynamicField) =>

@@ -3,4 +3,4 @@ export {
   familyResponseToFamilyFormData,
   studentFormDataToStudentRequest,
 } from "./FamilyForm";
-export type { FamilyStudentFormData } from "./FamilyForm";
+export type { FamilyFormData } from "./FamilyForm";
