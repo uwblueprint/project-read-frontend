@@ -8,13 +8,6 @@ import { DynamicField } from "types";
 
 import StudentFields from "../student-fields";
 
-export enum TestId {
-  ChildrenDefaultFields = "children-default-fields",
-  ChildrenDynamicFields = "children-dynamic-fields",
-  GuestsDefaultFields = "guests-default-fields",
-  GuestsDynamicFields = "guests-dynamic-fields",
-}
-
 export type StudentFormData = StudentRequest & { index: number };
 
 type Props = {
