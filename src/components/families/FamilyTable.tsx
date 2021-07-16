@@ -13,7 +13,7 @@ import {
   DefaultFields,
 } from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
-import QuestionTypes from "constants/QuestionTypes";
+import QuestionType from "constants/QuestionType";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField } from "types";
 
@@ -144,8 +144,8 @@ const FamilyTable = ({
     label: field.name,
     options: {
       display: field.is_default && (!isDynamic || shouldDisplayDynamicFields),
-      filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
-      searchable: field.question_type === QuestionTypes.TEXT,
+      filter: field.question_type === QuestionType.MULTIPLE_CHOICE,
+      searchable: field.question_type === QuestionType.TEXT,
       customBodyRender: (value) => (
         <Typography noWrap variant="body2">
           {value}

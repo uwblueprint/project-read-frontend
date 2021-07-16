@@ -8,7 +8,7 @@ import moment from "moment";
 
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
-import QuestionTypes from "constants/QuestionTypes";
+import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
@@ -85,7 +85,7 @@ const TEST_GUEST_DOB = "01011987";
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
   name: "Favourite colour",
-  question_type: QuestionTypes.TEXT,
+  question_type: QuestionType.TEXT,
   options: [],
 };
 

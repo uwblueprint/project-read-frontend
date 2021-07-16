@@ -1,7 +1,7 @@
-enum QuestionTypes {
+enum QuestionType {
   TEXT = "Text",
   MULTIPLE_CHOICE = "Multiple Choice",
   DATE = "Date",
 }
 
-export default QuestionTypes;
+export default QuestionType;
