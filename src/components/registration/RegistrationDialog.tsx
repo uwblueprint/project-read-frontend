@@ -87,6 +87,7 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
     data: FamilyStudentRequest
   ) => {
     e.preventDefault();
+    console.log(data);
     const response = await FamilyAPI.postFamily(data);
     if (response.non_field_errors) {
       // eslint-disable-next-line no-alert

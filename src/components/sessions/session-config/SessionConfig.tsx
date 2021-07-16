@@ -15,8 +15,8 @@ export enum TestId {
 type Props = {
   sessionName: string;
   onChangeSessionName: (name: string) => void;
-  startDate: Date;
-  onChangeStartDate: (date: Date) => void;
+  startDate: string;
+  onChangeStartDate: (date: string) => void;
 };
 
 const SessionConfig = ({
@@ -39,7 +39,9 @@ const SessionConfig = ({
       id="start-date"
       label="Start date"
       value={startDate}
-      onChange={(date) => onChangeStartDate(date)}
+      onChange={(date) => {
+        onChangeStartDate(date);
+      }}
       inputWidth={FORM_FIELD_WIDTH}
     />
   </div>
