@@ -12,7 +12,7 @@ export enum TestId {
 }
 
 type Props = InputProps & {
-  value: string | null;
+  value: string;
   onChange: (value: string) => void;
 };
 
@@ -39,7 +39,9 @@ const DateInput = ({
         format="MM/DD/yyyy"
         value={value === "" ? null : value}
         onChange={(date) =>
-          onChange(date ? moment(date).format("YYYY-MM-DD") : "")
+          onChange(
+            moment(date).isValid() ? moment(date).format("YYYY-MM-DD") : ""
+          )
         }
         fullWidth
         KeyboardButtonProps={{
