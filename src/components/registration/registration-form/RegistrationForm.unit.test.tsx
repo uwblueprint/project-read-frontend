@@ -276,7 +276,7 @@ describe("when text fields are submitted", () => {
     );
 
     // guest section
-    fireEvent.click(getByRole("button", { name: "Add Family Member" }));
+    fireEvent.click(getByRole("button", { name: "Add member" }));
     fireEvent.change(
       getByTestId(`${StudentRole.GUEST} ${DefaultFields.FIRST_NAME.name}`),
       {
