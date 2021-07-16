@@ -60,15 +60,3 @@ export type Class = {
   name: string;
   attendance: Attendance[];
 };
-
-export type InputProps = {
-  id: string;
-  label: string;
-  inputWidth?: number;
-  testId?: string;
-};
-
-export type StringInputProps = InputProps & {
-  value: string;
-  onChange: (value: string) => void;
-};
