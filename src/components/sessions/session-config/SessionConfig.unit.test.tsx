@@ -53,6 +53,6 @@ describe("SessionConfig", () => {
     await fireEvent.click(getByTestId(DateInputTestId.KeyboardButton));
     await fireEvent.click(await getByText("2"));
     expect(onChangeStartDate).toHaveBeenCalledTimes(1);
-    expect(onChangeStartDate).toHaveBeenCalledWith("2020-10-02");
+    expect(onChangeStartDate).toHaveBeenCalledWith(new Date(2020, 9, 2));
   });
 });
