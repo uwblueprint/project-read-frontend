@@ -121,12 +121,14 @@ const FamilyForm = ({
     index: number,
     role: StudentRole.CHILD | StudentRole.GUEST
   ): void => {
-    const data = role === StudentRole.CHILD ? family.children : family.guests;
-    const students = data.filter((e) => e.index !== index);
+    const students = (role === StudentRole.CHILD
+      ? [...family.children]
+      : [...family.guests]
+    ).filter((e) => e.index !== index);
     if (role === StudentRole.CHILD) {
-      onChange({ ...family, children: [...students] });
+      onChange({ ...family, children: students });
     } else {
-      onChange({ ...family, guests: [...students] });
+      onChange({ ...family, guests: students });
     }
   };
 
