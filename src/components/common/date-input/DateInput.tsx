@@ -1,10 +1,15 @@
 import React from "react";
 
 import { Box, InputLabel } from "@material-ui/core";
-import { DatePicker } from "@material-ui/pickers";
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import moment from "moment";
 
 import { InputProps } from "types";
+
+export enum TestId {
+  Input = "input",
+  KeyboardButton = "keyboard-button",
+}
 
 type Props = InputProps & {
   value: Date;
@@ -17,15 +22,20 @@ const DateInput = ({ id, label, value, onChange, inputWidth }: Props) => (
       <InputLabel htmlFor={id}>{label}</InputLabel>
     </Box>
     <Box width={inputWidth}>
-      <DatePicker
+      <KeyboardDatePicker
         id={id}
         autoOk
         disableToolbar
         variant="inline"
         inputVariant="outlined"
-        format="MMMM D, yyyy"
+        format="MM/DD/yyyy"
         value={value}
         onChange={(date) => onChange(moment(date).toDate())}
+        KeyboardButtonProps={{
+          "aria-label": "change date",
+          ...{ "data-testid": TestId.KeyboardButton },
+        }}
+        inputProps={{ "data-testid": TestId.Input }}
         fullWidth
       />
     </Box>
