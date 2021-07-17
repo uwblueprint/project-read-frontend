@@ -7,7 +7,10 @@ import {
   StudentRequest,
   SessionDetailResponse,
 } from "api/types";
-import FamilyForm from "components/families/family-form";
+import FamilyForm, {
+  FamilyFormData,
+  studentFormDataToStudentRequest,
+} from "components/families/family-form";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
@@ -23,7 +26,7 @@ const defaultStudentData: StudentRequest = {
   information: {},
 };
 
-const defaultFamilyData: FamilyStudentRequest = {
+const defaultFamilyData: FamilyFormData = {
   [DefaultFieldKey.ADDRESS]: "",
   [DefaultFieldKey.CELL_NUMBER]: "",
   [DefaultFieldKey.EMAIL]: "",
@@ -32,8 +35,8 @@ const defaultFamilyData: FamilyStudentRequest = {
   [DefaultFieldKey.PREFERRED_NUMBER]: "",
   [DefaultFieldKey.WORK_NUMBER]: "",
   parent: { ...defaultStudentData },
-  children: [{ ...defaultStudentData }],
-  guests: [{ ...defaultStudentData }],
+  children: [{ ...defaultStudentData, index: 0 }],
+  guests: [],
 };
 
 type RegistrationFormProps = {
@@ -51,17 +54,27 @@ const RegistrationForm = ({ onSubmit, session }: RegistrationFormProps) => {
     parentDynamicFields,
   } = useContext(DynamicFieldsContext);
 
-  const [family, setFamily] = useState<FamilyStudentRequest>(defaultFamilyData);
+  const [family, setFamily] = useState<FamilyFormData>(defaultFamilyData);
 
   const getSessionDynamicFields = (dynamicFields: DynamicField[]) =>
     dynamicFields.filter((dynamicField) =>
       session.fields.includes(dynamicField.id)
     );
 
+  const getSubmissionData = (): FamilyStudentRequest => ({
+    ...family,
+    children: family.children.map((child) =>
+      studentFormDataToStudentRequest(child)
+    ),
+    guests: family.guests.map((guest) =>
+      studentFormDataToStudentRequest(guest)
+    ),
+  });
+
   return (
     <form
       data-testid={TestId.RegistrationForm}
-      onSubmit={(e) => onSubmit(e, family)}
+      onSubmit={(e) => onSubmit(e, getSubmissionData())}
     >
       <Typography variant="body1" data-testid={TestId.SessionLabel}>
         Currently enrolling a <b>new family</b> for{" "}
