@@ -304,7 +304,9 @@ describe("when text fields are submitted", () => {
               [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR,
             },
             last_name: TEST_LAST_NAME,
-            date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").toDate(),
+            date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
           },
         ],
         email: TEST_PARENT_EMAIL,
@@ -315,7 +317,9 @@ describe("when text fields are submitted", () => {
               [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR,
             },
             last_name: TEST_LAST_NAME,
-            date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").toDate(),
+            date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
           },
         ],
         home_number: TEST_PARENT_HOME_NUMBER,
@@ -325,7 +329,9 @@ describe("when text fields are submitted", () => {
             [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR,
           },
           last_name: TEST_LAST_NAME,
-          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").toDate(),
+          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
         },
         preferred_comms: "",
         preferred_number: "",
