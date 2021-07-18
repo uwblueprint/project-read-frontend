@@ -38,9 +38,9 @@ const DateInput = ({
         inputVariant="outlined"
         format="MM/DD/yyyy"
         value={value}
-        onChange={(date) =>
-          onChange(date ? moment(date, "YYYY-MM-DD").toDate() : null)
-        }
+        onChange={(date) => {
+          onChange(date ? moment(date, "MM/DD/yyyy").toDate() : null);
+        }}
         fullWidth
         KeyboardButtonProps={{
           "aria-label": "change date",

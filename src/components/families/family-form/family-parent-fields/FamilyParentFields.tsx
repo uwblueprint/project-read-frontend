@@ -35,12 +35,12 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => (
     <Field
       field={{ ...DefaultFields.DATE_OF_BIRTH, role: StudentRole.PARENT }}
       onChange={(value) => {
-        const dob = value ? moment(value, "YYYY-MM-DD").toDate() : null;
+        const dob = value || null;
         onChange({
           ...family,
           parent: {
             ...family.parent,
-            date_of_birth: dob ? moment(dob).format("YYYY-MM-DD") : null,
+            date_of_birth: dob,
           },
         });
       }}

@@ -30,10 +30,10 @@ const StudentFields = ({ dynamicFields, onChange, role, student }: Props) => (
     <Field
       field={{ ...DefaultFields.DATE_OF_BIRTH, role }}
       onChange={(value) => {
-        const dob = value ? moment(value, "YYYY-MM-DD").toDate() : null;
+        const dob = value || null;
         onChange({
           ...student,
-          date_of_birth: dob ? moment(dob).format("YYYY-MM-DD") : null,
+          date_of_birth: dob,
         });
       }}
       value={
