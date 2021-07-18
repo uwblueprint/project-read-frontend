@@ -38,7 +38,10 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => (
         const dob = value ? moment(value, "YYYY-MM-DD").toDate() : null;
         onChange({
           ...family,
-          parent: { ...family.parent, date_of_birth: dob },
+          parent: {
+            ...family.parent,
+            date_of_birth: dob ? moment(dob).format("YYYY-MM-DD") : null,
+          },
         });
       }}
       value={

@@ -1,7 +1,7 @@
 enum QuestionType {
-  TEXT = "Text",
-  MULTIPLE_CHOICE = "Multiple Choice",
   DATE = "Date",
+  MULTIPLE_CHOICE = "Multiple Choice",
+  TEXT = "Text",
 }
 
 export default QuestionType;

@@ -18,7 +18,7 @@ export type DynamicField = Field & {
 };
 
 export type Student = {
-  [DefaultFieldKey.DATE_OF_BIRTH]: Date | null;
+  [DefaultFieldKey.DATE_OF_BIRTH]: string | null;
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
   id: number;
