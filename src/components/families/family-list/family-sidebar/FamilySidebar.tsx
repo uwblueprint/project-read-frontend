@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
-import { Drawer, Divider, Typography, TextField } from "@material-ui/core";
+import { Box, Drawer, Divider, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { FamilyDetailResponse } from "api/types";
@@ -8,15 +8,16 @@ import DefaultFieldKey from "constants/DefaultFieldKey";
 import { DefaultFamilyFormFields } from "constants/DefaultFields";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
-const drawerWidth = 400;
+const drawerWidth = 416;
 
 const useStyles = makeStyles(() => ({
   drawer: {
     width: drawerWidth,
   },
   drawerPaper: {
+    backgroundColor: "#F5F5F5",
+    borderLeft: "none",
     width: drawerWidth,
-    padding: 20,
   },
   pb: {
     paddingBottom: 16,
@@ -38,19 +39,47 @@ type Props = {
 const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
   const classes = useStyles();
   const { parentDynamicFields } = useContext(DynamicFieldsContext);
+  const sidebar = useRef<HTMLDivElement>(null);
+
+  const handleClick = (e: MouseEvent) => {
+    const sidebarRef = sidebar?.current;
+    if (!sidebarRef || !isOpen) {
+      return;
+    }
+    const sidebarX = sidebarRef.getBoundingClientRect().x || 0;
+    const clickX = e.clientX;
+    if (clickX < sidebarX) {
+      sidebarRef.scrollTo(0, 0);
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClick);
+      return () => {
+        document.removeEventListener("mousedown", handleClick);
+      };
+    }
+    return () => {};
+  }, [isOpen]);
 
   return (
     <Drawer
       anchor="right"
-      variant="temporary"
+      // temporary can't be used due to an incompatibility with Chrome and
+      // mui-datatable's sticky headers, leading to unexpected scroll behaviour
+      // instead, we use persistent and capture clicks ourselves
+      variant="persistent"
       className={classes.drawer}
       classes={{
         paper: classes.drawerPaper,
       }}
       open={isOpen}
       onClose={onClose}
+      PaperProps={{ ref: sidebar }}
     >
-      <div>
+      <Box padding={3} paddingTop={10}>
         <Typography variant="h2">
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
@@ -90,7 +119,7 @@ const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
             variant="filled"
           />
         </form>
-      </div>
+      </Box>
     </Drawer>
   );
 };

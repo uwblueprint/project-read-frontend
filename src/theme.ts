@@ -20,6 +20,7 @@ const theme = createMuiTheme({
     MuiAppBar: {
       root: {
         boxShadow: "none",
+        zIndex: defaultTheme.zIndex.drawer + 1,
       },
     },
     MuiButton: {
