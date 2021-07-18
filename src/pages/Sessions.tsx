@@ -20,7 +20,7 @@ import {
   SessionDetailResponse,
   FamilyListResponse,
 } from "api/types";
-import FamilyTable from "components/families/FamilyTable";
+import FamilyList from "components/families/family-list";
 import RegistrationDialog from "components/registration/RegistrationDialog";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
@@ -188,7 +188,7 @@ const Sessions = () => {
           classTabIndex={classTabIndex}
           onChangeClassTabIndex={handleChangeClassTabIndex}
           classDefaultView={
-            <FamilyTable
+            <FamilyList
               families={getFamilies()}
               enrolmentFields={getEnrolmentFields}
               shouldDisplayDynamicFields={false}
