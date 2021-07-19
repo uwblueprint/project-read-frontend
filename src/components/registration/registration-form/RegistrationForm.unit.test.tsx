@@ -2,10 +2,11 @@ import React from "react";
 
 import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import moment from "moment";
 
+import FamilyAPI from "api/FamilyAPI";
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
 import QuestionType from "constants/QuestionType";
@@ -31,7 +32,11 @@ describe("when the registration form is opened", () => {
   beforeEach(() => {
     ({ getByRole, getByTestId, getByText } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
-        <RegistrationForm onSubmit={() => {}} session={session} />
+        <RegistrationForm
+          existingFamily={null}
+          onSubmit={() => {}}
+          session={session}
+        />
       </MuiPickersUtilsProvider>
     ));
   });
@@ -131,7 +136,11 @@ describe("when text fields are submitted", () => {
             guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
           }}
         >
-          <RegistrationForm onSubmit={() => {}} session={session} />
+          <RegistrationForm
+            existingFamily={null}
+            onSubmit={() => {}}
+            session={session}
+          />
         </DynamicFieldsContext.Provider>
       </MuiPickersUtilsProvider>
     );
@@ -147,7 +156,7 @@ describe("when text fields are submitted", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("structures the data in the required format", () => {
+  it("structures the data in the required format", async () => {
     const session: SessionDetailResponse = {
       classes: [],
       families: [],
@@ -161,7 +170,9 @@ describe("when text fields are submitted", () => {
       start_date: "2021-09-01",
       year: 2021,
     };
-    const onSubmit = jest.fn((e) => e.preventDefault());
+
+    jest.spyOn(FamilyAPI, "postFamily").mockResolvedValue({});
+    const onSubmit = jest.fn(() => {});
     const { getByLabelText, getByRole, getByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DynamicFieldsContext.Provider
@@ -171,7 +182,11 @@ describe("when text fields are submitted", () => {
             guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
           }}
         >
-          <RegistrationForm onSubmit={onSubmit} session={session} />
+          <RegistrationForm
+            existingFamily={null}
+            onSubmit={onSubmit}
+            session={session}
+          />
         </DynamicFieldsContext.Provider>
       </MuiPickersUtilsProvider>
     );
@@ -261,6 +276,7 @@ describe("when text fields are submitted", () => {
     );
 
     // guest section
+    fireEvent.click(getByRole("button", { name: "Add Family Member" }));
     fireEvent.change(
       getByTestId(`${StudentRole.GUEST} ${DefaultFields.FIRST_NAME.name}`),
       {
@@ -338,5 +354,40 @@ describe("when text fields are submitted", () => {
         work_number: TEST_PARENT_WORK_NUMBER,
       }
     );
+
+    await waitFor(() => expect(FamilyAPI.postFamily).toHaveBeenCalledTimes(1));
+    expect(FamilyAPI.postFamily).toHaveBeenCalledWith({
+      address: TEST_PARENT_ADDRESS,
+      cell_number: TEST_PARENT_CELL_NUMBER,
+      children: [
+        {
+          first_name: TEST_CHILD_FIRST_NAME,
+          information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
+          last_name: TEST_LAST_NAME,
+          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
+        },
+      ],
+      email: TEST_PARENT_EMAIL,
+      guests: [
+        {
+          first_name: TEST_GUEST_FIRST_NAME,
+          information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
+          last_name: TEST_LAST_NAME,
+        },
+      ],
+      home_number: TEST_PARENT_HOME_NUMBER,
+      parent: {
+        first_name: TEST_PARENT_FIRST_NAME,
+        information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
+        last_name: TEST_LAST_NAME,
+      },
+      preferred_comms: "",
+      preferred_number: "",
+      work_number: TEST_PARENT_WORK_NUMBER,
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 });
