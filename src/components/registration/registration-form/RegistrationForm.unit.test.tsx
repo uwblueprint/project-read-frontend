@@ -305,82 +305,36 @@ describe("when text fields are submitted", () => {
 
     fireEvent.click(getByRole("button", { name: "Done" }));
 
-    expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(onSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: "submit",
-      }),
-      {
-        address: TEST_PARENT_ADDRESS,
-        cell_number: TEST_PARENT_CELL_NUMBER,
-        children: [
-          {
-            first_name: TEST_CHILD_FIRST_NAME,
-            information: {
-              [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR,
-            },
-            last_name: TEST_LAST_NAME,
-            date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
-              "YYYY-MM-DD"
-            ),
-          },
-        ],
-        email: TEST_PARENT_EMAIL,
-        guests: [
-          {
-            first_name: TEST_GUEST_FIRST_NAME,
-            information: {
-              [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR,
-            },
-            last_name: TEST_LAST_NAME,
-            date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
-              "YYYY-MM-DD"
-            ),
-          },
-        ],
-        home_number: TEST_PARENT_HOME_NUMBER,
-        parent: {
-          first_name: TEST_PARENT_FIRST_NAME,
-          information: {
-            [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR,
-          },
-          last_name: TEST_LAST_NAME,
-          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
-            "YYYY-MM-DD"
-          ),
-        },
-        preferred_comms: "",
-        preferred_number: "",
-        work_number: TEST_PARENT_WORK_NUMBER,
-      }
-    );
-
     await waitFor(() => expect(FamilyAPI.postFamily).toHaveBeenCalledTimes(1));
     expect(FamilyAPI.postFamily).toHaveBeenCalledWith({
       address: TEST_PARENT_ADDRESS,
       cell_number: TEST_PARENT_CELL_NUMBER,
       children: [
         {
-          first_name: TEST_CHILD_FIRST_NAME,
-          information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
-          last_name: TEST_LAST_NAME,
-          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
+          date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
             "YYYY-MM-DD"
           ),
+          first_name: TEST_CHILD_FIRST_NAME,
+          information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR },
+          last_name: TEST_LAST_NAME,
         },
       ],
       email: TEST_PARENT_EMAIL,
       guests: [
         {
+          date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
           first_name: TEST_GUEST_FIRST_NAME,
-          information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
+          information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR },
           last_name: TEST_LAST_NAME,
         },
       ],
       home_number: TEST_PARENT_HOME_NUMBER,
       parent: {
+        date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format("YYYY-MM-DD"),
         first_name: TEST_PARENT_FIRST_NAME,
-        information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
+        information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR },
         last_name: TEST_LAST_NAME,
       },
       preferred_comms: "",
