@@ -77,7 +77,10 @@ export type FamilyRequest = Pick<
 
 export type StudentRequest = Pick<
   Student,
-  DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME | "information"
+  | DefaultFieldKey.DATE_OF_BIRTH
+  | DefaultFieldKey.FIRST_NAME
+  | DefaultFieldKey.LAST_NAME
+  | "information"
 >;
 
 export type FamilyStudentRequest = FamilyRequest & {

@@ -12,11 +12,18 @@ export enum TestId {
 }
 
 type Props = InputProps & {
-  value: Date;
-  onChange: (value: Date) => void;
+  value: Date | null;
+  onChange: (value: Date | null) => void;
 };
 
-const DateInput = ({ id, label, value, onChange, inputWidth }: Props) => (
+const DateInput = ({
+  id,
+  label,
+  value,
+  onChange,
+  inputWidth,
+  testId,
+}: Props) => (
   <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
     <Box paddingRight={2} width={150}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
@@ -26,17 +33,20 @@ const DateInput = ({ id, label, value, onChange, inputWidth }: Props) => (
         id={id}
         autoOk
         disableToolbar
-        variant="inline"
+        disableFuture
+        variant="dialog"
         inputVariant="outlined"
         format="MM/DD/yyyy"
         value={value}
-        onChange={(date) => onChange(moment(date).toDate())}
+        onChange={(date) => {
+          onChange(date ? moment(date, "MM/DD/yyyy").toDate() : null);
+        }}
+        fullWidth
         KeyboardButtonProps={{
           "aria-label": "change date",
           ...{ "data-testid": TestId.KeyboardButton },
         }}
-        inputProps={{ "data-testid": TestId.Input }}
-        fullWidth
+        inputProps={{ "aria-label": testId, "data-testid": TestId.Input }}
       />
     </Box>
   </Box>

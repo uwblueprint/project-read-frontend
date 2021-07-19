@@ -1,6 +1,7 @@
 import React, { useContext, useCallback } from "react";
 
 import { Typography } from "@material-ui/core";
+import moment from "moment";
 import MUIDataTable, {
   MUIDataTableColumn,
   MUIDataTableOptions,
@@ -14,7 +15,7 @@ import {
   DefaultFields,
 } from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
-import QuestionTypes from "constants/QuestionTypes";
+import QuestionType from "constants/QuestionType";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField } from "types";
 
@@ -67,17 +68,6 @@ type FamilyTableRow = Pick<
   [key: number]: string | number; // dynamic fields
 };
 
-const getAge = (dateString: string): number => {
-  const today = new Date();
-  const birthDate = new Date(dateString);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age -= 1;
-  }
-  return age;
-};
-
 type FamilyTableProps = {
   families: FamilyListResponse[];
   enrolmentFields: DefaultField[];
@@ -97,9 +87,10 @@ const FamilyTable = ({
     families.map(({ parent, children, current_enrolment, ...args }) => {
       let childrenInfo = "";
       children.forEach((child, i) => {
-        if (child.date_of_birth != null) {
-          childrenInfo += `${child.first_name} (${getAge(
-            child.date_of_birth
+        if (child.date_of_birth) {
+          childrenInfo += `${child.first_name} (${moment().diff(
+            child.date_of_birth,
+            "years"
           )})`;
         } else {
           childrenInfo += `${child.first_name} (N/A)`;
@@ -142,8 +133,8 @@ const FamilyTable = ({
     label: field.name,
     options: {
       display: field.is_default && (!isDynamic || shouldDisplayDynamicFields),
-      filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
-      searchable: field.question_type === QuestionTypes.TEXT,
+      filter: field.question_type === QuestionType.MULTIPLE_CHOICE,
+      searchable: field.question_type === QuestionType.TEXT,
       customBodyRender: (value) => (
         <Typography noWrap variant="body2">
           {value}
