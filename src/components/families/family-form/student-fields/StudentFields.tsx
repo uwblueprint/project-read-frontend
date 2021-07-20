@@ -5,6 +5,7 @@ import moment from "moment";
 import { StudentRequest } from "api/types";
 import Field from "components/common/field";
 import { DefaultFields } from "constants/DefaultFields";
+import FieldVariant from "constants/FieldVariant";
 import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
 
@@ -21,11 +22,13 @@ const StudentFields = ({ dynamicFields, onChange, role, student }: Props) => (
       field={{ ...DefaultFields.FIRST_NAME, role }}
       onChange={(value) => onChange({ ...student, first_name: value })}
       value={student.first_name}
+      variant={FieldVariant.COMPACT}
     />
     <Field
       field={{ ...DefaultFields.LAST_NAME, role }}
       onChange={(value) => onChange({ ...student, last_name: value })}
       value={student.last_name}
+      variant={FieldVariant.COMPACT}
     />
     <Field
       field={{ ...DefaultFields.DATE_OF_BIRTH, role }}
@@ -41,6 +44,7 @@ const StudentFields = ({ dynamicFields, onChange, role, student }: Props) => (
           ? moment(student.date_of_birth).format("YYYY-MM-DD")
           : ""
       }
+      variant={FieldVariant.COMPACT}
     />
     {dynamicFields.map((field) => (
       <Field
@@ -56,6 +60,7 @@ const StudentFields = ({ dynamicFields, onChange, role, student }: Props) => (
           })
         }
         value={student.information[field.id] ?? ""}
+        variant={FieldVariant.COMPACT}
       />
     ))}
   </>
