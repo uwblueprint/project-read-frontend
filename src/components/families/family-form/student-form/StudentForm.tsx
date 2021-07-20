@@ -13,6 +13,7 @@ import StudentFields from "../student-fields";
 const useStyles = makeStyles(() => ({
   addButton: {
     marginLeft: 32,
+    marginTop: 10,
     paddingLeft: 12,
     paddingRight: 12,
   },
