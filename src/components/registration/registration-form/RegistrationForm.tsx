@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 
 import { Button, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
 import FamilyAPI from "api/FamilyAPI";
 import {
@@ -17,6 +18,13 @@ import FamilyForm, {
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
+
+const useStyles = makeStyles(() => ({
+  sessionLabel: {
+    fontSize: 24,
+    marginTop: 24,
+  },
+}));
 
 export enum TestId {
   RegistrationForm = "registration-form",
@@ -54,6 +62,7 @@ const RegistrationForm = ({
   onSubmit,
   session,
 }: RegistrationFormProps) => {
+  const classes = useStyles();
   const {
     childDynamicFields,
     guestDynamicFields,
@@ -96,7 +105,11 @@ const RegistrationForm = ({
 
   return (
     <form data-testid={TestId.RegistrationForm} onSubmit={handleSubmit}>
-      <Typography variant="body1" data-testid={TestId.SessionLabel}>
+      <Typography
+        variant="body1"
+        data-testid={TestId.SessionLabel}
+        className={classes.sessionLabel}
+      >
         Currently enrolling{" "}
         {existingFamily !== null ? (
           <span>

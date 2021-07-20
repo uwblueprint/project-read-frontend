@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
 import { FamilyDetailResponse, FamilyRequest, StudentRequest } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
@@ -13,6 +14,13 @@ import StudentForm, { StudentFormData } from "./student-form";
 // unique identifier for children form components
 let CHILD_KEY_COUNTER = 1;
 let GUEST_KEY_COUNTER = 1;
+
+const useStyles = makeStyles(() => ({
+  heading: {
+    marginBottom: 24,
+    marginTop: 32,
+  },
+}));
 
 export enum TestId {
   RegistrationForm = "registration-form",
@@ -83,6 +91,8 @@ const FamilyForm = ({
   parentDynamicFields,
   onChange,
 }: Props) => {
+  const classes = useStyles();
+
   const addStudent = (role: StudentRole.GUEST | StudentRole.CHILD): void => {
     if (role === StudentRole.CHILD) {
       onChange({
@@ -135,7 +145,7 @@ const FamilyForm = ({
 
   return (
     <>
-      <Typography component="h3" variant="h5" style={{ marginBottom: 16 }}>
+      <Typography variant="h3" className={classes.heading}>
         Basic information
       </Typography>
       <FamilyParentFields
@@ -144,8 +154,8 @@ const FamilyForm = ({
         onChange={(value) => onChange({ ...family, ...value })}
       />
 
-      <Typography component="h3" variant="h5">
-        Children
+      <Typography variant="h3" className={classes.heading}>
+        Family members
       </Typography>
       <StudentForm
         dynamicFields={childDynamicFields}
@@ -158,9 +168,6 @@ const FamilyForm = ({
         students={family.children}
       />
 
-      <Typography component="h3" variant="h5">
-        Family members
-      </Typography>
       <StudentForm
         dynamicFields={guestDynamicFields}
         onAddStudent={() => addStudent(StudentRole.GUEST)}
