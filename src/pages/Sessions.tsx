@@ -19,6 +19,7 @@ import FamilyAPI from "api/FamilyAPI";
 import SessionAPI from "api/SessionAPI";
 import {
   ClassDetailResponse,
+  ClassRequest,
   SessionListResponse,
   SessionDetailResponse,
   FamilyListResponse,
@@ -34,6 +35,7 @@ import RegistrationDialog from "components/registration/RegistrationDialog";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
+import AttendanceTable from "components/sessions/session-detail-view/AttendanceTable";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
@@ -59,6 +61,8 @@ const Sessions = () => {
   );
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
+  const [attendanceView, setAttendanceView] = useState(false);
+  const [isTakingAttendance, setIsTakingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [
     selectedFamily,
@@ -161,9 +165,21 @@ const Sessions = () => {
     return classObj !== undefined ? classObj.families : [];
   };
 
-  const onSelectFamily = async (id: number | null) => {
-    setIsLoadingFamily(true);
-    const family = id ? await FamilyAPI.getFamilyById(id) : null;
+  useEffect(() => {
+    setIsTakingAttendance(false);
+  }, [attendanceView]);
+
+  const onSubmitAttendance = async (classObj: ClassRequest) => {
+    const updatedClass = await ClassAPI.putClass(classObj);
+    setClassesMap(
+      (prevMap) =>
+        new Map([...Array.from(prevMap), [classObj.id, updatedClass]])
+    );
+    setIsTakingAttendance(!isTakingAttendance);
+  };
+
+  const onSelectFamily = async (id: number) => {
+    const family = await FamilyAPI.getFamilyById(id);
     setSelectedFamily(family);
     setIsLoadingFamily(false);
   };
@@ -194,6 +210,42 @@ const Sessions = () => {
       current_enrolment: await EnrolmentAPI.putEnrolment(data),
     });
     resetSession();
+  };
+
+  const getClassView = () => {
+    const selectedClass = classesMap.get(classTabIndex);
+    if (attendanceView && selectedClass) {
+      return (
+        <AttendanceTable
+          classObj={selectedClass}
+          isEditing={isTakingAttendance}
+          onSubmit={onSubmitAttendance}
+        />
+      );
+    }
+    return (
+      <>
+        <FamilyTable
+          families={getFamilies()}
+          enrolmentFields={
+            isOnAllClassesTab(classTabIndex)
+              ? [DefaultFields.ENROLLED_CLASS]
+              : []
+          }
+          shouldDisplayDynamicFields={false}
+          onSelectFamily={onSelectFamily}
+        />
+        {selectedFamily && (
+          <FamilySidebar
+            isOpen={isSidebarOpen}
+            family={selectedFamily}
+            onClose={() => setIsSidebarOpen(false)}
+            onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
+            onEditFamily={onEditFamily}
+          />
+        )}
+      </>
+    );
   };
 
   return (
@@ -237,8 +289,34 @@ const Sessions = () => {
         </Box>
         {selectedSession && (
           <>
+            <FormControl variant="outlined">
+              <InputLabel id="view">View</InputLabel>
+              <Select
+                id="select"
+                label="view"
+                labelId="view"
+                value={!attendanceView ? "default" : "attendance"}
+              >
+                <MenuItem
+                  value="default"
+                  onClick={() => setAttendanceView(false)}
+                >
+                  Default view
+                </MenuItem>
+                <MenuItem
+                  value="attendance"
+                  onClick={() => setAttendanceView(true)}
+                >
+                  Attendance view
+                </MenuItem>
+              </Select>
+            </FormControl>
             <Box flexShrink={0}>
-              <Button variant="outlined" onClick={handleOpenFormDialog}>
+              <Button
+                variant="outlined"
+                onClick={handleOpenFormDialog}
+                style={{ marginLeft: "20px", height: "56px" }}
+              >
                 Add a client &nbsp;
                 <Add />
               </Button>
@@ -274,32 +352,7 @@ const Sessions = () => {
           classes={selectedSession.classes}
           classTabIndex={classTabIndex}
           onChangeClassTabIndex={handleChangeClassTabIndex}
-          classDefaultView={
-            <>
-              <FamilyTable
-                families={getFamilies()}
-                enrolmentFields={
-                  isOnAllClassesTab(classTabIndex)
-                    ? [DefaultFields.ENROLLED_CLASS]
-                    : []
-                }
-                shouldDisplayDynamicFields={false}
-                onSelectFamily={async (id) => {
-                  await onSelectFamily(id);
-                  setIsSidebarOpen(true);
-                }}
-              />
-              {selectedFamily && (
-                <FamilySidebar
-                  isOpen={isSidebarOpen}
-                  family={selectedFamily}
-                  onClose={() => setIsSidebarOpen(false)}
-                  onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
-                  onSaveFamily={onSaveFamily}
-                />
-              )}
-            </>
-          }
+          classDefaultView={getClassView()}
         />
       )}
     </>

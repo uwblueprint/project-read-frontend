@@ -21,6 +21,7 @@ export type ClassDetailResponse = Class & {
 export type SessionListResponse = Pick<Session, "id" | "name"> & {
   classes: ClassListResponse[];
 };
+export type ClassRequest = ClassDetailResponse;
 
 export type SessionDetailResponse = Session & {
   classes: ClassListResponse[];
