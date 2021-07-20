@@ -11,13 +11,22 @@ import { DynamicField } from "types";
 import StudentFields from "../student-fields";
 
 const useStyles = makeStyles(() => ({
-  addButton: { marginLeft: 32, paddingLeft: 12, paddingRight: 12 },
-  addButtonIcon: { marginRight: 8 },
+  addButton: {
+    marginLeft: 32,
+    paddingLeft: 12,
+    paddingRight: 12,
+  },
+  addButtonIcon: {
+    marginRight: 8,
+  },
   deleteButton: {
     height: 16,
     width: 16,
   },
-  deleteButtonIcon: { height: 16, width: 16 },
+  deleteButtonIcon: {
+    height: 16,
+    width: 16,
+  },
   roleLabel: {
     width: 128,
   },
