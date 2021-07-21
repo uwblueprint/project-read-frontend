@@ -11,12 +11,17 @@ type FamilyParentRequest = FamilyRequest & { parent: StudentRequest };
 type Props = {
   dynamicFields: DynamicField[];
   family: FamilyParentRequest;
+  isEditing: boolean;
   onChange: (data: FamilyParentRequest) => void;
 };
 
-const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const fieldProps = {};
+const FamilyParentFields = ({
+  dynamicFields,
+  family,
+  isEditing,
+  onChange,
+}: Props) => {
+  const fieldProps = { isEditing };
   return (
     <>
       <Field
@@ -28,6 +33,7 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => {
           })
         }
         value={family.parent.first_name}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.LAST_NAME, role: StudentRole.PARENT }}
@@ -38,6 +44,7 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => {
           })
         }
         value={family.parent.last_name}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.DATE_OF_BIRTH, role: StudentRole.PARENT }}
@@ -52,41 +59,49 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => {
           });
         }}
         value={family.parent.date_of_birth || ""}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.HOME_NUMBER, role: StudentRole.PARENT }}
         onChange={(value) => onChange({ ...family, home_number: value })}
         value={family.home_number}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.CELL_NUMBER, role: StudentRole.PARENT }}
         onChange={(value) => onChange({ ...family, cell_number: value })}
         value={family.cell_number}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.WORK_NUMBER, role: StudentRole.PARENT }}
         onChange={(value) => onChange({ ...family, work_number: value })}
         value={family.work_number}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.PREFERRED_NUMBER, role: StudentRole.PARENT }}
         onChange={(value) => onChange({ ...family, preferred_number: value })}
         value={family.preferred_number}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.EMAIL, role: StudentRole.PARENT }}
         onChange={(value) => onChange({ ...family, email: value })}
         value={family.email}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.ADDRESS, role: StudentRole.PARENT }}
         onChange={(value) => onChange({ ...family, address: value })}
         value={family.address}
+        {...fieldProps}
       />
       <Field
         field={{ ...DefaultFields.PREFERRED_CONTACT, role: StudentRole.PARENT }}
         onChange={(value) => onChange({ ...family, preferred_comms: value })}
         value={family.preferred_comms}
+        {...fieldProps}
       />
       {dynamicFields.map((field) => (
         <Field
@@ -105,6 +120,7 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => {
             })
           }
           value={family.parent.information[field.id] ?? ""}
+          {...fieldProps}
         />
       ))}
     </>

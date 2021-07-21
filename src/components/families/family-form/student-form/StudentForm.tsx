@@ -69,13 +69,21 @@ const defaultStudentData: StudentRequest = {
 
 type Props = {
   dynamicFields: DynamicField[];
+  isEditing: boolean;
   onChange: (students: StudentFormData[]) => void;
   role: StudentRole.CHILD | StudentRole.GUEST;
   students: StudentFormData[];
 };
 
-const StudentForm = ({ dynamicFields, onChange, role, students }: Props) => {
+const StudentForm = ({
+  dynamicFields,
+  isEditing,
+  onChange,
+  role,
+  students,
+}: Props) => {
   const classes = useStyles();
+  const fieldProps = { isEditing, variant: FieldVariant.COMPACT };
 
   const onAddStudent = (): void => {
     onChange([
@@ -105,15 +113,16 @@ const StudentForm = ({ dynamicFields, onChange, role, students }: Props) => {
         {students.map((student, i) => (
           <Box key={student.index} display="flex">
             <Box className={classes.rowContainer} width={32}>
-              {(role === StudentRole.GUEST || students.length > 1) && (
-                <IconButton
-                  aria-label={`delete ${role}`}
-                  onClick={() => onDeleteStudent(student.index)}
-                  className={classes.deleteButton}
-                >
-                  <RemoveCircle className={classes.deleteButtonIcon} />
-                </IconButton>
-              )}
+              {isEditing &&
+                (role === StudentRole.GUEST || students.length > 1) && (
+                  <IconButton
+                    aria-label={`delete ${role}`}
+                    onClick={() => onDeleteStudent(student.index)}
+                    className={classes.deleteButton}
+                  >
+                    <RemoveCircle className={classes.deleteButtonIcon} />
+                  </IconButton>
+                )}
             </Box>
             <div>
               <Field
@@ -122,7 +131,7 @@ const StudentForm = ({ dynamicFields, onChange, role, students }: Props) => {
                   onUpdateStudent(i, { ...student, first_name: value })
                 }
                 value={student.first_name}
-                variant={FieldVariant.COMPACT}
+                {...fieldProps}
               />
               <Field
                 field={{ ...DefaultFields.LAST_NAME, role }}
@@ -130,7 +139,7 @@ const StudentForm = ({ dynamicFields, onChange, role, students }: Props) => {
                   onUpdateStudent(i, { ...student, last_name: value })
                 }
                 value={student.last_name}
-                variant={FieldVariant.COMPACT}
+                {...fieldProps}
               />
               <Field
                 field={{ ...DefaultFields.DATE_OF_BIRTH, role }}
@@ -142,7 +151,7 @@ const StudentForm = ({ dynamicFields, onChange, role, students }: Props) => {
                   });
                 }}
                 value={student.date_of_birth || ""}
-                variant={FieldVariant.COMPACT}
+                {...fieldProps}
               />
               {dynamicFields.map((field) => (
                 <Field
@@ -158,20 +167,22 @@ const StudentForm = ({ dynamicFields, onChange, role, students }: Props) => {
                     })
                   }
                   value={student.information[field.id] ?? ""}
-                  variant={FieldVariant.COMPACT}
+                  {...fieldProps}
                 />
               ))}
             </div>
           </Box>
         ))}
-        <Button
-          onClick={onAddStudent}
-          className={classes.addButton}
-          variant="outlined"
-        >
-          <Add fontSize="small" className={classes.addButtonIcon} />
-          Add {role === StudentRole.CHILD ? "child" : "member"}
-        </Button>
+        {isEditing && (
+          <Button
+            onClick={onAddStudent}
+            className={classes.addButton}
+            variant="outlined"
+          >
+            <Add fontSize="small" className={classes.addButtonIcon} />
+            Add {role === StudentRole.CHILD ? "child" : "member"}
+          </Button>
+        )}
       </div>
     </Box>
   );

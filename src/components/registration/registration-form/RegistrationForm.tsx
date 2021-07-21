@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/styles";
 
 import FamilyAPI from "api/FamilyAPI";
 import {
-  FamilyStudentRequest,
   StudentRequest,
   SessionDetailResponse,
   FamilyDetailResponse,
@@ -14,8 +13,8 @@ import FamilyParentFields from "components/families/family-form/family-parent-fi
 import StudentForm from "components/families/family-form/student-form";
 import {
   FamilyFormData,
+  familyFormDataToFamilyRequest,
   familyResponseToFamilyFormData,
-  studentFormDataToStudentRequest,
 } from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import StudentRole from "constants/StudentRole";
@@ -85,17 +84,10 @@ const RegistrationForm = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const requestData: FamilyStudentRequest = {
-      ...family,
-      children: family.children.map((child) =>
-        studentFormDataToStudentRequest(child)
-      ),
-      guests: family.guests.map((guest) =>
-        studentFormDataToStudentRequest(guest)
-      ),
-    };
     if (existingFamily === null) {
-      const response = await FamilyAPI.postFamily(requestData);
+      const response = await FamilyAPI.postFamily(
+        familyFormDataToFamilyRequest(family)
+      );
       if (response.non_field_errors) {
         // eslint-disable-next-line no-alert
         alert(response.non_field_errors);
@@ -137,6 +129,7 @@ const RegistrationForm = ({
         <Typography variant="h3">Basic information</Typography>
         <FamilyParentFields
           dynamicFields={getSessionDynamicFields(parentDynamicFields)}
+          isEditing
           family={family}
           onChange={(value) => setFamily({ ...family, ...value })}
         />
@@ -144,12 +137,14 @@ const RegistrationForm = ({
         <Typography variant="h3">Family members</Typography>
         <StudentForm
           dynamicFields={getSessionDynamicFields(childDynamicFields)}
+          isEditing
           onChange={(children) => setFamily({ ...family, children })}
           role={StudentRole.CHILD}
           students={family.children}
         />
         <StudentForm
           dynamicFields={getSessionDynamicFields(guestDynamicFields)}
+          isEditing
           onChange={(guests) => setFamily({ ...family, guests })}
           role={StudentRole.GUEST}
           students={family.guests}

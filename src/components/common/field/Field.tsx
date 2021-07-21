@@ -1,6 +1,12 @@
 import React from "react";
 
-import { MenuItem, OutlinedInput, Select } from "@material-ui/core";
+import {
+  Box,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import moment from "moment";
 
@@ -19,6 +25,7 @@ const useStyles = makeStyles(() => ({
 
 type Props = {
   field: (DefaultField & { role: StudentRole }) | DynamicField;
+  isEditing: boolean;
   onChange: (value: string) => void;
   variant?: FieldVariant;
   value: string;
@@ -28,9 +35,25 @@ const defaultProps = {
   variant: FieldVariant.DEFAULT,
 };
 
-const Field = ({ field, onChange, value, variant }: Props) => {
+const Field = ({ field, isEditing, onChange, value, variant }: Props) => {
   const classes = useStyles();
   const id = `${field.role} ${field.name}`;
+
+  if (!isEditing) {
+    return (
+      <Box display="flex" paddingY={1}>
+        <Box minWidth={144} paddingRight={2}>
+          <Typography variant="body2">
+            <b>{field.name}</b>
+          </Typography>
+        </Box>
+        <Box>
+          <Typography variant="body2">{value}</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <FormRow
       id={id}

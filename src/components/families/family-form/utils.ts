@@ -26,9 +26,17 @@ export const familyResponseToFamilyFormData = (
   ),
 });
 
-export const studentFormDataToStudentRequest = (
+const studentFormDataToStudentRequest = (
   obj: StudentFormData
 ): StudentRequest => {
   const { index, ...req } = obj;
   return req as StudentRequest;
 };
+
+export const familyFormDataToFamilyRequest = (family: FamilyFormData) => ({
+  ...family,
+  children: family.children.map((child) =>
+    studentFormDataToStudentRequest(child)
+  ),
+  guests: family.guests.map((guest) => studentFormDataToStudentRequest(guest)),
+});
