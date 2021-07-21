@@ -1,7 +1,5 @@
 import React from "react";
 
-import moment from "moment";
-
 import { FamilyRequest, StudentRequest } from "api/types";
 import Field from "components/common/field";
 import { DefaultFields } from "constants/DefaultFields";
@@ -44,11 +42,7 @@ const FamilyParentFields = ({ dynamicFields, family, onChange }: Props) => (
           },
         });
       }}
-      value={
-        family.parent.date_of_birth
-          ? moment(family.parent.date_of_birth).format("YYYY-MM-DD")
-          : ""
-      }
+      value={family.parent.date_of_birth || ""}
     />
     <Field
       field={{ ...DefaultFields.HOME_NUMBER, role: StudentRole.PARENT }}

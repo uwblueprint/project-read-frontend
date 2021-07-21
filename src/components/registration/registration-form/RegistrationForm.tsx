@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { Button, Typography } from "@material-ui/core";
+import { Box, Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import FamilyAPI from "api/FamilyAPI";
@@ -10,12 +10,15 @@ import {
   SessionDetailResponse,
   FamilyDetailResponse,
 } from "api/types";
-import FamilyForm, {
+import FamilyParentFields from "components/families/family-form/family-parent-fields";
+import StudentForm from "components/families/family-form/student-form";
+import {
   FamilyFormData,
   familyResponseToFamilyFormData,
   studentFormDataToStudentRequest,
-} from "components/families/family-form";
+} from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
+import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
 
@@ -130,13 +133,28 @@ const RegistrationForm = ({
         </b>
       </Typography>
 
-      <FamilyForm
-        family={family}
-        childDynamicFields={getSessionDynamicFields(childDynamicFields)}
-        guestDynamicFields={getSessionDynamicFields(guestDynamicFields)}
-        parentDynamicFields={getSessionDynamicFields(parentDynamicFields)}
-        onChange={setFamily}
-      />
+      <Box width={488}>
+        <Typography variant="h3">Basic information</Typography>
+        <FamilyParentFields
+          dynamicFields={getSessionDynamicFields(parentDynamicFields)}
+          family={family}
+          onChange={(value) => setFamily({ ...family, ...value })}
+        />
+
+        <Typography variant="h3">Family members</Typography>
+        <StudentForm
+          dynamicFields={getSessionDynamicFields(childDynamicFields)}
+          onChange={(children) => setFamily({ ...family, children })}
+          role={StudentRole.CHILD}
+          students={family.children}
+        />
+        <StudentForm
+          dynamicFields={getSessionDynamicFields(guestDynamicFields)}
+          onChange={(guests) => setFamily({ ...family, guests })}
+          role={StudentRole.GUEST}
+          students={family.guests}
+        />
+      </Box>
 
       <Button type="submit" variant="contained" color="primary">
         Done
