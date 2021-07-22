@@ -5,6 +5,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  Theme,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
@@ -17,27 +18,63 @@ import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DefaultField, DynamicField } from "types";
 
-const useStyles = makeStyles(() => ({
+const denseStyles = (theme: Theme) => ({
+  input: {
+    backgroundColor: theme.palette.background.paper,
+    fontSize: 14,
+    paddingBottom: 0,
+    paddingTop: 0,
+    height: 32,
+  },
+  label: {
+    fontSize: 14,
+  },
+  menuItem: {
+    fontSize: 14,
+    height: 32,
+  },
+  select: {
+    paddingBottom: 8,
+    paddingTop: 8,
+  },
+});
+
+const useStyles = makeStyles<Theme, Pick<Props, "dense">>((theme) => ({
+  input: ({ dense }) => (dense ? denseStyles(theme).input : {}),
+  label: ({ dense }) => (dense ? denseStyles(theme).label : {}),
+  menuItem: ({ dense }) => (dense ? denseStyles(theme).menuItem : {}),
+  select: ({ dense }) => (dense ? denseStyles(theme).select : {}),
   selectPlaceholder: {
     color: "rgba(0, 0, 0, 0.38)",
   },
 }));
 
 type Props = {
+  dense?: boolean;
   field: (DefaultField & { role: StudentRole }) | DynamicField;
   isEditing: boolean;
   onChange: (value: string) => void;
-  variant?: FieldVariant;
   value: string;
+  variant?: FieldVariant;
 };
 
 const defaultProps = {
+  dense: false,
   variant: FieldVariant.DEFAULT,
 };
 
-const Field = ({ field, isEditing, onChange, value, variant }: Props) => {
-  const classes = useStyles();
+const Field = ({
+  dense,
+  field,
+  isEditing,
+  onChange,
+  value,
+  variant,
+}: Props) => {
+  const classes = useStyles({ dense });
   const id = `${field.role} ${field.name}`;
+
+  const compact = variant === FieldVariant.COMPACT;
 
   if (!isEditing) {
     return (
@@ -56,6 +93,7 @@ const Field = ({ field, isEditing, onChange, value, variant }: Props) => {
 
   return (
     <FormRow
+      dense={dense}
       id={id}
       label={field.name}
       questionType={field.question_type}
@@ -66,10 +104,11 @@ const Field = ({ field, isEditing, onChange, value, variant }: Props) => {
           [QuestionType.TEXT]: (
             <OutlinedInput
               autoComplete="new-password" // disable autocomplete
+              className={classes.input}
               fullWidth
               id={id}
               inputProps={{ "data-testid": id }}
-              placeholder={variant === FieldVariant.COMPACT ? field.name : ""}
+              placeholder={compact ? field.name : ""}
               onChange={(e) => onChange(e.target.value)}
               value={value}
             />
@@ -77,16 +116,17 @@ const Field = ({ field, isEditing, onChange, value, variant }: Props) => {
           [QuestionType.MULTIPLE_CHOICE]: (
             <Select
               aria-label={field.name}
+              className={classes.input}
               displayEmpty
               fullWidth
-              inputProps={{ "data-testid": id }}
+              inputProps={{ "data-testid": id, className: classes.select }}
               labelId={id}
               onChange={(e) => onChange(e.target.value as string)}
               value={value}
               variant="outlined"
             >
-              <MenuItem value="">
-                {variant === FieldVariant.COMPACT ? (
+              <MenuItem value="" className={classes.menuItem}>
+                {compact ? (
                   <span className={classes.selectPlaceholder}>
                     {field.name}
                   </span>
@@ -95,7 +135,11 @@ const Field = ({ field, isEditing, onChange, value, variant }: Props) => {
                 )}
               </MenuItem>
               {field.options.map((option) => (
-                <MenuItem key={option} value={option}>
+                <MenuItem
+                  key={option}
+                  value={option}
+                  className={classes.menuItem}
+                >
                   {option}
                 </MenuItem>
               ))}
@@ -103,11 +147,12 @@ const Field = ({ field, isEditing, onChange, value, variant }: Props) => {
           ),
           [QuestionType.DATE]: (
             <DateInput
+              dense={dense}
               id={id}
               onChange={(val) =>
                 onChange(val ? moment(val).format("YYYY-MM-DD") : "")
               }
-              placeholder={variant === FieldVariant.COMPACT ? field.name : ""}
+              placeholder={compact ? field.name : ""}
               testId={`${field.role} ${field.name}`}
               value={value === "" ? null : moment(value, "YYYY-MM-DD").toDate()}
             />

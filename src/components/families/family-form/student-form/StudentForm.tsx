@@ -1,6 +1,13 @@
 import React from "react";
 
-import { Box, Button, IconButton, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Theme,
+  Typography,
+} from "@material-ui/core";
 import { Add, RemoveCircle } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 
@@ -16,13 +23,28 @@ import { DynamicField } from "types";
 let CHILD_KEY_COUNTER = 1;
 let GUEST_KEY_COUNTER = 1;
 
-const useStyles = makeStyles(() => ({
+const denseStyles = (isEditing: boolean) => ({
   addButton: {
+    marginBottom: 24,
+  },
+  roleLabel: {
+    fontSize: isEditing ? 14 : 15,
+    width: isEditing ? 112 : "",
+  },
+  rowContainer: {
+    height: 32,
+  },
+});
+
+const useStyles = makeStyles<Theme, Pick<Props, "dense" | "isEditing">>(() => ({
+  addButton: ({ dense, isEditing }) => ({
+    marginBottom: 48,
     marginLeft: 32,
     marginTop: 10,
     paddingLeft: 12,
     paddingRight: 12,
-  },
+    ...(dense && denseStyles(isEditing).addButton),
+  }),
   addButtonIcon: {
     marginRight: 8,
   },
@@ -30,18 +52,16 @@ const useStyles = makeStyles(() => ({
     height: 16,
     width: 16,
   },
-  deleteButtonIcon: {
-    height: 16,
-    width: 16,
-  },
-  roleLabel: {
+  roleLabel: ({ dense, isEditing }) => ({
     width: 128,
-  },
-  rowContainer: {
+    ...(dense && denseStyles(isEditing).roleLabel),
+  }),
+  rowContainer: ({ dense, isEditing }) => ({
     alignItems: "center",
     display: "flex",
     height: 56,
-  },
+    ...(dense && denseStyles(isEditing).rowContainer),
+  }),
 }));
 
 export const generateKey = (
@@ -68,6 +88,7 @@ const defaultStudentData: StudentRequest = {
 };
 
 type Props = {
+  dense: boolean;
   dynamicFields: DynamicField[];
   isEditing: boolean;
   onChange: (students: StudentFormData[]) => void;
@@ -76,14 +97,15 @@ type Props = {
 };
 
 const StudentForm = ({
+  dense,
   dynamicFields,
   isEditing,
   onChange,
   role,
   students,
 }: Props) => {
-  const classes = useStyles();
-  const fieldProps = { isEditing, variant: FieldVariant.COMPACT };
+  const classes = useStyles({ dense, isEditing });
+  const fieldProps = { dense, isEditing, variant: FieldVariant.COMPACT };
 
   const onAddStudent = (): void => {
     onChange([
@@ -103,28 +125,29 @@ const StudentForm = ({
   };
 
   return (
-    <Box display="flex" paddingBottom={6}>
+    <Box display={isEditing ? "flex" : ""}>
       <Box className={classes.rowContainer}>
         <Typography variant="h4" className={classes.roleLabel}>
           {role === StudentRole.CHILD ? "Children" : "Additional members"}
         </Typography>
       </Box>
-      <div>
+      <Box alignSelf="center" width="100%">
         {students.map((student, i) => (
-          <Box key={student.index} display="flex">
-            <Box className={classes.rowContainer} width={32}>
-              {isEditing &&
-                (role === StudentRole.GUEST || students.length > 1) && (
+          <Box key={student.index} display="flex" marginBottom={isEditing ?? 1}>
+            {isEditing && (
+              <Box className={classes.rowContainer} minWidth={32}>
+                {(role === StudentRole.GUEST || students.length > 1) && (
                   <IconButton
                     aria-label={`delete ${role}`}
                     onClick={() => onDeleteStudent(student.index)}
                     className={classes.deleteButton}
                   >
-                    <RemoveCircle className={classes.deleteButtonIcon} />
+                    <RemoveCircle className={classes.deleteButton} />
                   </IconButton>
                 )}
-            </Box>
-            <div>
+              </Box>
+            )}
+            <Box flex="auto">
               <Field
                 field={{ ...DefaultFields.FIRST_NAME, role }}
                 onChange={(value) =>
@@ -170,20 +193,26 @@ const StudentForm = ({
                   {...fieldProps}
                 />
               ))}
-            </div>
+              {!isEditing && (
+                <Box marginY={2}>
+                  <Divider />
+                </Box>
+              )}
+            </Box>
           </Box>
         ))}
         {isEditing && (
           <Button
             onClick={onAddStudent}
             className={classes.addButton}
+            size={dense ? "small" : "medium"}
             variant="outlined"
           >
             <Add fontSize="small" className={classes.addButtonIcon} />
             Add {role === StudentRole.CHILD ? "child" : "member"}
           </Button>
         )}
-      </div>
+      </Box>
     </Box>
   );
 };
