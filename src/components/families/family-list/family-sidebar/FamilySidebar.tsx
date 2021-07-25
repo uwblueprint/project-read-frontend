@@ -48,7 +48,8 @@ const useStyles = makeStyles((theme) => ({
     color: "#42526E",
     fontWeight: 700,
     fontSize: 16,
-    paddingBottom: 16,
+    paddingBottom: 20,
+    paddingTop: 20,
   },
   submitButton: {
     marginLeft: 12,
@@ -151,6 +152,13 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
             />
           </Box>
         </Box>
+
+        {!isEditing && (
+          <Box paddingTop={2}>
+            <Divider />
+          </Box>
+        )}
+
         <Typography variant="h3" className={classes.heading}>
           Notes
         </Typography>

@@ -193,8 +193,8 @@ const StudentForm = ({
                   {...fieldProps}
                 />
               ))}
-              {!isEditing && (
-                <Box marginY={2}>
+              {!isEditing && i < students.length - 1 && (
+                <Box paddingY={2}>
                   <Divider />
                 </Box>
               )}

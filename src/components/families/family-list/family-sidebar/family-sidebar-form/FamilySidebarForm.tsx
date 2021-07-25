@@ -17,8 +17,8 @@ export const familySidebarFormId = "familySidebarForm";
 
 const useStyles = makeStyles(() => ({
   heading: {
-    paddingBottom: 16,
-    paddingTop: 16,
+    paddingBottom: 20,
+    paddingTop: 20,
     fontSize: 18,
   },
 }));
@@ -76,6 +76,11 @@ const FamilySidebarForm = ({
           role={StudentRole.CHILD}
           students={family.children}
         />
+      )}
+      {!isEditing && (
+        <Box paddingY={2}>
+          <Divider />
+        </Box>
       )}
       {(family.guests.length || isEditing) && (
         <StudentForm
