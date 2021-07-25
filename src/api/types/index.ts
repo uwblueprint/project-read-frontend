@@ -18,7 +18,7 @@ export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
 };
 
-export type SessionListResponse = Pick<Session, "id" | "season" | "year">;
+export type SessionListResponse = Pick<Session, "id" | "name">;
 
 export type SessionDetailResponse = Session & {
   classes: ClassListResponse[];

@@ -157,7 +157,7 @@ const Sessions = () => {
                 >
                   {sessions.map((session) => (
                     <MenuItem key={session.id} value={session.id}>
-                      {session.season} {session.year}
+                      {session.name}
                     </MenuItem>
                   ))}
                   <MenuItem value={NEW_SESSION}>Add new session</MenuItem>
