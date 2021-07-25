@@ -89,6 +89,11 @@ const theme = createMuiTheme({
       },
     },
   },
+  props: {
+    MuiButton: {
+      disableElevation: true,
+    },
+  },
   typography: {
     h1: {
       fontSize: 36,

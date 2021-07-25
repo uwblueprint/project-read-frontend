@@ -22,6 +22,10 @@ import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
 
 const useStyles = makeStyles(() => ({
+  heading: {
+    marginBottom: 24,
+    marginTop: 32,
+  },
   sessionLabel: {
     fontSize: 24,
     marginTop: 24,
@@ -126,16 +130,22 @@ const RegistrationForm = ({
       </Typography>
 
       <Box width={488}>
-        <Typography variant="h3">Basic information</Typography>
+        <Typography variant="h3" className={classes.heading}>
+          Basic information
+        </Typography>
         <FamilyParentFields
+          dense={false}
           dynamicFields={getSessionDynamicFields(parentDynamicFields)}
           isEditing
           family={family}
           onChange={(value) => setFamily({ ...family, ...value })}
         />
 
-        <Typography variant="h3">Family members</Typography>
+        <Typography variant="h3" className={classes.heading}>
+          Family members
+        </Typography>
         <StudentForm
+          dense={false}
           dynamicFields={getSessionDynamicFields(childDynamicFields)}
           isEditing
           onChange={(children) => setFamily({ ...family, children })}
@@ -143,6 +153,7 @@ const RegistrationForm = ({
           students={family.children}
         />
         <StudentForm
+          dense={false}
           dynamicFields={getSessionDynamicFields(guestDynamicFields)}
           isEditing
           onChange={(guests) => setFamily({ ...family, guests })}

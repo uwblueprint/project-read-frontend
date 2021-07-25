@@ -7,6 +7,7 @@ import {
   IconButton,
   Typography,
   TextField,
+  Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Edit } from "@material-ui/icons";
@@ -14,27 +15,45 @@ import { Edit } from "@material-ui/icons";
 import { FamilyFormData } from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 
-import FamilySidebarForm from "./family-sidebar-form";
+import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
 
 const drawerWidth = 416;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
   },
   drawerPaper: {
     backgroundColor: "#F5F5F5",
     borderLeft: "none",
+    height: "calc(100% - 64px)",
+    marginTop: 64,
     width: drawerWidth,
   },
-  pb: {
-    paddingBottom: 16,
+  editButton: {
+    borderRadius: 8,
+    height: 40,
+    width: 40,
+  },
+  editButtonIcon: {
+    height: 20,
+    width: 20,
+  },
+  formActionRow: {
+    backgroundColor: "#F5F5F5",
+    boxShadow: "rgb(0 0 0 / 12%) 8px 0px 8px 0px",
+    zIndex: theme.zIndex.appBar + 1,
   },
   heading: {
     color: "#42526E",
     fontWeight: 700,
     fontSize: 16,
-    paddingBottom: 16,
+    paddingBottom: 20,
+    paddingTop: 20,
+  },
+  submitButton: {
+    marginLeft: 12,
+    marginRight: 24,
   },
 }));
 
@@ -110,27 +129,36 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
       onClose={handleClose}
       PaperProps={{ ref: sidebar }}
     >
-      <Box padding={3} paddingTop={10}>
+      <Box padding={3} paddingBottom={isEditing ? 10 : 3}>
         <Typography variant="h2">
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
         <Divider variant="fullWidth" />
         <Box position="relative">
-          <Box position="absolute" top={0} right={0}>
-            <IconButton onClick={() => onToggleEdit(!isEditing)}>
-              <Edit />
+          <Box position="absolute" top={8} right={0}>
+            <IconButton
+              className={classes.editButton}
+              onClick={() => onToggleEdit(!isEditing)}
+            >
+              <Edit className={classes.editButtonIcon} />
             </IconButton>
           </Box>
           <Box>
             <FamilySidebarForm
               family={familyFormData}
               isEditing={isEditing}
-              onCancel={() => onToggleEdit(false)}
               onChange={setFamilyFormData}
               onSubmit={onSubmitFamilyForm}
             />
           </Box>
         </Box>
+
+        {!isEditing && (
+          <Box paddingTop={2}>
+            <Divider />
+          </Box>
+        )}
+
         <Typography variant="h3" className={classes.heading}>
           Notes
         </Typography>
@@ -145,6 +173,35 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
           />
         </form>
       </Box>
+      {isEditing && (
+        <Box
+          alignContent="end"
+          bottom={0}
+          className={classes.formActionRow}
+          display="flex"
+          justifyContent="flex-end"
+          paddingY={2}
+          position="fixed"
+          width={drawerWidth}
+        >
+          <Button
+            onClick={() => onToggleEdit(false)}
+            type="button"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          <Button
+            color="primary"
+            className={classes.submitButton}
+            form={familySidebarFormId}
+            type="submit"
+            variant="contained"
+          >
+            Save
+          </Button>
+        </Box>
+      )}
     </Drawer>
   );
 };

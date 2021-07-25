@@ -9,6 +9,7 @@ import { DynamicField } from "types";
 type FamilyParentRequest = FamilyBaseRequest & { parent: StudentRequest };
 
 type Props = {
+  dense: boolean;
   dynamicFields: DynamicField[];
   family: FamilyParentRequest;
   isEditing: boolean;
@@ -16,12 +17,13 @@ type Props = {
 };
 
 const FamilyParentFields = ({
+  dense,
   dynamicFields,
   family,
   isEditing,
   onChange,
 }: Props) => {
-  const fieldProps = { isEditing };
+  const fieldProps = { dense, isEditing };
   return (
     <>
       <Field
