@@ -1,9 +1,13 @@
-import { FamilyDetailResponse, FamilyRequest, StudentRequest } from "api/types";
+import {
+  FamilyDetailResponse,
+  FamilyBaseRequest,
+  StudentRequest,
+} from "api/types";
 import StudentRole from "constants/StudentRole";
 
 import { generateKey, StudentFormData } from "./student-form";
 
-export type FamilyFormData = FamilyRequest & {
+export type FamilyFormData = FamilyBaseRequest & {
   children: StudentFormData[];
   guests: StudentFormData[];
   parent: StudentRequest;

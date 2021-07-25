@@ -1,12 +1,12 @@
 import React from "react";
 
-import { FamilyRequest, StudentRequest } from "api/types";
+import { FamilyBaseRequest, StudentRequest } from "api/types";
 import Field from "components/common/field";
 import { DefaultFields } from "constants/DefaultFields";
 import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
 
-type FamilyParentRequest = FamilyRequest & { parent: StudentRequest };
+type FamilyParentRequest = FamilyBaseRequest & { parent: StudentRequest };
 
 type Props = {
   dynamicFields: DynamicField[];

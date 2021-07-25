@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { Button, Typography } from "@material-ui/core";
 
-import { FamilyStudentRequest } from "api/types";
+import { FamilyRequest } from "api/types";
 import FamilyParentFields from "components/families/family-form/family-parent-fields";
 import StudentForm from "components/families/family-form/student-form";
 import {
@@ -17,7 +17,7 @@ type Props = {
   isEditing: boolean;
   onCancel: () => void;
   onChange: (family: FamilyFormData) => void;
-  onSubmit: (family: FamilyStudentRequest) => void;
+  onSubmit: (family: FamilyRequest) => void;
 };
 
 const FamilySidebarForm = ({
