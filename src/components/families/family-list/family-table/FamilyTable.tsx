@@ -1,24 +1,23 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext, useCallback } from "react";
 
 import { Typography } from "@material-ui/core";
+import moment from "moment";
 import MUIDataTable, {
   MUIDataTableColumn,
   MUIDataTableOptions,
 } from "mui-datatables";
 
 import { FamilyListResponse } from "api/types";
+import StatusChip from "components/common/status-chip";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import {
   DefaultFamilyTableFields,
   DefaultFields,
 } from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
-import QuestionTypes from "constants/QuestionTypes";
+import QuestionType from "constants/QuestionType";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField } from "types";
-
-import StatusChip from "../common/status-chip";
-import FamilyDetailsSidebar from "./FamilyDetailsSidebar";
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
@@ -69,39 +68,29 @@ type FamilyTableRow = Pick<
   [key: number]: string | number; // dynamic fields
 };
 
-const getAge = (dateString: string): number => {
-  const today = new Date();
-  const birthDate = new Date(dateString);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age -= 1;
-  }
-  return age;
-};
-
 type FamilyTableProps = {
   families: FamilyListResponse[];
   enrolmentFields: DefaultField[];
+  onSelectFamily: (id: number) => void;
   shouldDisplayDynamicFields: boolean;
 };
 
 const FamilyTable = ({
   families,
   enrolmentFields,
+  onSelectFamily,
   shouldDisplayDynamicFields,
 }: FamilyTableProps) => {
   const { parentDynamicFields } = useContext(DynamicFieldsContext);
-  const [openFamilyDetail, setOpenFamilyDetail] = useState(false);
-  const [familyId, setFamilyId] = useState<number>();
 
   const getTableRows = (): FamilyTableRow[] =>
     families.map(({ parent, children, current_enrolment, ...args }) => {
       let childrenInfo = "";
       children.forEach((child, i) => {
-        if (child.date_of_birth != null) {
-          childrenInfo += `${child.first_name} (${getAge(
-            child.date_of_birth
+        if (child.date_of_birth) {
+          childrenInfo += `${child.first_name} (${moment().diff(
+            child.date_of_birth,
+            "years"
           )})`;
         } else {
           childrenInfo += `${child.first_name} (N/A)`;
@@ -144,8 +133,8 @@ const FamilyTable = ({
     label: field.name,
     options: {
       display: field.is_default && (!isDynamic || shouldDisplayDynamicFields),
-      filter: field.question_type === QuestionTypes.MULTIPLE_CHOICE,
-      searchable: field.question_type === QuestionTypes.TEXT,
+      filter: field.question_type === QuestionType.MULTIPLE_CHOICE,
+      searchable: field.question_type === QuestionType.TEXT,
       customBodyRender: (value) => (
         <Typography noWrap variant="body2">
           {value}
@@ -154,7 +143,7 @@ const FamilyTable = ({
     },
   });
 
-  const getTableColumns: MUIDataTableColumn[] = [
+  const columns: MUIDataTableColumn[] = [
     idColumn,
     ...DefaultFamilyTableFields.map((field) => getColumn(field, false)),
     ...parentDynamicFields.map((field) => getColumn(field, true)),
@@ -162,33 +151,17 @@ const FamilyTable = ({
     statusColumn,
   ];
 
-  const handleOpenFamilyDetail = useCallback((rowData) => {
-    setFamilyId(rowData[0]);
-    setOpenFamilyDetail(true);
+  options.onRowClick = useCallback((rowData) => {
+    onSelectFamily(rowData[0]);
   }, []);
-
-  const handleCloseFamilyDetail = useCallback(() => {
-    setOpenFamilyDetail(false);
-  }, []);
-
-  options.onRowClick = handleOpenFamilyDetail;
 
   return (
-    <>
-      <MUIDataTable
-        title=""
-        data={getTableRows()}
-        columns={getTableColumns}
-        options={options}
-      />
-      {familyId && (
-        <FamilyDetailsSidebar
-          isOpen={openFamilyDetail}
-          familyId={familyId}
-          handleClose={handleCloseFamilyDetail}
-        />
-      )}
-    </>
+    <MUIDataTable
+      title=""
+      data={getTableRows()}
+      columns={columns}
+      options={options}
+    />
   );
 };
 

@@ -18,12 +18,12 @@ export type DynamicField = Field & {
 };
 
 export type Student = {
+  [DefaultFieldKey.DATE_OF_BIRTH]: string | null;
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
   id: number;
   information: Record<number, string>; // dynamic fields
   role: StudentRole;
-  date_of_birth: string;
 };
 
 export type Family = {
@@ -59,16 +59,4 @@ export type Class = {
   id: number;
   name: string;
   attendance: Attendance[];
-};
-
-export type InputProps = {
-  id: string;
-  label: string;
-  inputWidth?: number;
-  testId?: string;
-};
-
-export type StringInputProps = InputProps & {
-  value: string;
-  onChange: (value: string) => void;
 };

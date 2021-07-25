@@ -1,14 +1,20 @@
 import React from "react";
 
-import { fireEvent, render } from "@testing-library/react";
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { fireEvent, render, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import moment from "moment";
 
+import FamilyAPI from "api/FamilyAPI";
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
-import QuestionTypes from "constants/QuestionTypes";
+import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
 import RegistrationForm, { TestId } from "./RegistrationForm";
+import EnrolmentAPI from "api/EnrolmentAPI";
 
 describe("when the registration form is opened", () => {
   let getByRole: any;
@@ -26,7 +32,13 @@ describe("when the registration form is opened", () => {
 
   beforeEach(() => {
     ({ getByRole, getByTestId, getByText } = render(
-      <RegistrationForm onSubmit={() => {}} session={session} />
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <RegistrationForm
+          existingFamily={null}
+          onSubmit={() => {}}
+          session={session}
+        />
+      </MuiPickersUtilsProvider>
     ));
   });
 
@@ -58,22 +70,28 @@ describe("when the registration form is opened", () => {
 });
 
 const TEST_LAST_NAME = "Fish";
+
 const TEST_PARENT_ADDRESS = "42 Wallaby Way";
 const TEST_PARENT_CELL_NUMBER = "123";
-const TEST_PARENT_DOB = "Jan 1 1990";
+const TEST_PARENT_DOB = "01011990";
 const TEST_PARENT_EMAIL = "marlin@test.com";
+const TEST_PARENT_FAV_COLOUR = "red";
 const TEST_PARENT_FIRST_NAME = "Marlin";
 const TEST_PARENT_HOME_NUMBER = "456";
 const TEST_PARENT_WORK_NUMBER = "789";
+
+const TEST_CHILD_FAV_COLOUR = "blue";
 const TEST_CHILD_FIRST_NAME = "Nemo";
-const TEST_CHILD_DOB = "Jan 1 2020";
+const TEST_CHILD_DOB = "01012018";
+
+const TEST_GUEST_FAV_COLOUR = "periwinkle";
 const TEST_GUEST_FIRST_NAME = "Dory";
-const TEST_GUEST_DOB = "Jan 1 2015";
+const TEST_GUEST_DOB = "01011987";
 
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
-  name: "DOB",
-  question_type: QuestionTypes.TEXT,
+  name: "Favourite colour",
+  question_type: QuestionType.TEXT,
   options: [],
 };
 
@@ -111,15 +129,21 @@ describe("when text fields are submitted", () => {
       year: 2021,
     };
     const { getByTestId, queryByTestId } = render(
-      <DynamicFieldsContext.Provider
-        value={{
-          parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
-          childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
-          guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
-        }}
-      >
-        <RegistrationForm onSubmit={() => {}} session={session} />
-      </DynamicFieldsContext.Provider>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <DynamicFieldsContext.Provider
+          value={{
+            parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+            childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+            guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+          }}
+        >
+          <RegistrationForm
+            existingFamily={null}
+            onSubmit={() => {}}
+            session={session}
+          />
+        </DynamicFieldsContext.Provider>
+      </MuiPickersUtilsProvider>
     );
 
     expect(
@@ -133,7 +157,7 @@ describe("when text fields are submitted", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("structures the data in the required format", () => {
+  it("structures the data in the required format", async () => {
     const session: SessionDetailResponse = {
       classes: [],
       families: [],
@@ -147,17 +171,25 @@ describe("when text fields are submitted", () => {
       start_date: "2021-09-01",
       year: 2021,
     };
-    const onSubmit = jest.fn((e) => e.preventDefault());
-    const { getByRole, getByTestId } = render(
-      <DynamicFieldsContext.Provider
-        value={{
-          parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
-          childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
-          guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
-        }}
-      >
-        <RegistrationForm onSubmit={onSubmit} session={session} />
-      </DynamicFieldsContext.Provider>
+
+    jest.spyOn(EnrolmentAPI, "postEnrolment").mockResolvedValue({});
+    const onSubmit = jest.fn(() => {});
+    const { getByLabelText, getByRole, getByTestId } = render(
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <DynamicFieldsContext.Provider
+          value={{
+            parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+            childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+            guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+          }}
+        >
+          <RegistrationForm
+            existingFamily={null}
+            onSubmit={onSubmit}
+            session={session}
+          />
+        </DynamicFieldsContext.Provider>
+      </MuiPickersUtilsProvider>
     );
 
     // basic information section
@@ -173,6 +205,13 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    const parentDobInput = getByLabelText(
+      `${StudentRole.PARENT} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    parentDobInput.setSelectionRange(0, parentDobInput.value.length);
+    userEvent.type(parentDobInput, TEST_PARENT_DOB);
+
     fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${DefaultFields.HOME_NUMBER.name}`),
       {
@@ -206,7 +245,7 @@ describe("when text fields are submitted", () => {
     fireEvent.change(
       getByTestId(`${StudentRole.PARENT} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_PARENT_DOB },
+        target: { value: TEST_PARENT_FAV_COLOUR },
       }
     );
 
@@ -223,14 +262,22 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    const childDobInput = getByLabelText(
+      `${StudentRole.CHILD} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    childDobInput.setSelectionRange(0, childDobInput.value.length);
+    userEvent.type(childDobInput, TEST_CHILD_DOB);
+
     fireEvent.change(
       getByTestId(`${StudentRole.CHILD} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_CHILD_DOB },
+        target: { value: TEST_CHILD_FAV_COLOUR },
       }
     );
 
     // guest section
+    fireEvent.click(getByRole("button", { name: "Add member" }));
     fireEvent.change(
       getByTestId(`${StudentRole.GUEST} ${DefaultFields.FIRST_NAME.name}`),
       {
@@ -243,52 +290,73 @@ describe("when text fields are submitted", () => {
         target: { value: TEST_LAST_NAME },
       }
     );
+
+    const guestDobInput = getByLabelText(
+      `${StudentRole.GUEST} ${DefaultFields.DATE_OF_BIRTH.name}`
+    ) as HTMLInputElement;
+    guestDobInput.setSelectionRange(0, guestDobInput.value.length);
+    userEvent.type(guestDobInput, TEST_GUEST_DOB);
+
     fireEvent.change(
       getByTestId(`${StudentRole.GUEST} ${TEST_DYNAMIC_FIELD.name}`),
       {
-        target: { value: TEST_GUEST_DOB },
+        target: { value: TEST_GUEST_FAV_COLOUR },
       }
     );
 
     fireEvent.click(getByRole("button", { name: "Done" }));
 
-    expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(onSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: "submit",
-      }),
-      {
-        family: {
-          address: TEST_PARENT_ADDRESS,
-          cell_number: TEST_PARENT_CELL_NUMBER,
-          children: [
-            {
-              first_name: TEST_CHILD_FIRST_NAME,
-              information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_DOB },
-              last_name: TEST_LAST_NAME,
+    await waitFor(() =>
+      expect(EnrolmentAPI.postEnrolment).toHaveBeenCalledTimes(1)
+    );
+    expect(EnrolmentAPI.postEnrolment).toHaveBeenCalledWith({
+      family: {
+        address: TEST_PARENT_ADDRESS,
+        cell_number: TEST_PARENT_CELL_NUMBER,
+        children: [
+          {
+            date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
+            first_name: TEST_CHILD_FIRST_NAME,
+            information: {
+              [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR,
             },
-          ],
-          email: TEST_PARENT_EMAIL,
-          guests: [
-            {
-              first_name: TEST_GUEST_FIRST_NAME,
-              information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_DOB },
-              last_name: TEST_LAST_NAME,
-            },
-          ],
-          home_number: TEST_PARENT_HOME_NUMBER,
-          parent: {
-            first_name: TEST_PARENT_FIRST_NAME,
-            information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_DOB },
             last_name: TEST_LAST_NAME,
           },
-          preferred_comms: "",
-          preferred_number: "",
-          work_number: TEST_PARENT_WORK_NUMBER,
+        ],
+        email: TEST_PARENT_EMAIL,
+        guests: [
+          {
+            date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
+            first_name: TEST_GUEST_FIRST_NAME,
+            information: {
+              [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR,
+            },
+            last_name: TEST_LAST_NAME,
+          },
+        ],
+        home_number: TEST_PARENT_HOME_NUMBER,
+        parent: {
+          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
+          first_name: TEST_PARENT_FIRST_NAME,
+          information: {
+            [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR,
+          },
+          last_name: TEST_LAST_NAME,
         },
-        preferred_class: null,
-        session: session.id,
-      }
-    );
+        preferred_comms: "",
+        preferred_number: "",
+        work_number: TEST_PARENT_WORK_NUMBER,
+      },
+      preferred_class: null,
+      session: session.id,
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 });

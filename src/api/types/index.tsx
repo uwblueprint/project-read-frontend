@@ -64,7 +64,7 @@ export type FamilySearchResponse = Pick<
   [DefaultFieldKey.LAST_NAME]: string;
 };
 
-export type FamilyRequest = Pick<
+export type FamilyBaseRequest = Pick<
   Family,
   | DefaultFieldKey.ADDRESS
   | DefaultFieldKey.CELL_NUMBER
@@ -77,17 +77,20 @@ export type FamilyRequest = Pick<
 
 export type StudentRequest = Pick<
   Student,
-  DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME | "information"
+  | DefaultFieldKey.DATE_OF_BIRTH
+  | DefaultFieldKey.FIRST_NAME
+  | DefaultFieldKey.LAST_NAME
+  | "information"
 >;
 
-export type FamilyStudentRequest = FamilyRequest & {
+export type FamilyRequest = FamilyBaseRequest & {
   children: StudentRequest[];
   guests: StudentRequest[];
   parent: StudentRequest;
 };
 
 export type FamilyEnrolmentRequest = {
-  family: FamilyStudentRequest;
+  family: FamilyRequest;
   session: number;
   preferred_class: number | null;
 };

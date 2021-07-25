@@ -20,6 +20,7 @@ const theme = createMuiTheme({
     MuiAppBar: {
       root: {
         boxShadow: "none",
+        zIndex: defaultTheme.zIndex.drawer + 1,
       },
     },
     MuiButton: {
@@ -86,6 +87,11 @@ const theme = createMuiTheme({
         backgroundColor: "white",
         color: "black",
       },
+    },
+  },
+  props: {
+    MuiButton: {
+      disableElevation: true,
     },
   },
   typography: {
