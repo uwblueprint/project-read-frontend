@@ -1,6 +1,7 @@
 import {
-  FamilyDetailResponse,
   FamilyBaseRequest,
+  FamilyDetailResponse,
+  FamilyRequest,
   StudentRequest,
 } from "api/types";
 import StudentRole from "constants/StudentRole";
@@ -37,7 +38,9 @@ const studentFormDataToStudentRequest = (
   return req as StudentRequest;
 };
 
-export const familyFormDataToFamilyRequest = (family: FamilyFormData) => ({
+export const familyFormDataToFamilyRequest = (
+  family: FamilyFormData
+): FamilyRequest => ({
   ...family,
   children: family.children.map((child) =>
     studentFormDataToStudentRequest(child)
