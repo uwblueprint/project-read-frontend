@@ -1,12 +1,20 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { Box, Drawer, Divider, Typography, TextField } from "@material-ui/core";
+import {
+  Box,
+  Drawer,
+  Divider,
+  IconButton,
+  Typography,
+  TextField,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { Edit } from "@material-ui/icons";
 
-import { FamilyDetailResponse } from "api/types";
+import { FamilyFormData } from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import { DefaultFamilyFormFields } from "constants/DefaultFields";
-import { DynamicFieldsContext } from "context/DynamicFieldsContext";
+
+import FamilySidebarForm from "./family-sidebar-form";
 
 const drawerWidth = 416;
 
@@ -31,15 +39,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 type Props = {
+  family: FamilyFormData;
   isOpen: boolean;
-  family: FamilyDetailResponse;
   onClose: () => void;
 };
 
-const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
+const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
   const classes = useStyles();
-  const { parentDynamicFields } = useContext(DynamicFieldsContext);
   const sidebar = useRef<HTMLDivElement>(null);
+
+  const [familyFormData, setFamilyFormData] = useState<FamilyFormData>(family);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleClick = (e: MouseEvent) => {
     const sidebarRef = sidebar?.current;
@@ -64,6 +74,27 @@ const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
     return () => {};
   }, [isOpen]);
 
+  useEffect(() => {
+    setFamilyFormData(family);
+  }, [family]);
+
+  const onToggleEdit = (editing: boolean) => {
+    if (isEditing) {
+      setFamilyFormData(family);
+    }
+    setIsEditing(editing);
+  };
+
+  const handleClose = () => {
+    onToggleEdit(false);
+    onClose();
+  };
+
+  const onSubmitFamilyForm = () => {
+    // TODO: make PUT request
+    setIsEditing(false);
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -76,7 +107,7 @@ const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
         paper: classes.drawerPaper,
       }}
       open={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       PaperProps={{ ref: sidebar }}
     >
       <Box padding={3} paddingTop={10}>
@@ -84,28 +115,22 @@ const FamilySidebar = ({ isOpen, family, onClose }: Props) => {
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
         <Divider variant="fullWidth" />
-        <Typography variant="h3" className={classes.heading}>
-          Basic Information
-        </Typography>
-        {DefaultFamilyFormFields.map((defaultField) => (
-          <Typography
-            variant="body2"
-            className={classes.pb}
-            key={defaultField.name}
-          >
-            <b>{defaultField.name}:</b> {(family as any)[defaultField.id]}
-          </Typography>
-        ))}
-        {parentDynamicFields.map((parentField) => (
-          <Typography
-            variant="body2"
-            className={classes.pb}
-            key={parentField.id}
-          >
-            <b>{parentField.name}:</b>{" "}
-            {family.parent.information[parentField.id]}
-          </Typography>
-        ))}
+        <Box position="relative">
+          <Box position="absolute" top={0} right={0}>
+            <IconButton onClick={() => onToggleEdit(!isEditing)}>
+              <Edit />
+            </IconButton>
+          </Box>
+          <Box>
+            <FamilySidebarForm
+              family={familyFormData}
+              isEditing={isEditing}
+              onCancel={() => onToggleEdit(false)}
+              onChange={setFamilyFormData}
+              onSubmit={onSubmitFamilyForm}
+            />
+          </Box>
+        </Box>
         <Typography variant="h3" className={classes.heading}>
           Notes
         </Typography>

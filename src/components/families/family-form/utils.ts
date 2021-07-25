@@ -1,9 +1,14 @@
-import { FamilyDetailResponse, FamilyRequest, StudentRequest } from "api/types";
+import {
+  FamilyBaseRequest,
+  FamilyDetailResponse,
+  FamilyRequest,
+  StudentRequest,
+} from "api/types";
 import StudentRole from "constants/StudentRole";
 
 import { generateKey, StudentFormData } from "./student-form";
 
-export type FamilyFormData = FamilyRequest & {
+export type FamilyFormData = FamilyBaseRequest & {
   children: StudentFormData[];
   guests: StudentFormData[];
   parent: StudentRequest;
@@ -26,9 +31,19 @@ export const familyResponseToFamilyFormData = (
   ),
 });
 
-export const studentFormDataToStudentRequest = (
+const studentFormDataToStudentRequest = (
   obj: StudentFormData
 ): StudentRequest => {
   const { index, ...req } = obj;
   return req as StudentRequest;
 };
+
+export const familyFormDataToFamilyRequest = (
+  family: FamilyFormData
+): FamilyRequest => ({
+  ...family,
+  children: family.children.map((child) =>
+    studentFormDataToStudentRequest(child)
+  ),
+  guests: family.guests.map((guest) => studentFormDataToStudentRequest(guest)),
+});
