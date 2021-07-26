@@ -1,6 +1,12 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import StudentRole from "constants/StudentRole";
 
+export type User = {
+  id: number;
+  first_name: string;
+  last_name: string;
+};
+
 type Field = {
   is_default: boolean;
   name: string;
@@ -53,6 +59,11 @@ export type Session = {
 export type Attendance = {
   date: string;
   attendees: number[];
+};
+
+export type Interaction = {
+  date: string;
+  type: string;
 };
 
 export type Class = {
