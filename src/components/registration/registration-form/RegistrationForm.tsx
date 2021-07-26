@@ -17,6 +17,7 @@ import {
   familyResponseToFamilyFormData,
 } from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
@@ -93,6 +94,7 @@ const RegistrationForm = ({
         family: familyFormDataToFamilyRequest(family),
         session: session.id,
         preferred_class: null, // TODO: change this once we implement preferred_class in the reg form
+        status: EnrolmentStatus.REGISTERED, // TODO: change this once we implement status in the reg form
       });
       if (response.non_field_errors) {
         // eslint-disable-next-line no-alert

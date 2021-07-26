@@ -6,7 +6,7 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import moment from "moment";
 
-import FamilyAPI from "api/FamilyAPI";
+import EnrolmentAPI from "api/EnrolmentAPI";
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
 import QuestionType from "constants/QuestionType";
@@ -14,7 +14,6 @@ import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
 import RegistrationForm, { TestId } from "./RegistrationForm";
-import EnrolmentAPI from "api/EnrolmentAPI";
 
 describe("when the registration form is opened", () => {
   let getByRole: any;
