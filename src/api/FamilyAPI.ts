@@ -2,7 +2,6 @@ import * as APIUtils from "./APIUtils";
 import {
   FamilyListResponse,
   FamilyDetailResponse,
-  FamilyRequest,
   FamilySearchResponse,
 } from "./types";
 
@@ -20,11 +19,8 @@ const getFamiliesByParentName = (
 const getFamilyById = (id: number): Promise<FamilyDetailResponse> =>
   APIUtils.get(`/families/${id}`);
 
-const postFamily = (data: FamilyRequest) => APIUtils.post("/families/", data);
-
 export default {
   getFamilies,
   getFamiliesByParentName,
   getFamilyById,
-  postFamily,
 };

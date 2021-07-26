@@ -133,7 +133,11 @@ const StudentForm = ({
       </Box>
       <Box alignSelf="center" width="100%">
         {students.map((student, i) => (
-          <Box key={student.index} display="flex" marginBottom={isEditing ?? 1}>
+          <Box
+            key={student.index}
+            display="flex"
+            marginBottom={isEditing ? 1 : 0}
+          >
             {isEditing && (
               <Box className={classes.rowContainer} minWidth={32}>
                 {(role === StudentRole.GUEST || students.length > 1) && (

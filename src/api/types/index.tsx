@@ -89,6 +89,13 @@ export type FamilyRequest = FamilyBaseRequest & {
   parent: StudentRequest;
 };
 
+export type FamilyEnrolmentRequest = {
+  family: FamilyRequest;
+  session: number;
+  preferred_class: number | null;
+  status: EnrolmentStatus;
+};
+
 export type DynamicFieldsResponse = {
   parent_fields: DynamicField[];
   child_fields: DynamicField[];

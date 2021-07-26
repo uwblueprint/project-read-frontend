@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { Box, Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-import FamilyAPI from "api/FamilyAPI";
+import EnrolmentAPI from "api/EnrolmentAPI";
 import {
   StudentRequest,
   SessionDetailResponse,
@@ -17,6 +17,7 @@ import {
   familyResponseToFamilyFormData,
 } from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
@@ -89,9 +90,12 @@ const RegistrationForm = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (existingFamily === null) {
-      const response = await FamilyAPI.postFamily(
-        familyFormDataToFamilyRequest(family)
-      );
+      const response = await EnrolmentAPI.postEnrolment({
+        family: familyFormDataToFamilyRequest(family),
+        session: session.id,
+        preferred_class: null, // TODO: change this once we implement preferred_class in the reg form
+        status: EnrolmentStatus.REGISTERED, // TODO: change this once we implement status in the reg form
+      });
       if (response.non_field_errors) {
         // eslint-disable-next-line no-alert
         alert(response.non_field_errors);

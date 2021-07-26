@@ -6,9 +6,10 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import moment from "moment";
 
-import FamilyAPI from "api/FamilyAPI";
+import EnrolmentAPI from "api/EnrolmentAPI";
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
@@ -171,7 +172,7 @@ describe("when text fields are submitted", () => {
       year: 2021,
     };
 
-    jest.spyOn(FamilyAPI, "postFamily").mockResolvedValue({});
+    jest.spyOn(EnrolmentAPI, "postEnrolment").mockResolvedValue({});
     const onSubmit = jest.fn(() => {});
     const { getByLabelText, getByRole, getByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -305,41 +306,56 @@ describe("when text fields are submitted", () => {
 
     fireEvent.click(getByRole("button", { name: "Done" }));
 
-    await waitFor(() => expect(FamilyAPI.postFamily).toHaveBeenCalledTimes(1));
-    expect(FamilyAPI.postFamily).toHaveBeenCalledWith({
-      address: TEST_PARENT_ADDRESS,
-      cell_number: TEST_PARENT_CELL_NUMBER,
-      children: [
-        {
-          date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
+    await waitFor(() =>
+      expect(EnrolmentAPI.postEnrolment).toHaveBeenCalledTimes(1)
+    );
+    expect(EnrolmentAPI.postEnrolment).toHaveBeenCalledWith({
+      family: {
+        address: TEST_PARENT_ADDRESS,
+        cell_number: TEST_PARENT_CELL_NUMBER,
+        children: [
+          {
+            date_of_birth: moment(TEST_CHILD_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
+            first_name: TEST_CHILD_FIRST_NAME,
+            information: {
+              [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR,
+            },
+            last_name: TEST_LAST_NAME,
+          },
+        ],
+        email: TEST_PARENT_EMAIL,
+        guests: [
+          {
+            date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
+              "YYYY-MM-DD"
+            ),
+            first_name: TEST_GUEST_FIRST_NAME,
+            information: {
+              [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR,
+            },
+            last_name: TEST_LAST_NAME,
+          },
+        ],
+        home_number: TEST_PARENT_HOME_NUMBER,
+        parent: {
+          date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
             "YYYY-MM-DD"
           ),
-          first_name: TEST_CHILD_FIRST_NAME,
-          information: { [TEST_CHILD_DYNAMIC_FIELD.id]: TEST_CHILD_FAV_COLOUR },
+          first_name: TEST_PARENT_FIRST_NAME,
+          information: {
+            [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR,
+          },
           last_name: TEST_LAST_NAME,
         },
-      ],
-      email: TEST_PARENT_EMAIL,
-      guests: [
-        {
-          date_of_birth: moment(TEST_GUEST_DOB, "MMDDYYYY").format(
-            "YYYY-MM-DD"
-          ),
-          first_name: TEST_GUEST_FIRST_NAME,
-          information: { [TEST_GUEST_DYNAMIC_FIELD.id]: TEST_GUEST_FAV_COLOUR },
-          last_name: TEST_LAST_NAME,
-        },
-      ],
-      home_number: TEST_PARENT_HOME_NUMBER,
-      parent: {
-        date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format("YYYY-MM-DD"),
-        first_name: TEST_PARENT_FIRST_NAME,
-        information: { [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR },
-        last_name: TEST_LAST_NAME,
+        preferred_comms: "",
+        preferred_number: "",
+        work_number: TEST_PARENT_WORK_NUMBER,
       },
-      preferred_comms: "",
-      preferred_number: "",
-      work_number: TEST_PARENT_WORK_NUMBER,
+      preferred_class: null,
+      session: session.id,
+      status: EnrolmentStatus.REGISTERED,
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
