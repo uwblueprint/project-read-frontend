@@ -159,7 +159,10 @@ describe("when text fields are submitted", () => {
 
   it("structures the data in the required format", async () => {
     const session: SessionDetailResponse = {
-      classes: [],
+      classes: [
+        { id: 1, name: "Class 1" },
+        { id: 2, name: "Class 2" },
+      ],
       families: [],
       fields: [
         TEST_PARENT_DYNAMIC_FIELD.id,
@@ -304,6 +307,14 @@ describe("when text fields are submitted", () => {
       }
     );
 
+    fireEvent.change(getByTestId(TestId.PreferredClassSelect), {
+      target: { value: session.classes[1].id },
+    });
+
+    fireEvent.change(getByTestId(TestId.StatusSelect), {
+      target: { value: EnrolmentStatus.SIGNED_UP },
+    });
+
     fireEvent.click(getByRole("button", { name: "Done" }));
 
     await waitFor(() =>
@@ -353,9 +364,9 @@ describe("when text fields are submitted", () => {
         preferred_number: "",
         work_number: TEST_PARENT_WORK_NUMBER,
       },
-      preferred_class: null,
+      preferred_class: session.classes[1].id,
       session: session.id,
-      status: EnrolmentStatus.REGISTERED,
+      status: EnrolmentStatus.SIGNED_UP,
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
