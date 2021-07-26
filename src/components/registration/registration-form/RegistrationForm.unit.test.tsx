@@ -9,6 +9,7 @@ import moment from "moment";
 import EnrolmentAPI from "api/EnrolmentAPI";
 import { SessionDetailResponse } from "api/types";
 import { DefaultFields } from "constants/DefaultFields";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
@@ -354,6 +355,7 @@ describe("when text fields are submitted", () => {
       },
       preferred_class: null,
       session: session.id,
+      status: EnrolmentStatus.REGISTERED,
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
