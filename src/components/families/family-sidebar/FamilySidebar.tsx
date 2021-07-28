@@ -14,12 +14,17 @@ import { Add, Edit } from "@material-ui/icons";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
-import { FamilyDetailResponse, FamilyRequest } from "api/types";
+import {
+  FamilyDetailResponse,
+  FamilyRequest,
+  EnrolmentRequest,
+} from "api/types";
 import {
   FamilyFormData,
   familyResponseToFamilyFormData,
 } from "components/families/family-form/utils";
 
+import EnrolmentForm from "./enrolment-form";
 import FamilySidebarCard from "./family-sidebar-card";
 import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
 
@@ -78,11 +83,18 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   family: FamilyDetailResponse;
   isOpen: boolean;
+  onEditCurrentEnrolment: (enrolment: EnrolmentRequest) => void;
   onEditFamily: (family: FamilyRequest) => void;
   onClose: () => void;
 };
 
-const FamilySidebar = ({ family, isOpen, onClose, onEditFamily }: Props) => {
+const FamilySidebar = ({
+  family,
+  isOpen,
+  onClose,
+  onEditCurrentEnrolment,
+  onEditFamily,
+}: Props) => {
   const classes = useStyles();
   const sidebar = useRef<HTMLDivElement>(null);
 
@@ -163,7 +175,19 @@ const FamilySidebar = ({ family, isOpen, onClose, onEditFamily }: Props) => {
         <Typography variant="h2">
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
-        <Divider variant="fullWidth" />
+
+        <Typography variant="h3" className={classes.heading}>
+          Enrolment
+        </Typography>
+        <EnrolmentForm
+          enrolment={family.current_enrolment}
+          onChange={onEditCurrentEnrolment}
+        />
+
+        <Box paddingTop={2}>
+          <Divider />
+        </Box>
+
         <Box position="relative">
           <Box position="absolute" top={8} right={0}>
             <IconButton

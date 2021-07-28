@@ -13,6 +13,7 @@ import { Add } from "@material-ui/icons/";
 import { useHistory, useParams } from "react-router-dom";
 
 import ClassAPI from "api/ClassAPI";
+import EnrolmentAPI from "api/EnrolmentAPI";
 import FamilyAPI from "api/FamilyAPI";
 import SessionAPI from "api/SessionAPI";
 import {
@@ -21,6 +22,7 @@ import {
   SessionDetailResponse,
   FamilyListResponse,
   FamilyDetailResponse,
+  EnrolmentRequest,
 } from "api/types";
 import FamilySidebar from "components/families/family-sidebar";
 import FamilyTable from "components/families/family-table";
@@ -96,20 +98,21 @@ const Sessions = () => {
     }
   }, [sessionId]);
 
+  const resetClass = async (id: number) => {
+    const classObj = await ClassAPI.getClass(id);
+    setClassesMap(
+      (prevMap) => new Map([...Array.from(prevMap), [classObj.id, classObj]])
+    );
+  };
+
   useEffect(() => {
-    const fetchClass = async (id: number) => {
-      const classObj = await ClassAPI.getClass(id);
-      setClassesMap(
-        (prevMap) => new Map([...Array.from(prevMap), [classObj.id, classObj]])
-      );
-    };
     if (classId === undefined) {
       setClassTabIndex(ALL_CLASSES_TAB_INDEX);
       return;
     }
     const classIdNumber = Number(classId);
     if (!classesMap.has(classIdNumber)) {
-      fetchClass(classIdNumber);
+      resetClass(classIdNumber);
     }
     setClassTabIndex(classIdNumber);
   }, [classId]);
@@ -153,6 +156,22 @@ const Sessions = () => {
 
   const onEditFamily = async () => {
     // TODO: make put request
+  };
+
+  const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
+    if (selectedFamily === null || selectedFamily.current_enrolment === null) {
+      return;
+    }
+    setSelectedFamily({
+      ...selectedFamily,
+      current_enrolment: await EnrolmentAPI.putEnrolment(data),
+    });
+    if (selectedSession) {
+      updateSelectedSession(selectedSession.id);
+    }
+    classesMap.forEach(({ id }) => {
+      resetClass(id);
+    });
   };
 
   return (
@@ -218,6 +237,7 @@ const Sessions = () => {
                   isOpen={isSidebarOpen}
                   family={selectedFamily}
                   onClose={() => setIsSidebarOpen(false)}
+                  onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
                   onEditFamily={onEditFamily}
                 />
               )}

@@ -31,3 +31,17 @@ export async function post(path, data) {
 
   return res.json();
 }
+
+export async function put(path, data) {
+  const token = await getIdToken();
+  const res = await fetch(url + path, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return res.json();
+}

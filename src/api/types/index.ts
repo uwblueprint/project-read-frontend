@@ -18,17 +18,28 @@ export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
 };
 
-export type SessionListResponse = Pick<Session, "id" | "name">;
+export type SessionListResponse = Pick<Session, "id" | "name"> & {
+  classes: ClassListResponse[];
+};
 
 export type SessionDetailResponse = Session & {
   classes: ClassListResponse[];
   families: FamilyListResponse[];
 };
 
-export type EnrolmentResponse = Pick<Enrolment, "id" | "status"> & {
-  session: SessionListResponse | null;
+export type EnrolmentResponse = Pick<
+  Enrolment,
+  "id" | "status" | "students"
+> & {
+  session: SessionListResponse;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
+};
+
+export type EnrolmentRequest = Pick<Enrolment, "id" | "status" | "students"> & {
+  session: number;
+  preferred_class: number | null;
+  enrolled_class: number | null;
 };
 
 export type InteractionResponse = Interaction & {
