@@ -10,42 +10,48 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Edit } from "@material-ui/icons";
+import { Add, Edit } from "@material-ui/icons";
+import moment from "moment";
 
-import { FamilyFormData } from "components/families/family-form/utils";
+import { FamilyDetailResponse } from "api/types";
+import {
+  FamilyFormData,
+  familyResponseToFamilyFormData,
+} from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 
+import FamilySidebarCard from "./family-sidebar-card";
 import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
 
 const drawerWidth = 416;
 
 const useStyles = makeStyles((theme) => ({
+  actionButton: {
+    backgroundColor: theme.palette.backgroundSecondary.default,
+    borderRadius: 8,
+    height: 40,
+    width: 40,
+  },
+  actionButtonIcon: {
+    height: 20,
+    width: 20,
+  },
   drawer: {
     width: drawerWidth,
   },
   drawerPaper: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: theme.palette.backgroundSecondary.paper,
     borderLeft: "none",
     height: "calc(100% - 64px)",
     marginTop: 64,
     width: drawerWidth,
   },
-  editButton: {
-    borderRadius: 8,
-    height: 40,
-    width: 40,
-  },
-  editButtonIcon: {
-    height: 20,
-    width: 20,
-  },
   formActionRow: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: theme.palette.backgroundSecondary.paper,
     boxShadow: "rgb(0 0 0 / 12%) 8px 0px 8px 0px",
     zIndex: theme.zIndex.appBar + 1,
   },
   heading: {
-    color: "#42526E",
     fontWeight: 700,
     fontSize: 16,
     paddingBottom: 20,
@@ -58,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  family: FamilyFormData;
+  family: FamilyDetailResponse;
   isOpen: boolean;
   onClose: () => void;
 };
@@ -67,7 +73,9 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
   const classes = useStyles();
   const sidebar = useRef<HTMLDivElement>(null);
 
-  const [familyFormData, setFamilyFormData] = useState<FamilyFormData>(family);
+  const [familyFormData, setFamilyFormData] = useState<FamilyFormData>(
+    familyResponseToFamilyFormData(family)
+  );
   const [isEditing, setIsEditing] = useState(false);
 
   const handleClick = (e: MouseEvent) => {
@@ -93,13 +101,17 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
     return () => {};
   }, [isOpen]);
 
+  const resetFormData = () => {
+    setFamilyFormData(familyResponseToFamilyFormData(family));
+  };
+
   useEffect(() => {
-    setFamilyFormData(family);
+    resetFormData();
   }, [family]);
 
   const onToggleEdit = (editing: boolean) => {
     if (isEditing) {
-      setFamilyFormData(family);
+      resetFormData();
     }
     setIsEditing(editing);
   };
@@ -137,10 +149,10 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
         <Box position="relative">
           <Box position="absolute" top={8} right={0}>
             <IconButton
-              className={classes.editButton}
+              className={classes.actionButton}
               onClick={() => onToggleEdit(!isEditing)}
             >
-              <Edit className={classes.editButtonIcon} />
+              <Edit className={classes.actionButtonIcon} />
             </IconButton>
           </Box>
           <Box>
@@ -158,6 +170,35 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
             <Divider />
           </Box>
         )}
+
+        <Box position="relative">
+          <Box position="absolute" top={8} right={0}>
+            <IconButton className={classes.actionButton}>
+              <Add className={classes.actionButtonIcon} />
+            </IconButton>
+          </Box>
+          <Box>
+            <Typography variant="h3" className={classes.heading}>
+              Recent interactions
+            </Typography>
+            {family.interactions.map((interaction) => (
+              <FamilySidebarCard
+                title={
+                  <Typography variant="body2">{interaction.type}</Typography>
+                }
+                content={
+                  <Typography variant="body2">
+                    {interaction.user.first_name}{" "}
+                    {interaction.user.last_name.charAt(0)}. -{" "}
+                    {moment(interaction.date, "YYYY-MM-DD").format(
+                      "MMM. D, YYYY"
+                    )}
+                  </Typography>
+                }
+              />
+            ))}
+          </Box>
+        </Box>
 
         <Typography variant="h3" className={classes.heading}>
           Notes

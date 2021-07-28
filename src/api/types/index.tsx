@@ -1,6 +1,16 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import EnrolmentStatus from "constants/EnrolmentStatus";
-import { Class, Session, Family, Student, DynamicField } from "types";
+import {
+  Class,
+  DynamicField,
+  Family,
+  Interaction,
+  Session,
+  Student,
+  User,
+} from "types";
+
+export type UserResponse = Pick<User, "id" | "first_name" | "last_name">;
 
 export type ClassListResponse = Pick<Class, "id" | "name">;
 
@@ -23,6 +33,10 @@ export type Enrolment = {
   status: EnrolmentStatus;
 };
 
+export type InteractionResponse = Interaction & {
+  user: UserResponse;
+};
+
 export type FamilyDetailResponse = Pick<
   Family,
   | DefaultFieldKey.ADDRESS
@@ -36,8 +50,9 @@ export type FamilyDetailResponse = Pick<
   | "parent"
 > & {
   children: Student[];
-  guests: Student[];
   current_enrolment: Enrolment | null;
+  interactions: InteractionResponse[];
+  guests: Student[];
 };
 
 export type FamilyListResponse = Pick<
