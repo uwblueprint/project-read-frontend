@@ -65,7 +65,7 @@ export type FamilyListResponse = Pick<
   | DefaultFieldKey.PREFERRED_CONTACT
   | "parent"
 > & {
-  current_enrolment: Enrolment | null;
+  enrolment: Enrolment | null;
 };
 
 export type FamilySearchResponse = Pick<
