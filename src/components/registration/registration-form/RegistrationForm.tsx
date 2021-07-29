@@ -1,6 +1,13 @@
 import React, { useContext, useState } from "react";
 
-import { Box, Button, MenuItem, Select, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
@@ -38,6 +45,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export enum TestId {
+  NotesInput = "notes-input",
   PreferredClassSelect = "preferred-class-select",
   RegistrationForm = "registration-form",
   SessionLabel = "session-label",
@@ -56,6 +64,7 @@ const defaultFamilyData: FamilyFormData = {
   [DefaultFieldKey.CELL_NUMBER]: "",
   [DefaultFieldKey.EMAIL]: "",
   [DefaultFieldKey.HOME_NUMBER]: "",
+  [DefaultFieldKey.NOTES]: "",
   [DefaultFieldKey.PREFERRED_CONTACT]: "",
   [DefaultFieldKey.PREFERRED_NUMBER]: "",
   [DefaultFieldKey.WORK_NUMBER]: "",
@@ -154,7 +163,6 @@ const RegistrationForm = ({
             })
           }
         />
-
         <Typography variant="h3" className={classes.heading}>
           Family members
         </Typography>
@@ -184,7 +192,9 @@ const RegistrationForm = ({
           role={StudentRole.GUEST}
           students={enrolment.family.guests}
         />
+      </Box>
 
+      <Box width={408}>
         <Typography variant="h3" className={classes.heading}>
           Session questions
         </Typography>
@@ -246,6 +256,32 @@ const RegistrationForm = ({
               Signed up (more information is required)
             </MenuItem>
           </Select>
+        </FormRow>
+      </Box>
+
+      <Box width={840}>
+        <Typography variant="h3" className={classes.heading}>
+          Notes
+        </Typography>
+        <FormRow
+          id="notes"
+          label="Notes"
+          questionType={QuestionType.TEXT}
+          variant={FieldVariant.COMPACT}
+        >
+          <OutlinedInput
+            fullWidth
+            id="notes"
+            inputProps={{ "data-testid": TestId.NotesInput }}
+            multiline
+            onChange={(e) =>
+              setEnrolment({
+                ...enrolment,
+                family: { ...enrolment.family, notes: e.target.value },
+              })
+            }
+            value={enrolment.family.notes}
+          />
         </FormRow>
       </Box>
 

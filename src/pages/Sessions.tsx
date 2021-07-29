@@ -151,6 +151,10 @@ const Sessions = () => {
     setIsSidebarOpen(true);
   };
 
+  const onEditFamily = async () => {
+    // TODO: make put request
+  };
+
   return (
     <>
       <Box display="flex">
@@ -214,6 +218,7 @@ const Sessions = () => {
                   isOpen={isSidebarOpen}
                   family={selectedFamily}
                   onClose={() => setIsSidebarOpen(false)}
+                  onEditFamily={onEditFamily}
                 />
               )}
             </>
