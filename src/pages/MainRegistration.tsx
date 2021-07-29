@@ -3,11 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Typography } from "@material-ui/core";
 
 import FamilyAPI from "api/FamilyAPI";
-import {
-  FamilyDetailResponse,
-  FamilyListResponse,
-  FamilyRequest,
-} from "api/types";
+import { FamilyDetailResponse, FamilyListResponse } from "api/types";
 import FamilySidebar from "components/families/family-sidebar";
 import FamilyTable from "components/families/family-table";
 import { DefaultFields } from "constants/DefaultFields";
@@ -33,13 +29,7 @@ const MainRegistration = () => {
     setIsSidebarOpen(true);
   };
 
-  const onEditFamily = async (data: FamilyRequest) => {
-    if (selectedFamily === null) {
-      return;
-    }
-    console.log(selectedFamily.id);
-    console.log(data);
-  };
+  const onEditFamily = async () => {};
 
   return (
     <>
