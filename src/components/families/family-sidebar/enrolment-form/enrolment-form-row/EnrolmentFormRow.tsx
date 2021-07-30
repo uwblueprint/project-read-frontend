@@ -32,7 +32,7 @@ const defaultProps = {
   link: null,
 };
 
-const EnrolmentSelectFormRow = ({ children, id, label, link }: Props) => {
+const EnrolmentFormRow = ({ children, id, label, link }: Props) => {
   const classes = useStyles();
 
   return (
@@ -60,6 +60,6 @@ const EnrolmentSelectFormRow = ({ children, id, label, link }: Props) => {
   );
 };
 
-EnrolmentSelectFormRow.defaultProps = defaultProps;
+EnrolmentFormRow.defaultProps = defaultProps;
 
-export default EnrolmentSelectFormRow;
+export default EnrolmentFormRow;
