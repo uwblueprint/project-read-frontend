@@ -58,7 +58,7 @@ const EnrolmentForm = ({ enrolment, onChange }: Props) => {
     <EnrolmentFormRow
       id={`${baseId}-session`}
       label="Session"
-      link={enrolment ? `/sessions/${enrolment.session}` : undefined}
+      link={enrolment && `/sessions/${enrolment.session.id}`}
     >
       <Box
         className={classes.inputBackground}
@@ -112,7 +112,10 @@ const EnrolmentForm = ({ enrolment, onChange }: Props) => {
       <EnrolmentFormRow
         id={`${baseId}-enrolled-class`}
         label="Class"
-        link={`/sessions/${enrolment.session}/classes/${enrolment.enrolled_class}`}
+        link={
+          enrolment.enrolled_class &&
+          `/sessions/${enrolment.session.id}/classes/${enrolment.enrolled_class.id}`
+        }
       >
         <ClassSelect
           id={`${baseId}-enrolled-class`}

@@ -25,11 +25,11 @@ type Props = {
   children: ReactNode;
   id: string;
   label: string;
-  link?: string;
+  link?: string | null;
 };
 
 const defaultProps = {
-  link: "",
+  link: null,
 };
 
 const EnrolmentSelectFormRow = ({ children, id, label, link }: Props) => {
