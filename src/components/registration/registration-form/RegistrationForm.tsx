@@ -10,6 +10,7 @@ import {
   FamilyDetailResponse,
 } from "api/types";
 import FamilyParentFields from "components/families/family-form/family-parent-fields";
+import StudentDynamicFields from "components/families/family-form/student-dynamic-fields";
 import StudentForm from "components/families/family-form/student-form";
 import {
   FamilyFormData,
@@ -18,6 +19,7 @@ import {
 } from "components/families/family-form/utils";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import EnrolmentStatus from "constants/EnrolmentStatus";
+import FieldVariant from "constants/FieldVariant";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
@@ -74,6 +76,7 @@ const RegistrationForm = ({
     childDynamicFields,
     guestDynamicFields,
     parentDynamicFields,
+    sessionDynamicFields,
   } = useContext(DynamicFieldsContext);
 
   const [family, setFamily] = useState<FamilyFormData>(
@@ -144,7 +147,6 @@ const RegistrationForm = ({
           family={family}
           onChange={(value) => setFamily({ ...family, ...value })}
         />
-
         <Typography variant="h3" className={classes.heading}>
           Family members
         </Typography>
@@ -163,6 +165,22 @@ const RegistrationForm = ({
           onChange={(guests) => setFamily({ ...family, guests })}
           role={StudentRole.GUEST}
           students={family.guests}
+        />
+        <Typography variant="h3" className={classes.heading}>
+          Session questions
+        </Typography>
+        <StudentDynamicFields
+          dense={false}
+          dynamicFields={getSessionDynamicFields(sessionDynamicFields)}
+          information={family.parent.information}
+          isEditing
+          onChange={(value) =>
+            setFamily({
+              ...family,
+              parent: { ...family.parent, information: value },
+            })
+          }
+          variant={FieldVariant.DEFAULT}
         />
       </Box>
 

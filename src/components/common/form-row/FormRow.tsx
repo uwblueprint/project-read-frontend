@@ -54,7 +54,7 @@ const FormRow = ({
       )}
       <Box
         paddingRight={2}
-        minWidth={dense ? 128 : 144}
+        width={dense ? 128 : 144}
         hidden={variant === FieldVariant.COMPACT}
       >
         {

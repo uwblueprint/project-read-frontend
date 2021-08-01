@@ -7,12 +7,14 @@ type DynamicFields = {
   childDynamicFields: DynamicField[];
   guestDynamicFields: DynamicField[];
   parentDynamicFields: DynamicField[];
+  sessionDynamicFields: DynamicField[];
 };
 
 const defaultDynamicFieldsData: DynamicFields = {
   childDynamicFields: [],
   guestDynamicFields: [],
   parentDynamicFields: [],
+  sessionDynamicFields: [],
 };
 
 export const DynamicFieldsContext = createContext<DynamicFields>({
@@ -37,6 +39,7 @@ export const DynamicFieldsProvider = ({
         childDynamicFields: res.child_fields,
         guestDynamicFields: res.guest_fields,
         parentDynamicFields: res.parent_fields,
+        sessionDynamicFields: res.session_fields,
       });
     }
     fetchDynamicFields();
