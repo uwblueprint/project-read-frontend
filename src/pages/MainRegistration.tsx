@@ -29,6 +29,8 @@ const MainRegistration = () => {
     setIsSidebarOpen(true);
   };
 
+  const onEditFamily = async () => {};
+
   return (
     <>
       <Typography variant="h1">Main registration</Typography>
@@ -47,6 +49,7 @@ const MainRegistration = () => {
           isOpen={isSidebarOpen}
           family={selectedFamily}
           onClose={() => setIsSidebarOpen(false)}
+          onEditFamily={onEditFamily}
         />
       )}
     </>

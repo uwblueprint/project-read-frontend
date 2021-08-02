@@ -42,6 +42,7 @@ export type FamilyDetailResponse = Pick<
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.HOME_NUMBER
   | DefaultFieldKey.ID
+  | DefaultFieldKey.NOTES
   | DefaultFieldKey.PREFERRED_CONTACT
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
@@ -83,6 +84,7 @@ export type FamilyBaseRequest = Pick<
   | DefaultFieldKey.CELL_NUMBER
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.HOME_NUMBER
+  | DefaultFieldKey.NOTES
   | DefaultFieldKey.PREFERRED_CONTACT
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER

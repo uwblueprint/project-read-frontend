@@ -87,6 +87,8 @@ const TEST_GUEST_FAV_COLOUR = "periwinkle";
 const TEST_GUEST_FIRST_NAME = "Dory";
 const TEST_GUEST_DOB = "01011987";
 
+const TEST_NOTES = "Just keep swimming";
+
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
   name: "Favourite colour",
@@ -312,6 +314,10 @@ describe("when text fields are submitted", () => {
       target: { value: EnrolmentStatus.SIGNED_UP },
     });
 
+    fireEvent.change(getByTestId(TestId.NotesInput), {
+      target: { value: TEST_NOTES },
+    });
+
     fireEvent.click(getByRole("button", { name: "Done" }));
 
     await waitFor(() =>
@@ -347,6 +353,7 @@ describe("when text fields are submitted", () => {
           },
         ],
         home_number: TEST_PARENT_HOME_NUMBER,
+        notes: TEST_NOTES,
         parent: {
           date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
             "YYYY-MM-DD"
