@@ -135,10 +135,7 @@ const RegistrationForm = ({
             a <b>new family</b>
           </span>
         )}{" "}
-        for{" "}
-        <b>
-          {session.season} {session.year}
-        </b>
+        for <b>{session.name}</b>
       </Typography>
 
       <Box width={488}>

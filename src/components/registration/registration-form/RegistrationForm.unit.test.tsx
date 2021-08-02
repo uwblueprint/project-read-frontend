@@ -25,9 +25,8 @@ describe("when the registration form is opened", () => {
     families: [],
     fields: [],
     id: 1,
-    season: "Fall",
+    name: "Fall 2021",
     start_date: "2021-09-01",
-    year: 2021,
   };
 
   beforeEach(() => {
@@ -124,9 +123,8 @@ describe("when text fields are submitted", () => {
         // guest field not included
       ],
       id: 1,
-      season: "Fall",
+      name: "Fall 2021",
       start_date: "2021-09-01",
-      year: 2021,
     };
     const { getByTestId, queryByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -170,9 +168,8 @@ describe("when text fields are submitted", () => {
         TEST_GUEST_DYNAMIC_FIELD.id,
       ],
       id: 1,
-      season: "Fall",
+      name: "Fall 2021",
       start_date: "2021-09-01",
-      year: 2021,
     };
 
     jest.spyOn(EnrolmentAPI, "postEnrolment").mockResolvedValue({});

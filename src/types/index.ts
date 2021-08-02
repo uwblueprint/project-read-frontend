@@ -52,9 +52,8 @@ export type Family = {
 export type Session = {
   fields: number[]; // array of field IDs
   id: number;
-  season: string;
+  name: string;
   start_date: string;
-  year: number;
 };
 
 export type Attendance = {
