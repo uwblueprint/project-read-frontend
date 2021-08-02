@@ -1,4 +1,5 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 import StudentRole from "constants/StudentRole";
 
 export type User = {
@@ -70,4 +71,9 @@ export type Class = {
   id: number;
   name: string;
   attendance: Attendance[];
+};
+
+export type Enrolment = {
+  id: number;
+  status: EnrolmentStatus;
 };

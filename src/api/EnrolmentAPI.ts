@@ -1,7 +1,7 @@
 import * as APIUtils from "./APIUtils";
-import { FamilyEnrolmentRequest } from "./types";
+import { EnrolmentFamilyRequest } from "./types";
 
-const postEnrolment = (data: FamilyEnrolmentRequest) =>
+const postEnrolment = (data: EnrolmentFamilyRequest) =>
   APIUtils.post("/enrolments/", data);
 
 export default {
