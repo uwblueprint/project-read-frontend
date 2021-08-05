@@ -25,9 +25,8 @@ describe("when the registration form is opened", () => {
     families: [],
     fields: [],
     id: 1,
-    season: "Fall",
+    name: "Fall 2021",
     start_date: "2021-09-01",
-    year: 2021,
   };
 
   beforeEach(() => {
@@ -89,6 +88,7 @@ const TEST_GUEST_FIRST_NAME = "Dory";
 const TEST_GUEST_DOB = "01011987";
 
 const TEST_SESSION_TIME_IN_CANADA = "1 year";
+const TEST_NOTES = "Just keep swimming";
 
 const TEST_DYNAMIC_FIELD = {
   is_default: false,
@@ -136,9 +136,8 @@ describe("when text fields are submitted", () => {
         TEST_SESSION_DYNAMIC_FIELD.id,
       ],
       id: 1,
-      season: "Fall",
+      name: "Fall 2021",
       start_date: "2021-09-01",
-      year: 2021,
     };
     const { getByTestId, queryByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -175,7 +174,10 @@ describe("when text fields are submitted", () => {
 
   it("structures the data in the required format", async () => {
     const session: SessionDetailResponse = {
-      classes: [],
+      classes: [
+        { id: 1, name: "Class 1" },
+        { id: 2, name: "Class 2" },
+      ],
       families: [],
       fields: [
         TEST_PARENT_DYNAMIC_FIELD.id,
@@ -184,9 +186,8 @@ describe("when text fields are submitted", () => {
         TEST_SESSION_DYNAMIC_FIELD.id,
       ],
       id: 1,
-      season: "Fall",
+      name: "Fall 2021",
       start_date: "2021-09-01",
-      year: 2021,
     };
 
     jest.spyOn(EnrolmentAPI, "postEnrolment").mockResolvedValue({});
@@ -330,6 +331,18 @@ describe("when text fields are submitted", () => {
       }
     );
 
+    fireEvent.change(getByTestId(TestId.PreferredClassSelect), {
+      target: { value: session.classes[1].id },
+    });
+
+    fireEvent.change(getByTestId(TestId.StatusSelect), {
+      target: { value: EnrolmentStatus.SIGNED_UP },
+    });
+
+    fireEvent.change(getByTestId(TestId.NotesInput), {
+      target: { value: TEST_NOTES },
+    });
+
     fireEvent.click(getByRole("button", { name: "Done" }));
 
     await waitFor(() =>
@@ -365,6 +378,7 @@ describe("when text fields are submitted", () => {
           },
         ],
         home_number: TEST_PARENT_HOME_NUMBER,
+        notes: TEST_NOTES,
         parent: {
           date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(
             "YYYY-MM-DD"
@@ -380,9 +394,9 @@ describe("when text fields are submitted", () => {
         preferred_number: "",
         work_number: TEST_PARENT_WORK_NUMBER,
       },
-      preferred_class: null,
+      preferred_class: session.classes[1].id,
       session: session.id,
-      status: EnrolmentStatus.REGISTERED,
+      status: EnrolmentStatus.SIGNED_UP,
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);

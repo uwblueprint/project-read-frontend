@@ -3,12 +3,18 @@ import React, { useEffect, useState } from "react";
 import { Typography } from "@material-ui/core";
 
 import FamilyAPI from "api/FamilyAPI";
-import { FamilyListResponse } from "api/types";
-import FamilyList from "components/families/family-list";
+import { FamilyDetailResponse, FamilyListResponse } from "api/types";
+import FamilySidebar from "components/families/family-sidebar";
+import FamilyTable from "components/families/family-table";
 import { DefaultFields } from "constants/DefaultFields";
 
 const MainRegistration = () => {
   const [families, setFamilies] = useState<FamilyListResponse[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [
+    selectedFamily,
+    setSelectedFamily,
+  ] = useState<FamilyDetailResponse | null>(null);
 
   useEffect(() => {
     async function fetchFamilies() {
@@ -17,10 +23,18 @@ const MainRegistration = () => {
     fetchFamilies();
   }, []);
 
+  const onSelectFamily = async (id: number) => {
+    const family = await FamilyAPI.getFamilyById(id);
+    setSelectedFamily(family);
+    setIsSidebarOpen(true);
+  };
+
+  const onEditFamily = async () => {};
+
   return (
     <>
       <Typography variant="h1">Main registration</Typography>
-      <FamilyList
+      <FamilyTable
         families={families}
         enrolmentFields={[
           DefaultFields.CURRENT_PREFERRED_CLASS,
@@ -28,7 +42,16 @@ const MainRegistration = () => {
           DefaultFields.CURRENT_CLASS,
         ]}
         shouldDisplayDynamicFields
+        onSelectFamily={onSelectFamily}
       />
+      {selectedFamily && (
+        <FamilySidebar
+          isOpen={isSidebarOpen}
+          family={selectedFamily}
+          onClose={() => setIsSidebarOpen(false)}
+          onEditFamily={onEditFamily}
+        />
+      )}
     </>
   );
 };

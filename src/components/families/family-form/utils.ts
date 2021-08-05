@@ -1,4 +1,5 @@
 import {
+  EnrolmentFamilyRequest,
   FamilyBaseRequest,
   FamilyDetailResponse,
   FamilyRequest,
@@ -12,6 +13,13 @@ export type FamilyFormData = FamilyBaseRequest & {
   children: StudentFormData[];
   guests: StudentFormData[];
   parent: StudentRequest;
+};
+
+export type EnrolmentFormData = Pick<
+  EnrolmentFamilyRequest,
+  "preferred_class" | "session" | "status"
+> & {
+  family: FamilyFormData;
 };
 
 const studentRequestToStudentFormData = (

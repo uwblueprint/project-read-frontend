@@ -1,4 +1,5 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 import StudentRole from "constants/StudentRole";
 
 export type User = {
@@ -51,9 +52,8 @@ export type Family = {
 export type Session = {
   fields: number[]; // array of field IDs
   id: number;
-  season: string;
+  name: string;
   start_date: string;
-  year: number;
 };
 
 export type Attendance = {
@@ -70,4 +70,9 @@ export type Class = {
   id: number;
   name: string;
   attendance: Attendance[];
+};
+
+export type Enrolment = {
+  id: number;
+  status: EnrolmentStatus;
 };

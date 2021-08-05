@@ -6,10 +6,43 @@ import { makeStyles } from "@material-ui/styles";
 import FieldVariant from "constants/FieldVariant";
 import QuestionType from "constants/QuestionType";
 
-const useStyles = makeStyles<Theme, Pick<Props, "dense">>(() => ({
+const denseStyles = {
+  formRow: {
+    marginBottom: 4,
+  },
+  labelContainer: {
+    minWidth: 128,
+  },
+};
+
+const stackedStyles = {
+  formRow: {
+    alignItems: "",
+    "flex-direction": "column",
+  },
+  labelContainer: {
+    paddingBottom: 12,
+  },
+};
+
+const useStyles = makeStyles<Theme, Pick<Props, "dense" | "variant">>(() => ({
+  formRow: ({ dense, variant }) => ({
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    marginBottom: 16,
+    ...(dense && denseStyles.formRow),
+    ...(variant === FieldVariant.STACKED && stackedStyles.formRow),
+  }),
   label: {
     fontSize: ({ dense }) => (dense ? 14 : 16),
   },
+  labelContainer: ({ dense, variant }) => ({
+    minWidth: 144,
+    paddingRight: 2,
+    ...(dense && denseStyles.labelContainer),
+    ...(variant === FieldVariant.STACKED && stackedStyles.labelContainer),
+  }),
 }));
 
 type Props = {
@@ -34,27 +67,21 @@ const FormRow = ({
   questionType,
   variant,
 }: Props) => {
-  const classes = useStyles({ dense });
+  const classes = useStyles({ dense, variant });
 
   const inputLabelProps =
     questionType === QuestionType.MULTIPLE_CHOICE ? { id } : { htmlFor: id };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      marginBottom={dense ? "4px" : 2}
-    >
+    <div className={classes.formRow}>
       {/* hidden input to disable autocomplete: https://gist.github.com/niksumeiko/360164708c3b326bd1c8#gistcomment-3716208 */}
       {questionType === QuestionType.TEXT && (
         <Box display="none" aria-hidden="true">
           <input aria-hidden="true" tabIndex={-1} />
         </Box>
       )}
-      <Box
-        paddingRight={2}
-        width={dense ? 128 : 144}
+      <div
+        className={classes.labelContainer}
         hidden={variant === FieldVariant.COMPACT}
       >
         {
@@ -63,9 +90,9 @@ const FormRow = ({
             {label}
           </InputLabel>
         }
-      </Box>
+      </div>
       <Box flexGrow={1}>{children}</Box>
-    </Box>
+    </div>
   );
 };
 

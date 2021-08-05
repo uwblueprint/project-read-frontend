@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   Box,
@@ -6,19 +6,19 @@ import {
   Divider,
   IconButton,
   Typography,
-  TextField,
   Button,
+  InputBase,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Add, Edit } from "@material-ui/icons";
+import debounce from "lodash/debounce";
 import moment from "moment";
 
-import { FamilyDetailResponse } from "api/types";
+import { FamilyDetailResponse, FamilyRequest } from "api/types";
 import {
   FamilyFormData,
   familyResponseToFamilyFormData,
 } from "components/families/family-form/utils";
-import DefaultFieldKey from "constants/DefaultFieldKey";
 
 import FamilySidebarCard from "./family-sidebar-card";
 import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
@@ -57,6 +57,18 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 20,
     paddingTop: 20,
   },
+  notes: {
+    alignItems: "baseline",
+    backgroundColor: theme.palette.backgroundSecondary.default,
+    borderRadius: 4,
+    fontSize: 14,
+    height: "fit-content",
+    minHeight: 150,
+    padding: 16,
+  },
+  notesLabel: {
+    display: "none",
+  },
   submitButton: {
     marginLeft: 12,
     marginRight: 24,
@@ -66,10 +78,11 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   family: FamilyDetailResponse;
   isOpen: boolean;
+  onEditFamily: (family: FamilyRequest) => void;
   onClose: () => void;
 };
 
-const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
+const FamilySidebar = ({ family, isOpen, onClose, onEditFamily }: Props) => {
   const classes = useStyles();
   const sidebar = useRef<HTMLDivElement>(null);
 
@@ -116,15 +129,17 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
     setIsEditing(editing);
   };
 
-  const handleClose = () => {
-    onToggleEdit(false);
-    onClose();
-  };
-
   const onSubmitFamilyForm = () => {
     // TODO: make PUT request
     setIsEditing(false);
   };
+
+  const debouncedSaveFamily = useCallback(
+    debounce(async (data: FamilyRequest) => {
+      onEditFamily(data);
+    }, 500),
+    []
+  );
 
   return (
     <Drawer
@@ -138,7 +153,10 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
         paper: classes.drawerPaper,
       }}
       open={isOpen}
-      onClose={handleClose}
+      onClose={() => {
+        onToggleEdit(false);
+        onClose();
+      }}
       PaperProps={{ ref: sidebar }}
     >
       <Box padding={3} paddingBottom={isEditing ? 10 : 3}>
@@ -152,7 +170,7 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
               className={classes.actionButton}
               onClick={() => onToggleEdit(!isEditing)}
             >
-              <Edit className={classes.actionButtonIcon} />
+              <Edit />
             </IconButton>
           </Box>
           <Box>
@@ -174,7 +192,7 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
         <Box position="relative">
           <Box position="absolute" top={8} right={0}>
             <IconButton className={classes.actionButton}>
-              <Add className={classes.actionButtonIcon} />
+              <Add />
             </IconButton>
           </Box>
           <Box>
@@ -203,16 +221,21 @@ const FamilySidebar = ({ family, isOpen, onClose }: Props) => {
         <Typography variant="h3" className={classes.heading}>
           Notes
         </Typography>
-        <form>
-          <TextField
-            id={DefaultFieldKey.NOTES}
-            InputLabelProps={{ shrink: true }}
-            label="Notes"
-            value={(family as any)[DefaultFieldKey.NOTES]}
-            fullWidth
-            variant="filled"
-          />
-        </form>
+        <InputBase
+          className={classes.notes}
+          defaultValue=""
+          fullWidth
+          inputProps={{ "aria-label": "notes" }}
+          multiline
+          onChange={(e) => {
+            setFamilyFormData({ ...familyFormData, notes: e.target.value });
+            debouncedSaveFamily({
+              ...family,
+              notes: e.target.value,
+            });
+          }}
+          value={familyFormData.notes}
+        />
       </Box>
       {isEditing && (
         <Box

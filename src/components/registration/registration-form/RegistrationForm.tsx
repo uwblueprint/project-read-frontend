@@ -1,6 +1,13 @@
 import React, { useContext, useState } from "react";
 
-import { Box, Button, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
@@ -9,10 +16,12 @@ import {
   SessionDetailResponse,
   FamilyDetailResponse,
 } from "api/types";
+import FormRow from "components/common/form-row";
 import FamilyParentFields from "components/families/family-form/family-parent-fields";
 import StudentDynamicFields from "components/families/family-form/student-dynamic-fields";
 import StudentForm from "components/families/family-form/student-form";
 import {
+  EnrolmentFormData,
   FamilyFormData,
   familyFormDataToFamilyRequest,
   familyResponseToFamilyFormData,
@@ -20,6 +29,7 @@ import {
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import EnrolmentStatus from "constants/EnrolmentStatus";
 import FieldVariant from "constants/FieldVariant";
+import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DynamicField } from "types";
@@ -36,8 +46,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 export enum TestId {
+  NotesInput = "notes-input",
+  PreferredClassSelect = "preferred-class-select",
   RegistrationForm = "registration-form",
   SessionLabel = "session-label",
+  StatusSelect = "status-select",
 }
 
 const defaultStudentData: StudentRequest = {
@@ -52,6 +65,7 @@ const defaultFamilyData: FamilyFormData = {
   [DefaultFieldKey.CELL_NUMBER]: "",
   [DefaultFieldKey.EMAIL]: "",
   [DefaultFieldKey.HOME_NUMBER]: "",
+  [DefaultFieldKey.NOTES]: "",
   [DefaultFieldKey.PREFERRED_CONTACT]: "",
   [DefaultFieldKey.PREFERRED_NUMBER]: "",
   [DefaultFieldKey.WORK_NUMBER]: "",
@@ -79,11 +93,15 @@ const RegistrationForm = ({
     sessionDynamicFields,
   } = useContext(DynamicFieldsContext);
 
-  const [family, setFamily] = useState<FamilyFormData>(
-    existingFamily !== null
-      ? familyResponseToFamilyFormData(existingFamily)
-      : defaultFamilyData
-  );
+  const [enrolment, setEnrolment] = useState<EnrolmentFormData>({
+    family:
+      existingFamily !== null
+        ? familyResponseToFamilyFormData(existingFamily)
+        : defaultFamilyData,
+    preferred_class: null,
+    session: session.id,
+    status: EnrolmentStatus.REGISTERED,
+  });
 
   const getSessionDynamicFields = (dynamicFields: DynamicField[]) =>
     dynamicFields.filter((dynamicField) =>
@@ -94,10 +112,8 @@ const RegistrationForm = ({
     e.preventDefault();
     if (existingFamily === null) {
       const response = await EnrolmentAPI.postEnrolment({
-        family: familyFormDataToFamilyRequest(family),
-        session: session.id,
-        preferred_class: null, // TODO: change this once we implement preferred_class in the reg form
-        status: EnrolmentStatus.REGISTERED, // TODO: change this once we implement status in the reg form
+        ...enrolment,
+        family: familyFormDataToFamilyRequest(enrolment.family),
       });
       if (response.non_field_errors) {
         // eslint-disable-next-line no-alert
@@ -130,10 +146,7 @@ const RegistrationForm = ({
             a <b>new family</b>
           </span>
         )}{" "}
-        for{" "}
-        <b>
-          {session.season} {session.year}
-        </b>
+        for <b>{session.name}</b>
       </Typography>
 
       <Box width={488}>
@@ -144,8 +157,13 @@ const RegistrationForm = ({
           dense={false}
           dynamicFields={getSessionDynamicFields(parentDynamicFields)}
           isEditing
-          family={family}
-          onChange={(value) => setFamily({ ...family, ...value })}
+          family={enrolment.family}
+          onChange={(value) =>
+            setEnrolment({
+              ...enrolment,
+              family: { ...enrolment.family, ...value },
+            })
+          }
         />
         <Typography variant="h3" className={classes.heading}>
           Family members
@@ -154,17 +172,27 @@ const RegistrationForm = ({
           dense={false}
           dynamicFields={getSessionDynamicFields(childDynamicFields)}
           isEditing
-          onChange={(children) => setFamily({ ...family, children })}
+          onChange={(children) =>
+            setEnrolment({
+              ...enrolment,
+              family: { ...enrolment.family, children },
+            })
+          }
           role={StudentRole.CHILD}
-          students={family.children}
+          students={enrolment.family.children}
         />
         <StudentForm
           dense={false}
           dynamicFields={getSessionDynamicFields(guestDynamicFields)}
           isEditing
-          onChange={(guests) => setFamily({ ...family, guests })}
+          onChange={(guests) =>
+            setEnrolment({
+              ...enrolment,
+              family: { ...enrolment.family, guests },
+            })
+          }
           role={StudentRole.GUEST}
-          students={family.guests}
+          students={enrolment.family.guests}
         />
         <Typography variant="h3" className={classes.heading}>
           Session questions
@@ -172,16 +200,110 @@ const RegistrationForm = ({
         <StudentDynamicFields
           dense={false}
           dynamicFields={getSessionDynamicFields(sessionDynamicFields)}
-          information={family.parent.information}
+          information={enrolment.family.parent.information}
           isEditing
           onChange={(value) =>
-            setFamily({
-              ...family,
-              parent: { ...family.parent, information: value },
+            setEnrolment({
+              ...enrolment,
+              family: {
+                ...enrolment.family,
+                parent: { ...enrolment.family.parent, information: value },
+              },
             })
           }
           variant={FieldVariant.DEFAULT}
         />
+      </Box>
+
+      <Box width={408}>
+        <Typography variant="h3" className={classes.heading}>
+          Session questions
+        </Typography>
+        <FormRow
+          id="preferred-class"
+          label="What are your preferred dates?"
+          questionType={QuestionType.MULTIPLE_CHOICE}
+          variant={FieldVariant.STACKED}
+        >
+          <Select
+            displayEmpty
+            fullWidth
+            inputProps={{ "data-testid": TestId.PreferredClassSelect }}
+            labelId="preferred-class"
+            onChange={(e) =>
+              setEnrolment({
+                ...enrolment,
+                preferred_class: Number(e.target.value),
+              })
+            }
+            value={enrolment.preferred_class || ""}
+            variant="outlined"
+          >
+            <MenuItem value="">Select</MenuItem>
+            {session.classes.map((classObj) => (
+              <MenuItem key={classObj.id} value={classObj.id.toString()}>
+                {classObj.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormRow>
+
+        <Typography variant="h3" className={classes.heading}>
+          Status
+        </Typography>
+        <FormRow
+          id="status"
+          label="Which status would you like to assign?"
+          questionType={QuestionType.MULTIPLE_CHOICE}
+          variant={FieldVariant.STACKED}
+        >
+          <Select
+            fullWidth
+            inputProps={{ "data-testid": TestId.StatusSelect }}
+            labelId="status"
+            onChange={(e) =>
+              setEnrolment({
+                ...enrolment,
+                status: e.target.value as EnrolmentStatus,
+              })
+            }
+            value={enrolment.status}
+            variant="outlined"
+          >
+            <MenuItem value={EnrolmentStatus.REGISTERED}>
+              Registered (all or most information is complete)
+            </MenuItem>
+            <MenuItem value={EnrolmentStatus.SIGNED_UP}>
+              Signed up (more information is required)
+            </MenuItem>
+          </Select>
+        </FormRow>
+      </Box>
+
+      <Box width={840}>
+        <Typography variant="h3" className={classes.heading}>
+          Notes
+        </Typography>
+        <FormRow
+          id="notes"
+          label="Notes"
+          questionType={QuestionType.TEXT}
+          variant={FieldVariant.COMPACT}
+        >
+          <OutlinedInput
+            fullWidth
+            id="notes"
+            inputProps={{ "data-testid": TestId.NotesInput }}
+            multiline
+            onChange={(e) =>
+              setEnrolment({
+                ...enrolment,
+                family: { ...enrolment.family, notes: e.target.value },
+              })
+            }
+            value={enrolment.family.notes}
+          />
+        </FormRow>
       </Box>
 
       <Button type="submit" variant="contained" color="primary">

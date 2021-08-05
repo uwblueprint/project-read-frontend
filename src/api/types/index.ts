@@ -1,8 +1,8 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import EnrolmentStatus from "constants/EnrolmentStatus";
 import {
   Class,
   DynamicField,
+  Enrolment,
   Family,
   Interaction,
   Session,
@@ -18,19 +18,17 @@ export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
 };
 
-export type SessionListResponse = Pick<Session, "id" | "season" | "year">;
+export type SessionListResponse = Pick<Session, "id" | "name">;
 
 export type SessionDetailResponse = Session & {
   classes: ClassListResponse[];
   families: FamilyListResponse[];
 };
 
-export type Enrolment = {
-  id: number;
+export type EnrolmentResponse = Pick<Enrolment, "id" | "status"> & {
   session: SessionListResponse | null;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
-  status: EnrolmentStatus;
 };
 
 export type InteractionResponse = Interaction & {
@@ -44,15 +42,16 @@ export type FamilyDetailResponse = Pick<
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.HOME_NUMBER
   | DefaultFieldKey.ID
+  | DefaultFieldKey.NOTES
   | DefaultFieldKey.PREFERRED_CONTACT
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
   | "parent"
 > & {
   children: Student[];
-  current_enrolment: Enrolment | null;
-  interactions: InteractionResponse[];
+  current_enrolment: EnrolmentResponse | null;
   guests: Student[];
+  interactions: InteractionResponse[];
 };
 
 export type FamilyListResponse = Pick<
@@ -65,7 +64,7 @@ export type FamilyListResponse = Pick<
   | DefaultFieldKey.PREFERRED_CONTACT
   | "parent"
 > & {
-  enrolment: Enrolment | null;
+  enrolment: EnrolmentResponse | null;
 };
 
 export type FamilySearchResponse = Pick<
@@ -85,6 +84,7 @@ export type FamilyBaseRequest = Pick<
   | DefaultFieldKey.CELL_NUMBER
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.HOME_NUMBER
+  | DefaultFieldKey.NOTES
   | DefaultFieldKey.PREFERRED_CONTACT
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
@@ -104,11 +104,10 @@ export type FamilyRequest = FamilyBaseRequest & {
   parent: StudentRequest;
 };
 
-export type FamilyEnrolmentRequest = {
+export type EnrolmentFamilyRequest = Pick<Enrolment, "status"> & {
   family: FamilyRequest;
   session: number;
   preferred_class: number | null;
-  status: EnrolmentStatus;
 };
 
 export type DynamicFieldsResponse = {
