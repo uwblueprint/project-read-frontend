@@ -87,6 +87,7 @@ const TEST_GUEST_FAV_COLOUR = "periwinkle";
 const TEST_GUEST_FIRST_NAME = "Dory";
 const TEST_GUEST_DOB = "01011987";
 
+const TEST_SESSION_TIME_IN_CANADA = "1 year";
 const TEST_NOTES = "Just keep swimming";
 
 const TEST_DYNAMIC_FIELD = {
@@ -114,6 +115,15 @@ const TEST_GUEST_DYNAMIC_FIELD = {
   ...TEST_DYNAMIC_FIELD,
 };
 
+const TEST_SESSION_DYNAMIC_FIELD = {
+  id: 4,
+  role: StudentRole.PARENT,
+  is_default: false,
+  name: "Time in Canada",
+  question_type: QuestionType.TEXT,
+  options: [],
+};
+
 describe("when text fields are submitted", () => {
   it("displays them as form fields", () => {
     const session: SessionDetailResponse = {
@@ -123,6 +133,7 @@ describe("when text fields are submitted", () => {
         TEST_PARENT_DYNAMIC_FIELD.id,
         TEST_CHILD_DYNAMIC_FIELD.id,
         // guest field not included
+        TEST_SESSION_DYNAMIC_FIELD.id,
       ],
       id: 1,
       name: "Fall 2021",
@@ -135,6 +146,7 @@ describe("when text fields are submitted", () => {
             parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
             childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
             guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+            sessionDynamicFields: [TEST_SESSION_DYNAMIC_FIELD],
           }}
         >
           <RegistrationForm
@@ -155,6 +167,9 @@ describe("when text fields are submitted", () => {
     expect(
       queryByTestId(`${StudentRole.GUEST} ${TEST_GUEST_DYNAMIC_FIELD.name}`)
     ).not.toBeInTheDocument();
+    expect(
+      getByTestId(`${StudentRole.PARENT} ${TEST_SESSION_DYNAMIC_FIELD.name}`)
+    ).toBeInTheDocument();
   });
 
   it("structures the data in the required format", async () => {
@@ -168,6 +183,7 @@ describe("when text fields are submitted", () => {
         TEST_PARENT_DYNAMIC_FIELD.id,
         TEST_CHILD_DYNAMIC_FIELD.id,
         TEST_GUEST_DYNAMIC_FIELD.id,
+        TEST_SESSION_DYNAMIC_FIELD.id,
       ],
       id: 1,
       name: "Fall 2021",
@@ -183,6 +199,7 @@ describe("when text fields are submitted", () => {
             parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
             childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
             guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+            sessionDynamicFields: [TEST_SESSION_DYNAMIC_FIELD],
           }}
         >
           <RegistrationForm
@@ -293,6 +310,14 @@ describe("when text fields are submitted", () => {
       }
     );
 
+    // session section
+    fireEvent.change(
+      getByTestId(`${StudentRole.PARENT} ${TEST_SESSION_DYNAMIC_FIELD.name}`),
+      {
+        target: { value: TEST_SESSION_TIME_IN_CANADA },
+      }
+    );
+
     const guestDobInput = getByLabelText(
       `${StudentRole.GUEST} ${DefaultFields.DATE_OF_BIRTH.name}`
     ) as HTMLInputElement;
@@ -361,6 +386,7 @@ describe("when text fields are submitted", () => {
           first_name: TEST_PARENT_FIRST_NAME,
           information: {
             [TEST_PARENT_DYNAMIC_FIELD.id]: TEST_PARENT_FAV_COLOUR,
+            [TEST_SESSION_DYNAMIC_FIELD.id]: TEST_SESSION_TIME_IN_CANADA,
           },
           last_name: TEST_LAST_NAME,
         },

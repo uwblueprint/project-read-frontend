@@ -3,8 +3,11 @@ import React from "react";
 import { FamilyBaseRequest, StudentRequest } from "api/types";
 import Field from "components/common/field";
 import { DefaultFields } from "constants/DefaultFields";
+import FieldVariant from "constants/FieldVariant";
 import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
+
+import StudentDynamicFields from "../student-dynamic-fields";
 
 type FamilyParentRequest = FamilyBaseRequest & { parent: StudentRequest };
 
@@ -105,26 +108,19 @@ const FamilyParentFields = ({
         value={family.preferred_comms}
         {...fieldProps}
       />
-      {dynamicFields.map((field) => (
-        <Field
-          key={field.id}
-          field={field}
-          onChange={(value) =>
-            onChange({
-              ...family,
-              parent: {
-                ...family.parent,
-                information: {
-                  ...family.parent.information,
-                  [field.id]: value,
-                },
-              },
-            })
-          }
-          value={family.parent.information[field.id] ?? ""}
-          {...fieldProps}
-        />
-      ))}
+      <StudentDynamicFields
+        dense={dense}
+        dynamicFields={dynamicFields}
+        information={family.parent.information}
+        isEditing={isEditing}
+        onChange={(value) =>
+          onChange({
+            ...family,
+            parent: { ...family.parent, information: value },
+          })
+        }
+        variant={FieldVariant.DEFAULT}
+      />
     </>
   );
 };
