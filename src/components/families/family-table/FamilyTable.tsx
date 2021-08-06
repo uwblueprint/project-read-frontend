@@ -182,6 +182,30 @@ const FamilyTable = ({
     };
   };
 
+  const enrolledClassColumn: MUIDataTableColumn = {
+    name: DefaultFields.ENROLLED_CLASS.id,
+    label: DefaultFields.ENROLLED_CLASS.name,
+    options: {
+      customBodyRender: (value) => (
+        <Typography noWrap variant="body2">
+          {value}
+        </Typography>
+      ),
+      searchable: false,
+      setCellProps: (cellValue, rowIndex) => {
+        const classColour =
+          families[rowIndex].enrolment?.enrolled_class?.colour || "ffffff00";
+        return {
+          style: {
+            backgroundColor: `#${classColour}`,
+            paddingLeft: 16,
+            paddingRight: 16,
+          },
+        };
+      },
+    },
+  };
+
   const columns: MUIDataTableColumn[] = [
     // hidden ID column
     idColumn,
@@ -207,7 +231,12 @@ const FamilyTable = ({
     ...parentDynamicFields.map((field) => getColumn(field, true)),
 
     // enrolment columns
-    ...enrolmentFields.map((field) => getColumn(field, false)),
+    ...enrolmentFields
+      .filter((field) => field !== DefaultFields.ENROLLED_CLASS)
+      .map((field) => getColumn(field, false)),
+    ...(enrolmentFields.includes(DefaultFields.ENROLLED_CLASS)
+      ? [enrolledClassColumn]
+      : []),
     statusColumn,
   ];
 

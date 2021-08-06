@@ -12,7 +12,7 @@ import {
 
 export type UserResponse = Pick<User, "id" | "first_name" | "last_name">;
 
-export type ClassListResponse = Pick<Class, "id" | "name">;
+export type ClassListResponse = Pick<Class, "id" | "name" | "colour">;
 
 export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
