@@ -86,6 +86,14 @@ const theme = createMuiTheme({
         borderColor: defaultTheme.palette.divider,
       },
     },
+    MuiTableRow: {
+      root: {
+        backgroundColor: defaultTheme.palette.background.paper,
+        "&$hover:hover": {
+          backgroundColor: "rgb(245, 245, 245)",
+        },
+      },
+    },
     MuiTabs: {
       root: {
         backgroundColor: "white",

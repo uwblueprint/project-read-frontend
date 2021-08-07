@@ -14,7 +14,7 @@ import { makeStyles } from "@material-ui/styles";
 import { StudentRequest } from "api/types";
 import Field from "components/common/field";
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import { DefaultFields } from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 import FieldVariant from "constants/FieldVariant";
 import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
