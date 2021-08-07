@@ -68,8 +68,9 @@ export type Interaction = {
 
 export type Class = {
   id: number;
-  name: string;
   attendance: Attendance[];
+  colour: string;
+  name: string;
 };
 
 export type Enrolment = {
