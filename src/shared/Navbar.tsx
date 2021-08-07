@@ -16,17 +16,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 function Navbar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const classes = useStyles();
   const history = useHistory();
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    app.auth().signOut();
   };
 
   return (
@@ -44,8 +43,24 @@ function Navbar() {
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
           >
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                app.auth().signOut();
+              }}
+            >
+              Logout
+            </MenuItem>
           </Menu>
         </div>
       </Toolbar>
