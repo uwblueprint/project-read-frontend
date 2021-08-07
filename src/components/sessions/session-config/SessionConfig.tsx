@@ -1,11 +1,10 @@
 import React from "react";
 
-import { Typography } from "@material-ui/core";
+import { OutlinedInput, Typography } from "@material-ui/core";
 
 import DateInput from "components/common/date-input";
-import TextInput from "components/common/inputs/TextInput";
-
-const FORM_FIELD_WIDTH = 328;
+import FormRow from "components/common/form-row";
+import QuestionType from "constants/QuestionType";
 
 export enum TestId {
   NameInput = "name-input",
@@ -15,8 +14,8 @@ export enum TestId {
 type Props = {
   sessionName: string;
   onChangeSessionName: (name: string) => void;
-  startDate: Date;
-  onChangeStartDate: (date: Date) => void;
+  startDate: Date | null;
+  onChangeStartDate: (date: Date | null) => void;
 };
 
 const SessionConfig = ({
@@ -27,21 +26,27 @@ const SessionConfig = ({
 }: Props) => (
   <div data-testid={TestId.SessionConfig}>
     <Typography variant="h2">Session information</Typography>
-    <TextInput
-      testId={TestId.NameInput}
-      id="session-name"
-      label="Name"
-      value={sessionName}
-      onChange={(name) => onChangeSessionName(name)}
-      inputWidth={FORM_FIELD_WIDTH}
-    />
-    <DateInput
+    <FormRow id="session-name" label="Name" questionType={QuestionType.TEXT}>
+      <OutlinedInput
+        autoComplete="new-password" // disable autocomplete
+        fullWidth
+        id="session-name"
+        inputProps={{ "data-testid": TestId.NameInput }}
+        onChange={(e) => onChangeSessionName(e.target.value)}
+        value={sessionName}
+      />
+    </FormRow>
+    <FormRow
       id="start-date"
       label="Start date"
-      value={startDate}
-      onChange={(date) => onChangeStartDate(date)}
-      inputWidth={FORM_FIELD_WIDTH}
-    />
+      questionType={QuestionType.DATE}
+    >
+      <DateInput
+        id="start-date"
+        value={startDate}
+        onChange={(date) => onChangeStartDate(date)}
+      />
+    </FormRow>
   </div>
 );
 

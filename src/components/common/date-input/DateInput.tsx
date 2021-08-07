@@ -1,45 +1,92 @@
 import React from "react";
 
-import { Box, InputLabel } from "@material-ui/core";
+import { Theme } from "@material-ui/core";
+import { CalendarToday } from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
+import { makeStyles } from "@material-ui/styles";
 import moment from "moment";
-
-import { InputProps } from "types";
 
 export enum TestId {
   Input = "input",
   KeyboardButton = "keyboard-button",
 }
 
-type Props = InputProps & {
-  value: Date;
-  onChange: (value: Date) => void;
+const denseStyles = (theme: Theme) => ({
+  button: {
+    height: 16,
+    width: 16,
+  },
+  datePicker: {
+    backgroundColor: theme.palette.background.paper,
+  },
+  input: {
+    fontSize: 14,
+    height: 32,
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
+});
+
+const useStyles = makeStyles<Theme, Pick<Props, "dense">>((theme) => ({
+  button: ({ dense }) => (dense ? denseStyles(theme).button : {}),
+  datePicker: ({ dense }) => (dense ? denseStyles(theme).datePicker : {}),
+  input: ({ dense }) => (dense ? denseStyles(theme).input : {}),
+}));
+
+type Props = {
+  dense?: boolean;
+  id: string;
+  onChange: (value: Date | null) => void;
+  placeholder?: string;
+  testId?: string;
+  value: Date | null;
 };
 
-const DateInput = ({ id, label, value, onChange, inputWidth }: Props) => (
-  <Box display="flex" flexDirection="row" alignItems="center" marginY={2}>
-    <Box paddingRight={2} width={150}>
-      <InputLabel htmlFor={id}>{label}</InputLabel>
-    </Box>
-    <Box width={inputWidth}>
-      <KeyboardDatePicker
-        id={id}
-        autoOk
-        disableToolbar
-        variant="inline"
-        inputVariant="outlined"
-        format="MM/DD/yyyy"
-        value={value}
-        onChange={(date) => onChange(moment(date).toDate())}
-        KeyboardButtonProps={{
-          "aria-label": "change date",
-          ...{ "data-testid": TestId.KeyboardButton },
-        }}
-        inputProps={{ "data-testid": TestId.Input }}
-        fullWidth
-      />
-    </Box>
-  </Box>
-);
+const defaultProps = {
+  dense: false,
+  placeholder: "",
+  testId: "",
+};
+
+const DateInput = ({
+  dense,
+  id,
+  onChange,
+  placeholder,
+  testId,
+  value,
+}: Props) => {
+  const classes = useStyles({ dense });
+  return (
+    <KeyboardDatePicker
+      autoOk
+      className={classes.datePicker}
+      disableToolbar
+      format="MM/DD/yyyy"
+      fullWidth
+      id={id}
+      inputProps={{
+        "aria-label": testId,
+        className: classes.input,
+        "data-testid": TestId.Input,
+      }}
+      inputVariant="outlined"
+      KeyboardButtonProps={{
+        className: classes.button,
+        "aria-label": "change date",
+        ...{ "data-testid": TestId.KeyboardButton },
+      }}
+      keyboardIcon={<CalendarToday className={classes.button} />}
+      onChange={(date) =>
+        onChange(date ? moment(date, "MM/DD/yyyy").toDate() : null)
+      }
+      placeholder={placeholder || "MM/DD/YYYY"}
+      value={value}
+      variant="inline"
+    />
+  );
+};
+
+DateInput.defaultProps = defaultProps;
 
 export default DateInput;

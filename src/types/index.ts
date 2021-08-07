@@ -1,5 +1,12 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
+import EnrolmentStatus from "constants/EnrolmentStatus";
 import StudentRole from "constants/StudentRole";
+
+export type User = {
+  id: number;
+  first_name: string;
+  last_name: string;
+};
 
 type Field = {
   is_default: boolean;
@@ -18,12 +25,12 @@ export type DynamicField = Field & {
 };
 
 export type Student = {
+  [DefaultFieldKey.DATE_OF_BIRTH]: string | null;
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
   id: number;
   information: Record<number, string>; // dynamic fields
   role: StudentRole;
-  date_of_birth: string;
 };
 
 export type Family = {
@@ -45,14 +52,18 @@ export type Family = {
 export type Session = {
   fields: number[]; // array of field IDs
   id: number;
-  season: string;
+  name: string;
   start_date: string;
-  year: number;
 };
 
 export type Attendance = {
   date: string;
   attendees: number[];
+};
+
+export type Interaction = {
+  date: string;
+  type: string;
 };
 
 export type Class = {
@@ -61,14 +72,8 @@ export type Class = {
   attendance: Attendance[];
 };
 
-export type InputProps = {
-  id: string;
-  label: string;
-  inputWidth?: number;
-  testId?: string;
-};
-
-export type StringInputProps = InputProps & {
-  value: string;
-  onChange: (value: string) => void;
+export type Enrolment = {
+  id: number;
+  status: EnrolmentStatus;
+  students: number[];
 };
