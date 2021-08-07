@@ -32,6 +32,7 @@ import { UsersContext } from "context/UsersContext";
 
 import { FamilyFormData } from "../family-form/types";
 import EnrolmentForm from "./enrolment-form";
+import FamilySidebarEnrolmentCard from "./family-sidebar-enrolment-card";
 import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
 import InteractionCard from "./interaction-card";
 
@@ -358,6 +359,35 @@ const FamilySidebar = ({
           }}
           value={familyFormData.notes}
         />
+
+        <Box paddingTop={2}>
+          <Divider />
+        </Box>
+
+        <Box position="relative">
+          <Box>
+            <Typography variant="h3" className={classes.heading}>
+              Previous Enrolments
+            </Typography>
+            {family.enrolments.map(() => (
+              <FamilySidebarEnrolmentCard
+                {...console.log(family.enrolments[0].students)}
+                session={
+                  <Typography variant="body2">
+                    {family.enrolments[0].session!.name}
+                  </Typography>
+                }
+                days={
+                  <Typography variant="body2">
+                    {family.enrolments[0].enrolled_class!.name}
+                  </Typography>
+                }
+                status={family.enrolments[0].status} // except put this in a loop
+                students={family.enrolments[0].students}
+              />
+            ))}
+          </Box>
+        </Box>
       </Box>
 
       {isEditingFamily && (

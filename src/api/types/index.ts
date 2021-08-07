@@ -41,6 +41,7 @@ export type EnrolmentResponse = Enrolment & {
   session: SessionListResponse;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
+  students: Student;
 };
 
 export type EnrolmentRequest = Enrolment & {
@@ -65,6 +66,7 @@ export type FamilyDetailResponse = Pick<
 > & {
   children: Student[];
   current_enrolment: EnrolmentResponse | null;
+  enrolments: EnrolmentResponse[];
   guests: Student[];
 };
 
