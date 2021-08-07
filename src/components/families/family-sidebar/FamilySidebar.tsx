@@ -369,21 +369,15 @@ const FamilySidebar = ({
             <Typography variant="h3" className={classes.heading}>
               Previous Enrolments
             </Typography>
-            {family.enrolments.map(() => (
+            {family.enrolments.map((enrolment) => (
               <FamilySidebarEnrolmentCard
-                {...console.log(family.enrolments[0].students)}
-                session={
-                  <Typography variant="body2">
-                    {family.enrolments[0].session!.name}
-                  </Typography>
-                }
-                days={
-                  <Typography variant="body2">
-                    {family.enrolments[0].enrolled_class!.name}
-                  </Typography>
-                }
-                status={family.enrolments[0].status} // except put this in a loop
-                students={family.enrolments[0].students}
+                session={enrolment.session!.name}
+                days={enrolment.enrolled_class!.name}
+                status={enrolment.status}
+                studentIDs={enrolment.students}
+                students={family.children
+                  .concat(family.parent)
+                  .concat(family.guests)}
               />
             ))}
           </Box>

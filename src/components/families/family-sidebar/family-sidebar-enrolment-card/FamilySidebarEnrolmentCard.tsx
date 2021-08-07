@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState } from "react";
 
 import { Box, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,6 +9,7 @@ import {
 
 import StatusChip from "components/common/status-chip/StatusChip";
 import EnrolmentStatus from "constants/EnrolmentStatus";
+import { Student } from "types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -40,27 +41,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  session: ReactNode;
-  days: ReactNode;
+  session: string;
+  days: string;
   status: EnrolmentStatus;
-  students: any; // change this to the right thing
+  studentIDs: number[];
+  students: Student[];
 };
 
 const FamilySidebarEnrolmentCard = ({
   session,
   days,
   status,
+  studentIDs,
   students,
 }: Props) => {
-  // add students
   const [showStudents, setShowStudents] = useState(false);
   const classes = useStyles();
-  const tempStudents = [
-    "Mary Wells",
-    "Lebron James",
-    "Kyle Lowry",
-    "North West",
-  ]; // to be replaced with students
 
   return (
     <Box
@@ -72,19 +68,21 @@ const FamilySidebarEnrolmentCard = ({
       paddingY={1.5}
     >
       <Box display="flex" flexDirection="row" alignItems="center">
-        {console.log(session)}
-        <div className={classes.session}>{session}</div>
+        <div className={classes.session}>
+          <Typography variant="body2">{session}</Typography>
+        </div>
         <Divider className={classes.divider} orientation="vertical" flexItem />
-        <div className={classes.days}>{days}</div>
+        <div className={classes.days}>
+          <Typography variant="body2">{days}</Typography>
+        </div>
+
         <Divider
           classes={{ root: classes.divider }}
           orientation="vertical"
           flexItem
         />
         <StatusChip status={status} />
-        <Box
-        //   alignSelf="flex-end" // this isn't working -- must be end of box
-        >
+        <Box>
           {showStudents ? (
             <KeyboardArrowUpRounded />
           ) : (
@@ -92,19 +90,16 @@ const FamilySidebarEnrolmentCard = ({
           )}
         </Box>
       </Box>
-      {showStudents ? ( // this moves kind of annoyingly
-        <>
-          <Box>
-            {tempStudents.map((student) => (
-              <Typography key={student} variant="body2">
-                {student}
+      {showStudents ? (
+        <Box>
+          {students
+            .filter((student) => studentIDs.includes(student.id))
+            .map((student) => (
+              <Typography key={student.id} variant="body2">
+                {student.first_name} {student.last_name}
               </Typography>
             ))}
-            {
-              console.log(students) // remove this to test with a better sample once database is updated
-            }
-          </Box>
-        </>
+        </Box>
       ) : null}
     </Box>
   );
