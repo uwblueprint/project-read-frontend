@@ -34,9 +34,7 @@ export const post = async (path: string, data: unknown): Promise<unknown> => {
   });
 
   if (!res.ok) {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { non_field_errors } = await res.json();
-    throw Error(non_field_errors);
+    throw Error(res.statusText);
   }
 
   return res.json();
@@ -54,9 +52,7 @@ export const put = async (path: string, data: unknown): Promise<unknown> => {
   });
 
   if (!res.ok) {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { non_field_errors } = await res.json();
-    throw Error(non_field_errors);
+    throw Error(res.statusText);
   }
 
   return res.json();

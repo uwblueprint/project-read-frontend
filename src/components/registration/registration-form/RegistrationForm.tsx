@@ -111,13 +111,14 @@ const RegistrationForm = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (existingFamily === null) {
-      const response = await EnrolmentAPI.postEnrolment({
-        ...enrolment,
-        family: familyFormDataToFamilyRequest(enrolment.family),
-      });
-      if (response.non_field_errors) {
+      try {
+        await EnrolmentAPI.postEnrolment({
+          ...enrolment,
+          family: familyFormDataToFamilyRequest(enrolment.family),
+        });
+      } catch (err) {
         // eslint-disable-next-line no-alert
-        alert(response.non_field_errors);
+        alert(err);
         return;
       }
     }
