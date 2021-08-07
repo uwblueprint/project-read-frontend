@@ -75,4 +75,5 @@ export type Class = {
 export type Enrolment = {
   id: number;
   status: EnrolmentStatus;
+  students: number[];
 };

@@ -17,7 +17,12 @@ const StatusColourMap = new Map([
 ]);
 
 type Props = {
+  className?: string;
   status: EnrolmentStatus;
+};
+
+const defaultProps = {
+  className: "",
 };
 
 const useStyles = makeStyles<Theme, Props>(() => ({
@@ -36,9 +41,11 @@ const useStyles = makeStyles<Theme, Props>(() => ({
   },
 }));
 
-const StatusChip = ({ status }: Props) => {
+const StatusChip = ({ className, status }: Props) => {
   const classes = useStyles({ status });
-  return <Chip label={status} className={classes.chip} />;
+  return <Chip label={status} className={`${classes.chip} ${className}`} />;
 };
+
+StatusChip.defaultProps = defaultProps;
 
 export default StatusChip;
