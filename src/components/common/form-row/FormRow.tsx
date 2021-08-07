@@ -11,17 +11,21 @@ const denseStyles = {
     marginBottom: 4,
   },
   labelContainer: {
-    minWidth: 128,
+    width: 128,
   },
 };
 
 const stackedStyles = {
   formRow: {
     alignItems: "",
+    paddingTop: 8,
+    paddingBottom: 8,
     "flex-direction": "column",
   },
   labelContainer: {
     paddingBottom: 12,
+    width: "100%",
+    minWidth: 144,
   },
 };
 
@@ -38,7 +42,7 @@ const useStyles = makeStyles<Theme, Pick<Props, "dense" | "variant">>(() => ({
     fontSize: ({ dense }) => (dense ? 14 : 16),
   },
   labelContainer: ({ dense, variant }) => ({
-    minWidth: 144,
+    width: 144,
     paddingRight: 2,
     ...(dense && denseStyles.labelContainer),
     ...(variant === FieldVariant.STACKED && stackedStyles.labelContainer),
