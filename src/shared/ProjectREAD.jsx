@@ -5,12 +5,12 @@ import { Container } from "@material-ui/core";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Redirect, Switch } from "react-router-dom";
 
-import Navbar from "components/Navbar";
 import { DynamicFieldsProvider } from "context/DynamicFieldsContext";
 import CreateSession from "pages/create-session";
 import MainRegistration from "pages/MainRegistration";
 import Sessions from "pages/Sessions";
 
+import Navbar from "./Navbar";
 import PrivateRoute from "./PrivateRoute";
 
 function ProjectREAD() {
