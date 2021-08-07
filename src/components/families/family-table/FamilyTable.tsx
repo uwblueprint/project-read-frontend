@@ -84,7 +84,7 @@ const FamilyTable = ({
   const { parentDynamicFields } = useContext(DynamicFieldsContext);
 
   const getTableRows = (): FamilyTableRow[] =>
-    families.map(({ parent, children, current_enrolment, ...args }) => {
+    families.map(({ parent, children, enrolment, ...args }) => {
       let childrenInfo = "";
       children.forEach((child, i) => {
         if (child.date_of_birth) {
@@ -100,7 +100,7 @@ const FamilyTable = ({
         }
       });
 
-      const enrolment = current_enrolment || {
+      const enrolmentData = enrolment || {
         enrolled_class: null,
         preferred_class: null,
         status: EnrolmentStatus.UNASSIGNED,
@@ -109,13 +109,13 @@ const FamilyTable = ({
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
         [DefaultFieldKey.CHILDREN]: childrenInfo,
-        [DefaultFieldKey.STATUS]: enrolment.status,
-        [DefaultFieldKey.IS_ENROLLED]: current_enrolment ? "True" : "False",
-        [DefaultFieldKey.CURRENT_CLASS]: enrolment.enrolled_class
-          ? enrolment.enrolled_class.name
+        [DefaultFieldKey.STATUS]: enrolmentData.status,
+        [DefaultFieldKey.IS_ENROLLED]: enrolment ? "True" : "False",
+        [DefaultFieldKey.CURRENT_CLASS]: enrolmentData.enrolled_class
+          ? enrolmentData.enrolled_class.name
           : "N/A",
-        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: enrolment.preferred_class
-          ? enrolment.preferred_class.name
+        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: enrolmentData.preferred_class
+          ? enrolmentData.preferred_class.name
           : "N/A",
         ...args,
       };

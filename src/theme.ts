@@ -5,6 +5,10 @@ const defaultTheme = createMuiTheme();
 const theme = createMuiTheme({
   palette: {
     type: "light",
+    backgroundSecondary: {
+      default: "#091e420A",
+      paper: "#F5F5F5",
+    },
   },
   overrides: {
     MuiContainer: {
@@ -87,6 +91,11 @@ const theme = createMuiTheme({
         backgroundColor: "white",
         color: "black",
       },
+    },
+  },
+  props: {
+    MuiButton: {
+      disableElevation: true,
     },
   },
   typography: {

@@ -8,7 +8,6 @@ import { DefaultFields } from "constants/DefaultFields";
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    boxShadow: "none",
     height: 55,
     minWidth: 55,
   },
