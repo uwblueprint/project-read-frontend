@@ -194,25 +194,6 @@ const RegistrationForm = ({
           role={StudentRole.GUEST}
           students={enrolment.family.guests}
         />
-        <Typography variant="h3" className={classes.heading}>
-          Session questions
-        </Typography>
-        <StudentDynamicFields
-          dense={false}
-          dynamicFields={getSessionDynamicFields(sessionDynamicFields)}
-          information={enrolment.family.parent.information}
-          isEditing
-          onChange={(value) =>
-            setEnrolment({
-              ...enrolment,
-              family: {
-                ...enrolment.family,
-                parent: { ...enrolment.family.parent, information: value },
-              },
-            })
-          }
-          variant={FieldVariant.DEFAULT}
-        />
       </Box>
 
       <Box width={408}>
@@ -247,6 +228,22 @@ const RegistrationForm = ({
             ))}
           </Select>
         </FormRow>
+        <StudentDynamicFields
+          dense={false}
+          dynamicFields={getSessionDynamicFields(sessionDynamicFields)}
+          information={enrolment.family.parent.information}
+          isEditing
+          onChange={(value) =>
+            setEnrolment({
+              ...enrolment,
+              family: {
+                ...enrolment.family,
+                parent: { ...enrolment.family.parent, information: value },
+              },
+            })
+          }
+          variant={FieldVariant.STACKED}
+        />
 
         <Typography variant="h3" className={classes.heading}>
           Status
