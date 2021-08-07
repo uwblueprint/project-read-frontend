@@ -19,6 +19,8 @@ import FieldVariant from "constants/FieldVariant";
 import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
 
+import StudentDynamicFields from "../student-dynamic-fields";
+
 // unique identifier for children form components
 let CHILD_KEY_COUNTER = 1;
 let GUEST_KEY_COUNTER = 1;
@@ -180,23 +182,19 @@ const StudentForm = ({
                 value={student.date_of_birth || ""}
                 {...fieldProps}
               />
-              {dynamicFields.map((field) => (
-                <Field
-                  key={field.id}
-                  field={field}
-                  onChange={(value) =>
-                    onUpdateStudent(i, {
-                      ...student,
-                      information: {
-                        ...student.information,
-                        [field.id]: value,
-                      },
-                    })
-                  }
-                  value={student.information[field.id] ?? ""}
-                  {...fieldProps}
-                />
-              ))}
+              <StudentDynamicFields
+                dense={dense}
+                dynamicFields={dynamicFields}
+                information={student.information}
+                isEditing={isEditing}
+                onChange={(value) =>
+                  onUpdateStudent(i, {
+                    ...student,
+                    information: value,
+                  })
+                }
+                variant={fieldProps.variant}
+              />
               {!isEditing && i < students.length - 1 && (
                 <Box paddingY={2}>
                   <Divider />

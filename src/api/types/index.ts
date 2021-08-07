@@ -125,4 +125,5 @@ export type DynamicFieldsResponse = {
   parent_fields: DynamicField[];
   child_fields: DynamicField[];
   guest_fields: DynamicField[];
+  session_fields: DynamicField[];
 };

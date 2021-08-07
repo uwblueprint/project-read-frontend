@@ -41,6 +41,7 @@ const FamilySidebarForm = ({
     childDynamicFields,
     guestDynamicFields,
     parentDynamicFields,
+    sessionDynamicFields,
   } = useContext(DynamicFieldsContext);
 
   const onSubmitFamilyForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,7 +57,7 @@ const FamilySidebarForm = ({
       <Box marginBottom={2}>
         <FamilyParentFields
           dense
-          dynamicFields={parentDynamicFields}
+          dynamicFields={[...parentDynamicFields, ...sessionDynamicFields]}
           isEditing={isEditing}
           family={family}
           onChange={(value) => onChange({ ...family, ...value })}

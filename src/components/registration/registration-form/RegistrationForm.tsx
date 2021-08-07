@@ -18,6 +18,7 @@ import {
 } from "api/types";
 import FormRow from "components/common/form-row";
 import FamilyParentFields from "components/families/family-form/family-parent-fields";
+import StudentDynamicFields from "components/families/family-form/student-dynamic-fields";
 import StudentForm from "components/families/family-form/student-form";
 import {
   EnrolmentFormData,
@@ -89,6 +90,7 @@ const RegistrationForm = ({
     childDynamicFields,
     guestDynamicFields,
     parentDynamicFields,
+    sessionDynamicFields,
   } = useContext(DynamicFieldsContext);
 
   const [enrolment, setEnrolment] = useState<EnrolmentFormData>({
@@ -191,6 +193,25 @@ const RegistrationForm = ({
           }
           role={StudentRole.GUEST}
           students={enrolment.family.guests}
+        />
+        <Typography variant="h3" className={classes.heading}>
+          Session questions
+        </Typography>
+        <StudentDynamicFields
+          dense={false}
+          dynamicFields={getSessionDynamicFields(sessionDynamicFields)}
+          information={enrolment.family.parent.information}
+          isEditing
+          onChange={(value) =>
+            setEnrolment({
+              ...enrolment,
+              family: {
+                ...enrolment.family,
+                parent: { ...enrolment.family.parent, information: value },
+              },
+            })
+          }
+          variant={FieldVariant.DEFAULT}
         />
       </Box>
 
