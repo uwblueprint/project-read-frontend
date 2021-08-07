@@ -6,7 +6,7 @@ import {
 } from "./types";
 
 const getFamilies = (): Promise<FamilyListResponse[]> =>
-  APIUtils.get("/families/");
+  APIUtils.get("/families/") as Promise<FamilyListResponse[]>;
 
 const getFamiliesByParentName = (
   firstName: string,
@@ -14,10 +14,10 @@ const getFamiliesByParentName = (
 ): Promise<FamilySearchResponse[]> =>
   APIUtils.get(
     `/families/search/?first_name=${firstName}&last_name=${lastName}`
-  );
+  ) as Promise<FamilySearchResponse[]>;
 
 const getFamilyById = (id: number): Promise<FamilyDetailResponse> =>
-  APIUtils.get(`/families/${id}`);
+  APIUtils.get(`/families/${id}`) as Promise<FamilyDetailResponse>;
 
 export default {
   getFamilies,
