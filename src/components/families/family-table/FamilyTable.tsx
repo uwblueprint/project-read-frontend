@@ -1,6 +1,7 @@
 import React, { useContext, useCallback } from "react";
 
 import { Typography } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import moment from "moment";
 import MUIDataTable, {
   MUIDataTableColumn,
@@ -10,14 +11,14 @@ import MUIDataTable, {
 import { FamilyListResponse } from "api/types";
 import StatusChip from "components/common/status-chip";
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import {
-  DefaultFamilyTableFields,
-  DefaultFields,
-} from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
 import QuestionType from "constants/QuestionType";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField } from "types";
+
+const stickyColumnWidth = 116;
+const stickyColumnPaddingX = 16;
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
@@ -25,6 +26,19 @@ const options: MUIDataTableOptions = {
   rowsPerPageOptions: [25, 50, 100],
   selectableRows: "none",
   elevation: 0,
+  setTableProps: () => ({
+    style: {
+      borderCollapse: "separate",
+    },
+  }),
+};
+
+const stickyColumnStyles = {
+  backgroundColor: "inherit",
+  left: 0,
+  minWidth: stickyColumnWidth,
+  position: "sticky",
+  zIndex: 101,
 };
 
 const idColumn: MUIDataTableColumn = {
@@ -43,8 +57,7 @@ const statusColumn: MUIDataTableColumn = {
     searchable: false,
     setCellProps: () => ({
       style: {
-        paddingTop: 10,
-        paddingBottom: 10,
+        padding: "10px 16px",
       },
     }),
   },
@@ -61,9 +74,9 @@ type FamilyTableRow = Pick<
   [DefaultFieldKey.FIRST_NAME]: string;
   [DefaultFieldKey.LAST_NAME]: string;
   [DefaultFieldKey.STATUS]: EnrolmentStatus;
-  [DefaultFieldKey.IS_ENROLLED]: string;
-  [DefaultFieldKey.CURRENT_CLASS]: string;
-  [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: string;
+  [DefaultFieldKey.SESSION]: string;
+  [DefaultFieldKey.ENROLLED_CLASS]: string;
+  [DefaultFieldKey.PREFERRED_CLASS]: string;
   [DefaultFieldKey.CHILDREN]: string;
   [key: number]: string | number; // dynamic fields
 };
@@ -110,11 +123,11 @@ const FamilyTable = ({
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
         [DefaultFieldKey.CHILDREN]: childrenInfo,
         [DefaultFieldKey.STATUS]: enrolmentData.status,
-        [DefaultFieldKey.IS_ENROLLED]: enrolment ? "True" : "False",
-        [DefaultFieldKey.CURRENT_CLASS]: enrolmentData.enrolled_class
+        [DefaultFieldKey.SESSION]: enrolment ? enrolment.session.name : "N/A",
+        [DefaultFieldKey.ENROLLED_CLASS]: enrolmentData.enrolled_class
           ? enrolmentData.enrolled_class.name
           : "N/A",
-        [DefaultFieldKey.CURRENT_PREFERRED_CLASS]: enrolmentData.preferred_class
+        [DefaultFieldKey.PREFERRED_CLASS]: enrolmentData.preferred_class
           ? enrolmentData.preferred_class.name
           : "N/A",
         ...args,
@@ -143,10 +156,57 @@ const FamilyTable = ({
     },
   });
 
+  const getStickyColumn = (
+    column: MUIDataTableColumn,
+    isLast: boolean,
+    offset: number
+  ): MUIDataTableColumn => {
+    const columnStyles = {
+      ...stickyColumnStyles,
+      left: offset,
+      ...(isLast && {
+        borderRight: `1px solid ${grey[300]}`,
+      }),
+    };
+    return {
+      ...column,
+      options: {
+        ...column.options,
+        setCellHeaderProps: () => ({
+          style: columnStyles,
+        }),
+        setCellProps: () => ({
+          style: columnStyles,
+        }),
+      },
+    };
+  };
+
   const columns: MUIDataTableColumn[] = [
+    // hidden ID column
     idColumn,
-    ...DefaultFamilyTableFields.map((field) => getColumn(field, false)),
+
+    // sticky first and last name columns
+    getStickyColumn(getColumn(DefaultFields.FIRST_NAME, false), false, 0),
+    getStickyColumn(
+      getColumn(DefaultFields.LAST_NAME, false),
+      true,
+      stickyColumnWidth + stickyColumnPaddingX * 2
+    ),
+
+    // remaining default fields
+    ...[
+      DefaultFields.PHONE_NUMBER,
+      DefaultFields.EMAIL,
+      DefaultFields.NUM_CHILDREN,
+      DefaultFields.CHILDREN,
+      DefaultFields.PREFERRED_CONTACT,
+    ].map((field) => getColumn(field, false)),
+
+    // dynamic fields
     ...parentDynamicFields.map((field) => getColumn(field, true)),
+
+    // enrolment columns
     ...enrolmentFields.map((field) => getColumn(field, false)),
     statusColumn,
   ];

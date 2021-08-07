@@ -11,7 +11,7 @@ import {
 } from "api/types";
 import FamilySidebar from "components/families/family-sidebar";
 import FamilyTable from "components/families/family-table";
-import { DefaultFields } from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 
 const MainRegistration = () => {
   const [families, setFamilies] = useState<FamilyListResponse[]>([]);
@@ -57,9 +57,9 @@ const MainRegistration = () => {
       <FamilyTable
         families={families}
         enrolmentFields={[
-          DefaultFields.CURRENT_PREFERRED_CLASS,
-          DefaultFields.IS_ENROLLED,
-          DefaultFields.CURRENT_CLASS,
+          DefaultFields.PREFERRED_CLASS,
+          DefaultFields.SESSION,
+          DefaultFields.ENROLLED_CLASS,
         ]}
         shouldDisplayDynamicFields
         onSelectFamily={onSelectFamily}

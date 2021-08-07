@@ -2,7 +2,7 @@ import React from "react";
 
 import { FamilyBaseRequest, StudentRequest } from "api/types";
 import Field from "components/common/field";
-import { DefaultFields } from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 import FieldVariant from "constants/FieldVariant";
 import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";

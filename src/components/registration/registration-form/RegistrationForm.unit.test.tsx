@@ -8,7 +8,7 @@ import moment from "moment";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
 import { SessionDetailResponse } from "api/types";
-import { DefaultFields } from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
 import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";

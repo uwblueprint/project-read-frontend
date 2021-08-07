@@ -30,7 +30,7 @@ import RegistrationDialog from "components/registration/RegistrationDialog";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
-import { DefaultFields } from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
 
@@ -144,10 +144,6 @@ const Sessions = () => {
     return classObj !== undefined ? classObj.families : [];
   };
 
-  const getEnrolmentFields = isOnAllClassesTab(classTabIndex)
-    ? [DefaultFields.CURRENT_CLASS]
-    : [];
-
   const onSelectFamily = async (id: number) => {
     const family = await FamilyAPI.getFamilyById(id);
     setSelectedFamily(family);
@@ -228,7 +224,11 @@ const Sessions = () => {
             <>
               <FamilyTable
                 families={getFamilies()}
-                enrolmentFields={getEnrolmentFields}
+                enrolmentFields={
+                  isOnAllClassesTab(classTabIndex)
+                    ? [DefaultFields.ENROLLED_CLASS]
+                    : []
+                }
                 shouldDisplayDynamicFields={false}
                 onSelectFamily={onSelectFamily}
               />

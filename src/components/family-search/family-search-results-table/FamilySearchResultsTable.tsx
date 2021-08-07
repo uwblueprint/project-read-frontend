@@ -15,7 +15,7 @@ import { makeStyles } from "@material-ui/styles";
 
 import { FamilySearchResponse } from "api/types";
 import RoundedOutlinedButton from "components/common/rounded-outlined-button/RoundedOutlinedButton";
-import { DefaultFields } from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 
 const useStyles = makeStyles(() => ({
   noResultsTableCell: {
