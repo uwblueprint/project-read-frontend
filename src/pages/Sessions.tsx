@@ -25,6 +25,8 @@ import {
   FamilyDetailResponse,
   EnrolmentRequest,
 } from "api/types";
+import Spinner from "components/common/spinner";
+import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
 import FamilyTable from "components/families/family-table";
 import RegistrationForm from "components/registration/registration-form";
@@ -56,7 +58,6 @@ const Sessions = () => {
     new Map<number, ClassDetailResponse>()
   );
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
-  const [isLoadingSession, setIsLoadingSession] = useState(true);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [
@@ -65,9 +66,12 @@ const Sessions = () => {
   ] = useState<FamilyDetailResponse | null>(null);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const [isLoadingClass, setIsLoadingClass] = useState(false);
+  const [isLoadingFamily, setIsLoadingFamily] = useState(false);
+
   const updateSelectedSession = async (id: number) => {
-    await setIsLoadingSession(true);
-    await setSelectedSession(await SessionAPI.getSession(id));
+    setSelectedSession(await SessionAPI.getSession(id));
     setIsLoadingSession(false);
   };
 
@@ -84,6 +88,7 @@ const Sessions = () => {
         updateSelectedSession(sessionsData[0].id);
       }
     };
+    setIsLoadingSession(true);
     fetchSessions();
   }, []);
 
@@ -96,16 +101,19 @@ const Sessions = () => {
   };
 
   useEffect(() => {
+    setIsLoadingSession(true);
     if (sessionId !== undefined) {
       updateSelectedSession(Number(sessionId));
     }
   }, [sessionId]);
 
   const resetClass = async (id: number) => {
+    setIsLoadingClass(true);
     const classObj = await ClassAPI.getClass(id);
     setClassesMap(
       (prevMap) => new Map([...Array.from(prevMap), [classObj.id, classObj]])
     );
+    setIsLoadingClass(false);
   };
 
   useEffect(() => {
@@ -148,8 +156,10 @@ const Sessions = () => {
   };
 
   const onSelectFamily = async (id: number | null) => {
+    setIsLoadingFamily(true);
     const family = id ? await FamilyAPI.getFamilyById(id) : null;
     setSelectedFamily(family);
+    setIsLoadingFamily(false);
   };
 
   const onEditFamily = async () => {
@@ -174,6 +184,7 @@ const Sessions = () => {
 
   return (
     <>
+      {(isLoadingSession || isLoadingClass) && <SpinnerOverlay />}
       <Box display="flex">
         <Box display="flex" flexGrow={1} alignItems="center">
           <Snackbar
@@ -223,24 +234,28 @@ const Sessions = () => {
               onClose={handleCloseFormDialog}
               onSelectFamily={onSelectFamily}
               registrationForm={
-                <RegistrationForm
-                  existingFamily={selectedFamily}
-                  onRegister={(enrolment) => {
-                    setDisplayRegDialog(false);
-                    setClassTabIndex(ALL_CLASSES_TAB_INDEX);
-                    setSnackbarMessage(
-                      `Successfully added ${enrolment.family.parent.first_name} ${enrolment.family.parent.last_name} to this session.`
-                    );
-                    updateSelectedSession(selectedSession.id);
-                  }}
-                  session={selectedSession}
-                />
+                isLoadingFamily ? (
+                  <Spinner />
+                ) : (
+                  <RegistrationForm
+                    existingFamily={selectedFamily}
+                    onRegister={(enrolment) => {
+                      setDisplayRegDialog(false);
+                      setClassTabIndex(ALL_CLASSES_TAB_INDEX);
+                      setSnackbarMessage(
+                        `Successfully added ${enrolment.family.parent.first_name} ${enrolment.family.parent.last_name} to this session.`
+                      );
+                      updateSelectedSession(selectedSession.id);
+                    }}
+                    session={selectedSession}
+                  />
+                )
               }
             />
           </>
         )}
       </Box>
-      {!isLoadingSession && selectedSession && (
+      {selectedSession && (
         <SessionDetailView
           classes={selectedSession.classes}
           classTabIndex={classTabIndex}
@@ -256,7 +271,7 @@ const Sessions = () => {
                 }
                 shouldDisplayDynamicFields={false}
                 onSelectFamily={async (id) => {
-                  onSelectFamily(id);
+                  await onSelectFamily(id);
                   setIsSidebarOpen(true);
                 }}
               />
