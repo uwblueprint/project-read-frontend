@@ -8,6 +8,7 @@ import {
   EnrolmentRequest,
   FamilyDetailResponse,
   FamilyListResponse,
+  FamilyRequest,
 } from "api/types";
 import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
@@ -39,10 +40,13 @@ const MainRegistration = () => {
     setIsSidebarOpen(true);
   };
 
-  const onEditFamily = async () => {
+  const onSaveFamily = async (data: FamilyRequest) => {
     if (selectedFamily === null) {
       return;
     }
+    setSelectedFamily(
+      await FamilyAPI.putFamily({ ...data, id: selectedFamily.id })
+    );
     resetFamilies();
   };
 
@@ -77,7 +81,7 @@ const MainRegistration = () => {
           family={selectedFamily}
           onClose={() => setIsSidebarOpen(false)}
           onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
-          onEditFamily={onEditFamily}
+          onSaveFamily={onSaveFamily}
         />
       )}
     </>

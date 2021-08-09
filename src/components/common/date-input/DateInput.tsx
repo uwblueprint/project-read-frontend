@@ -35,6 +35,7 @@ const useStyles = makeStyles<Theme, Pick<Props, "dense">>((theme) => ({
 
 type Props = {
   dense?: boolean;
+  disableFuture?: boolean;
   id: string;
   onChange: (value: Date | null) => void;
   placeholder?: string;
@@ -44,12 +45,14 @@ type Props = {
 
 const defaultProps = {
   dense: false,
+  disableFuture: false,
   placeholder: "",
   testId: "",
 };
 
 const DateInput = ({
   dense,
+  disableFuture,
   id,
   onChange,
   placeholder,
@@ -61,6 +64,7 @@ const DateInput = ({
     <KeyboardDatePicker
       autoOk
       className={classes.datePicker}
+      disableFuture={disableFuture}
       disableToolbar
       format="MM/DD/yyyy"
       fullWidth

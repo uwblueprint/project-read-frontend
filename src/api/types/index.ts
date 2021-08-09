@@ -42,10 +42,6 @@ export type EnrolmentRequest = Pick<Enrolment, "id" | "status" | "students"> & {
   enrolled_class: number | null;
 };
 
-export type InteractionResponse = Interaction & {
-  user: UserResponse;
-};
-
 export type FamilyDetailResponse = Pick<
   Family,
   | DefaultFieldKey.ADDRESS
@@ -58,11 +54,11 @@ export type FamilyDetailResponse = Pick<
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
   | "parent"
+  | "interactions"
 > & {
   children: Student[];
   current_enrolment: EnrolmentResponse | null;
   guests: Student[];
-  interactions: InteractionResponse[];
 };
 
 export type FamilyListResponse = Pick<
@@ -113,6 +109,7 @@ export type FamilyRequest = FamilyBaseRequest & {
   children: StudentRequest[];
   guests: StudentRequest[];
   parent: StudentRequest;
+  interactions: Interaction[];
 };
 
 export type EnrolmentFamilyRequest = Pick<Enrolment, "status"> & {

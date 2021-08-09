@@ -380,6 +380,7 @@ describe("when text fields are submitted", () => {
           },
         ],
         home_number: TEST_PARENT_HOME_NUMBER,
+        interactions: [],
         notes: TEST_NOTES,
         parent: {
           date_of_birth: moment(TEST_PARENT_DOB, "MMDDYYYY").format(

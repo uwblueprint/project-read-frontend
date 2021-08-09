@@ -24,6 +24,8 @@ import StudentForm from "components/families/family-form/student-form";
 import {
   EnrolmentFormData,
   FamilyFormData,
+} from "components/families/family-form/types";
+import {
   familyFormDataToFamilyRequest,
   familyResponseToFamilyFormData,
 } from "components/families/family-form/utils";
@@ -73,6 +75,7 @@ const defaultFamilyData: FamilyFormData = {
   parent: { ...defaultStudentData },
   children: [{ ...defaultStudentData, index: 0 }],
   guests: [],
+  interactions: [],
 };
 
 export const defaultEnrolmentData = {
