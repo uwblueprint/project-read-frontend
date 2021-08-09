@@ -9,6 +9,7 @@ import {
 import CheckIcon from "@material-ui/icons/Check";
 import { makeStyles } from "@material-ui/styles";
 import _ from "lodash";
+import moment from "moment";
 import MUIDataTable, {
   MUIDataTableColumn,
   MUIDataTableOptions,
@@ -38,22 +39,12 @@ const useStyles = makeStyles(() => ({
     marginRight: 15,
     textTransform: "none",
   },
+  checkmark: {
+    height: "20px",
+    width: "20px",
+    marginLeft: "8px",
+  },
 }));
-
-const monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
 
 const AttendanceTable = ({
   classObj,
@@ -106,7 +97,7 @@ const AttendanceTable = ({
         className={classes.button}
       >
         {!isEditing ? "Take attendance " : "Done attendance "}
-        <CheckIcon />
+        <CheckIcon className={classes.checkmark} />
       </Button>
     ),
   };
@@ -120,37 +111,36 @@ const AttendanceTable = ({
         last_name: family.parent.last_name,
       };
       data.attendance.forEach((currClass) => {
-        parentRow[currClass.date] =
-          currClass.attendees.filter((id) => id === family.parent.id).length > 0
-            ? "yes"
-            : "no";
+        parentRow[currClass.date] = currClass.attendees.includes(
+          family.parent.id
+        )
+          ? "yes"
+          : "no";
       });
       rows.push(parentRow);
       family.children.forEach((child) => {
         const childRow: AttendanceTableRow = {
           id: child.id.toString(),
-          first_name: child.first_name,
+          first_name: `${child.first_name} (child)`,
           last_name: child.last_name,
         };
         data.attendance.forEach((currClass) => {
-          childRow[currClass.date] =
-            currClass.attendees.filter((id) => id === child.id).length > 0
-              ? "yes"
-              : "no";
+          childRow[currClass.date] = currClass.attendees.includes(child.id)
+            ? "yes"
+            : "no";
         });
         rows.push(childRow);
       });
       family.guests.forEach((guest) => {
         const guestRow: AttendanceTableRow = {
           id: guest.id.toString(),
-          first_name: guest.first_name,
+          first_name: `${guest.first_name} (guest)`,
           last_name: guest.last_name,
         };
         data.attendance.forEach((currClass) => {
-          guestRow[currClass.date] =
-            currClass.attendees.filter((id) => id === guest.id).length > 0
-              ? "yes"
-              : "no";
+          guestRow[currClass.date] = currClass.attendees.includes(guest.id)
+            ? "yes"
+            : "no";
         });
         rows.push(guestRow);
       });
@@ -178,12 +168,9 @@ const AttendanceTable = ({
     const dateColumns: MUIDataTableColumn[] = data.attendance.map(
       (currClass) => {
         // eslint-disable-next-line prefer-template
-        const currDate = new Date(currClass.date + " ");
         const dateColumn: MUIDataTableColumn = {
           name: currClass.date,
-          label: `${monthNames[currDate.getMonth()]} ${String(
-            currDate.getDate()
-          )}`,
+          label: moment(currClass.date).format("MMM D"),
           options: {
             customBodyRender: (value, tableMeta) => (
               <Checkbox

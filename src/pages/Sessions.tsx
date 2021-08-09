@@ -45,7 +45,7 @@ const isOnAllClassesTab = (classTabIndex: number) =>
   classTabIndex === ALL_CLASSES_TAB_INDEX;
 
 const useStyles = makeStyles(() => ({
-  input: {
+  registerButton: {
     marginLeft: "20px",
   },
 }));
@@ -175,7 +175,7 @@ const Sessions = () => {
 
   useEffect(() => {
     setIsTakingAttendance(false);
-  }, [isOnAttendanceView]);
+  }, [isOnAttendanceView, classTabIndex]);
 
   const onSubmitAttendance = async (classObj: ClassRequest) => {
     const updatedClass = await ClassAPI.putClass(classObj);
@@ -297,7 +297,7 @@ const Sessions = () => {
         </Box>
         {selectedSession && (
           <>
-            {classTabIndex !== 0 && (
+            {classTabIndex !== ALL_CLASSES_TAB_INDEX && (
               <FormControl variant="outlined">
                 <InputLabel id="view">View</InputLabel>
                 <Select
@@ -325,7 +325,7 @@ const Sessions = () => {
               <Button
                 variant="outlined"
                 onClick={handleOpenFormDialog}
-                className={classes.input}
+                className={classes.registerButton}
               >
                 Add a client &nbsp;
                 <Add />
