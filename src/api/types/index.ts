@@ -65,6 +65,7 @@ export type FamilyDetailResponse = Pick<
 export type FamilyListResponse = Pick<
   Family,
   | DefaultFieldKey.CHILDREN
+  | DefaultFieldKey.GUESTS
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.ID
   | DefaultFieldKey.NUM_CHILDREN

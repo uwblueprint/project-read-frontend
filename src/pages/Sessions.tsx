@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
+import { makeStyles } from "@material-ui/styles";
 import { useHistory, useParams } from "react-router-dom";
 
 import ClassAPI from "api/ClassAPI";
@@ -43,12 +44,19 @@ const NEW_SESSION = -1;
 const isOnAllClassesTab = (classTabIndex: number) =>
   classTabIndex === ALL_CLASSES_TAB_INDEX;
 
+const useStyles = makeStyles(() => ({
+  input: {
+    marginLeft: "20px",
+  },
+}));
+
 type Params = {
   classId: string | undefined;
   sessionId: string | undefined;
 };
 
 const Sessions = () => {
+  const classes = useStyles();
   const history = useHistory();
   const { classId, sessionId } = useParams<Params>();
   const [sessions, setSessions] = useState<SessionListResponse[]>([]);
@@ -61,8 +69,8 @@ const Sessions = () => {
   );
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
-  const [attendanceView, setAttendanceView] = useState(false);
-  const [isTakingAttendance, setIsTakingAttendance] = useState(false);
+  const [isOnAttendanceView, setAttendanceView] = useState(false);
+  const [isEditingAttendance, setIsTakingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [
     selectedFamily,
@@ -167,7 +175,7 @@ const Sessions = () => {
 
   useEffect(() => {
     setIsTakingAttendance(false);
-  }, [attendanceView]);
+  }, [isOnAttendanceView]);
 
   const onSubmitAttendance = async (classObj: ClassRequest) => {
     const updatedClass = await ClassAPI.putClass(classObj);
@@ -175,7 +183,7 @@ const Sessions = () => {
       (prevMap) =>
         new Map([...Array.from(prevMap), [classObj.id, updatedClass]])
     );
-    setIsTakingAttendance(!isTakingAttendance);
+    setIsTakingAttendance(!isEditingAttendance);
   };
 
   const onSelectFamily = async (id: number) => {
@@ -214,11 +222,11 @@ const Sessions = () => {
 
   const getClassView = () => {
     const selectedClass = classesMap.get(classTabIndex);
-    if (attendanceView && selectedClass) {
+    if (isOnAttendanceView && selectedClass) {
       return (
         <AttendanceTable
           classObj={selectedClass}
-          isEditing={isTakingAttendance}
+          isEditing={isEditingAttendance}
           onSubmit={onSubmitAttendance}
         />
       );
@@ -295,7 +303,7 @@ const Sessions = () => {
                 id="select"
                 label="view"
                 labelId="view"
-                value={!attendanceView ? "default" : "attendance"}
+                value={!isOnAttendanceView ? "default" : "attendance"}
               >
                 <MenuItem
                   value="default"
@@ -315,7 +323,7 @@ const Sessions = () => {
               <Button
                 variant="outlined"
                 onClick={handleOpenFormDialog}
-                style={{ marginLeft: "20px", height: "56px" }}
+                className={classes.input}
               >
                 Add a client &nbsp;
                 <Add />

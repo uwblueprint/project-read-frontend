@@ -6,6 +6,8 @@ import {
   createMuiTheme,
   MuiThemeProvider,
 } from "@material-ui/core";
+import CheckIcon from "@material-ui/icons/Check";
+import { makeStyles } from "@material-ui/styles";
 import _ from "lodash";
 import MUIDataTable, {
   MUIDataTableColumn,
@@ -13,12 +15,13 @@ import MUIDataTable, {
 } from "mui-datatables";
 
 import { ClassDetailResponse, ClassRequest } from "api/types";
+import DefaultFieldKey from "constants/DefaultFieldKey";
 
 type AttendanceTableRow = {
   id: string;
   first_name: string;
   last_name: string;
-  [key: string]: string;
+  [key: string]: string; // array of dates and student's attendance is represented as "yes" or "no"
 };
 
 type AttendanceTableProps = {
@@ -26,6 +29,16 @@ type AttendanceTableProps = {
   isEditing: boolean;
   onSubmit: (data: ClassRequest) => void;
 };
+
+const useStyles = makeStyles(() => ({
+  button: {
+    order: -1,
+    height: 36,
+    marginTop: 5,
+    marginRight: 15,
+    textTransform: "none",
+  },
+}));
 
 const monthNames = [
   "Jan",
@@ -47,6 +60,7 @@ const AttendanceTable = ({
   isEditing,
   onSubmit,
 }: AttendanceTableProps) => {
+  const classes = useStyles();
   const [data, setData] = useState<ClassRequest>(_.cloneDeep(classObj));
   const [tableRows, setTableRows] = useState<AttendanceTableRow[]>([]);
 
@@ -81,8 +95,7 @@ const AttendanceTable = ({
 
   const options: MUIDataTableOptions = {
     responsive: "standard",
-    rowsPerPage: 25,
-    rowsPerPageOptions: [25, 50, 100],
+    pagination: false,
     selectableRows: "none",
     elevation: 0,
     customToolbar: () => (
@@ -90,18 +103,17 @@ const AttendanceTable = ({
         variant="outlined"
         color={!isEditing ? "default" : "primary"}
         onClick={() => onSubmit(data)}
-        style={{ order: -1, height: 36, marginTop: 5, marginRight: 15 }}
+        className={classes.button}
       >
-        {!isEditing ? "Take Attendance " : "Done Attendance "}
-        &#10003;
+        {!isEditing ? "Take attendance " : "Done attendance "}
+        <CheckIcon />
       </Button>
     ),
   };
 
   const getTableRows = (): AttendanceTableRow[] => {
-    const rows: AttendanceTableRow[][] = [];
-    const currFamily = classObj.families.flatMap((family) => {
-      const familyNames: AttendanceTableRow[] = [];
+    const rows: AttendanceTableRow[] = [];
+    classObj.families.forEach((family) => {
       const parentRow: AttendanceTableRow = {
         id: family.parent.id.toString(),
         first_name: `${family.parent.first_name} (parent)`,
@@ -113,7 +125,7 @@ const AttendanceTable = ({
             ? "yes"
             : "no";
       });
-      familyNames.push(parentRow);
+      rows.push(parentRow);
       family.children.forEach((child) => {
         const childRow: AttendanceTableRow = {
           id: child.id.toString(),
@@ -126,12 +138,24 @@ const AttendanceTable = ({
               ? "yes"
               : "no";
         });
-        familyNames.push(childRow);
+        rows.push(childRow);
       });
-      return familyNames;
+      family.guests.forEach((guest) => {
+        const guestRow: AttendanceTableRow = {
+          id: guest.id.toString(),
+          first_name: guest.first_name,
+          last_name: guest.last_name,
+        };
+        data.attendance.forEach((currClass) => {
+          guestRow[currClass.date] =
+            currClass.attendees.filter((id) => id === guest.id).length > 0
+              ? "yes"
+              : "no";
+        });
+        rows.push(guestRow);
+      });
     });
-    rows.push(currFamily);
-    return rows.flat();
+    return rows;
   };
 
   useEffect(() => {
@@ -140,59 +164,58 @@ const AttendanceTable = ({
 
   const getTableColumns = (): MUIDataTableColumn[] => {
     const idColumn: MUIDataTableColumn = {
-      name: "id",
+      name: DefaultFieldKey.ID,
       options: { display: "excluded" },
     };
     const firstNameColumn: MUIDataTableColumn = {
-      name: "first_name",
+      name: DefaultFieldKey.FIRST_NAME,
       label: "First Name",
     };
     const lastNameColumn: MUIDataTableColumn = {
-      name: "last_name",
+      name: DefaultFieldKey.LAST_NAME,
       label: "Last Name",
     };
-    const dateColumns: MUIDataTableColumn[] = [];
-    data.attendance.forEach((currClass) => {
-      // eslint-disable-next-line prefer-template
-      const currDate = new Date(currClass.date + " ");
-      const dateColumn: MUIDataTableColumn = {
-        name: currClass.date,
-        label: `${monthNames[currDate.getMonth()]} ${String(
-          currDate.getDate()
-        )}`,
-        options: {
-          customBodyRender: (value, tableMeta) => (
-            <Checkbox
-              checked={value === "yes"}
-              disabled={!isEditing}
-              color="primary"
-              inputProps={{ "aria-label": "secondary checkbox" }}
-              onChange={() =>
-                handleCheckboxOnClick(
-                  Number(tableMeta.rowData[0]),
-                  currDate.toISOString().split("T")[0]
-                )
-              }
-            />
-          ),
-        },
-      };
-      dateColumns.push(dateColumn);
-    });
+    const dateColumns: MUIDataTableColumn[] = data.attendance.map(
+      (currClass) => {
+        // eslint-disable-next-line prefer-template
+        const currDate = new Date(currClass.date + " ");
+        const dateColumn: MUIDataTableColumn = {
+          name: currClass.date,
+          label: `${monthNames[currDate.getMonth()]} ${String(
+            currDate.getDate()
+          )}`,
+          options: {
+            customBodyRender: (value, tableMeta) => (
+              <Checkbox
+                checked={value === "yes"}
+                disabled={!isEditing}
+                color="primary"
+                inputProps={{ "aria-label": "attendance date checkbox" }}
+                onChange={() =>
+                  handleCheckboxOnClick(
+                    Number(tableMeta.rowData[0]),
+                    currClass.date
+                  )
+                }
+              />
+            ),
+          },
+        };
+        return dateColumn;
+      }
+    );
     return [idColumn, firstNameColumn, lastNameColumn].concat(dateColumns);
   };
 
   return (
-    <>
-      <MuiThemeProvider theme={getMuiTheme()}>
-        <MUIDataTable
-          title=""
-          data={tableRows}
-          columns={getTableColumns()}
-          options={options}
-        />
-      </MuiThemeProvider>
-    </>
+    <MuiThemeProvider theme={getMuiTheme()}>
+      <MUIDataTable
+        title=""
+        data={tableRows}
+        columns={getTableColumns()}
+        options={options}
+      />
+    </MuiThemeProvider>
   );
 };
 
