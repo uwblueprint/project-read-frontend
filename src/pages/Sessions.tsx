@@ -297,28 +297,30 @@ const Sessions = () => {
         </Box>
         {selectedSession && (
           <>
-            <FormControl variant="outlined">
-              <InputLabel id="view">View</InputLabel>
-              <Select
-                id="select"
-                label="view"
-                labelId="view"
-                value={!isOnAttendanceView ? "default" : "attendance"}
-              >
-                <MenuItem
-                  value="default"
-                  onClick={() => setAttendanceView(false)}
+            {classTabIndex !== 0 && (
+              <FormControl variant="outlined">
+                <InputLabel id="view">View</InputLabel>
+                <Select
+                  id="select"
+                  label="view"
+                  labelId="view"
+                  value={!isOnAttendanceView ? "default" : "attendance"}
                 >
-                  Default view
-                </MenuItem>
-                <MenuItem
-                  value="attendance"
-                  onClick={() => setAttendanceView(true)}
-                >
-                  Attendance view
-                </MenuItem>
-              </Select>
-            </FormControl>
+                  <MenuItem
+                    value="default"
+                    onClick={() => setAttendanceView(false)}
+                  >
+                    Default view
+                  </MenuItem>
+                  <MenuItem
+                    value="attendance"
+                    onClick={() => setAttendanceView(true)}
+                  >
+                    Attendance view
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            )}
             <Box flexShrink={0}>
               <Button
                 variant="outlined"
