@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontWeight: 700,
-    fontSize: 16,
+    fontSize: 18,
     paddingBottom: 20,
     paddingTop: 20,
   },
@@ -232,7 +232,7 @@ const FamilySidebar = ({
       {isLoading && <SpinnerOverlay />}
 
       <Box padding={3} paddingBottom={isEditingFamily ? 10 : 3}>
-        <Typography variant="h2">
+        <Typography component="h2" variant="h3">
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
 
@@ -344,7 +344,6 @@ const FamilySidebar = ({
         </Typography>
         <InputBase
           className={classes.notes}
-          defaultValue=""
           disabled={isEditing}
           fullWidth
           inputProps={{ "aria-label": "notes" }}

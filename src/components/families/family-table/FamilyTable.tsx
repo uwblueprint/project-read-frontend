@@ -36,6 +36,7 @@ const options: MUIDataTableOptions = {
 const stickyColumnStyles = {
   backgroundColor: "inherit",
   left: 0,
+  maxWidth: stickyColumnWidth,
   minWidth: stickyColumnWidth,
   position: "sticky",
   zIndex: 101,

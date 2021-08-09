@@ -52,6 +52,7 @@ const useStyles = makeStyles<Theme, Pick<Props, "dense">>((theme) => ({
 type Props = {
   dense?: boolean;
   field: (DefaultField & { role: StudentRole }) | DynamicField;
+  index?: number | null;
   isEditing: boolean;
   onChange: (value: string) => void;
   value: string;
@@ -60,19 +61,21 @@ type Props = {
 
 const defaultProps = {
   dense: false,
+  index: null,
   variant: FieldVariant.DEFAULT,
 };
 
 const Field = ({
   dense,
   field,
+  index,
   isEditing,
   onChange,
   value,
   variant,
 }: Props) => {
   const classes = useStyles({ dense });
-  const id = `${field.role} ${field.name}`;
+  const id = `${field.role} ${index || ""} ${field.name} `;
 
   const compact = variant === FieldVariant.COMPACT;
 

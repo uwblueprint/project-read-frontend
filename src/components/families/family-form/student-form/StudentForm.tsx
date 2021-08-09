@@ -155,6 +155,7 @@ const StudentForm = ({
             <Box flex="auto">
               <Field
                 field={{ ...DefaultFields.FIRST_NAME, role }}
+                index={i}
                 onChange={(value) =>
                   onUpdateStudent(i, { ...student, first_name: value })
                 }
@@ -163,6 +164,7 @@ const StudentForm = ({
               />
               <Field
                 field={{ ...DefaultFields.LAST_NAME, role }}
+                index={i}
                 onChange={(value) =>
                   onUpdateStudent(i, { ...student, last_name: value })
                 }
@@ -171,6 +173,7 @@ const StudentForm = ({
               />
               <Field
                 field={{ ...DefaultFields.DATE_OF_BIRTH, role }}
+                index={i}
                 onChange={(value) => {
                   const dob = value || null;
                   onUpdateStudent(i, {
@@ -184,6 +187,7 @@ const StudentForm = ({
               <StudentDynamicFields
                 dense={dense}
                 dynamicFields={dynamicFields}
+                index={i}
                 information={student.information}
                 isEditing={isEditing}
                 onChange={(value) =>

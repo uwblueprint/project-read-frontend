@@ -42,8 +42,9 @@ const useStyles = makeStyles<Theme, Pick<Props, "dense" | "variant">>(() => ({
     fontSize: ({ dense }) => (dense ? 14 : 16),
   },
   labelContainer: ({ dense, variant }) => ({
+    flexShrink: 0,
+    paddingRight: 16,
     width: 144,
-    paddingRight: 2,
     ...(dense && denseStyles.labelContainer),
     ...(variant === FieldVariant.STACKED && stackedStyles.labelContainer),
   }),

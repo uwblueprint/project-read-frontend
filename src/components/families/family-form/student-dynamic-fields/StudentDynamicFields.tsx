@@ -7,15 +7,21 @@ import { DynamicField } from "types";
 type Props = {
   dense: boolean;
   dynamicFields: DynamicField[];
+  index?: number | null;
   information: Record<number, string>;
   isEditing: boolean;
   onChange: (data: Record<number, string>) => void;
   variant: FieldVariant;
 };
 
+const defaultProps = {
+  index: null,
+};
+
 const StudentDynamicFields = ({
   dense,
   dynamicFields,
+  index,
   information,
   isEditing,
   onChange,
@@ -25,6 +31,7 @@ const StudentDynamicFields = ({
     {dynamicFields.map((field) => (
       <Field
         dense={dense}
+        index={index}
         isEditing={isEditing}
         key={field.id}
         field={field}
@@ -40,5 +47,7 @@ const StudentDynamicFields = ({
     ))}
   </>
 );
+
+StudentDynamicFields.defaultProps = defaultProps;
 
 export default StudentDynamicFields;

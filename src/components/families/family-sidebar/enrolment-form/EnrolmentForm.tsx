@@ -101,7 +101,7 @@ const EnrolmentForm = ({ enrolment, onChange }: Props) => {
             {Object.values(EnrolmentStatus)
               .filter((status) => status !== EnrolmentStatus.UNASSIGNED)
               .map((status) => (
-                <MenuItem value={status}>
+                <MenuItem key={status} value={status}>
                   <StatusChip className={classes.statusChip} status={status} />
                 </MenuItem>
               ))}
