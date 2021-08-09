@@ -276,45 +276,55 @@ const FamilySidebar = ({
             <Typography variant="h3" className={classes.heading}>
               Recent interactions
             </Typography>
-            {familyFormData.interactions
-              // sort with most recent interaction first
-              .sort((a, b) => moment(b.date).diff(moment(a.date), "days"))
-              .map((interaction, index) => (
-                <InteractionCard
-                  key={interaction.index}
-                  disabled={isEditing}
-                  interaction={interaction}
-                  onDelete={async () => {
-                    saveFamily(
-                      {
-                        ...familyFormData,
-                        interactions: familyFormData.interactions.filter(
-                          (value) => value.index !== interaction.index
-                        ),
-                      },
-                      false
-                    );
-                  }}
-                  onSubmit={async (data) => {
-                    const interactions = [...familyFormData.interactions];
-                    interactions[index] = data;
-                    saveFamily(
-                      {
-                        ...familyFormData,
-                        interactions,
-                      },
-                      false
-                    );
-                  }}
-                  onToggleEdit={() => {
-                    const interactions = [...familyFormData.interactions];
-                    interactions[index].isEditing = true;
-                    setFamilyFormData({ ...familyFormData, interactions });
-                  }}
-                  users={users}
-                />
-              ))}
+            {familyFormData.interactions.length > 0 ? (
+              familyFormData.interactions
+                // sort with most recent interaction first
+                .sort((a, b) => moment(b.date).diff(moment(a.date), "days"))
+                .map((interaction, index) => (
+                  <InteractionCard
+                    key={interaction.index}
+                    disabled={isEditing}
+                    interaction={interaction}
+                    onDelete={async () => {
+                      saveFamily(
+                        {
+                          ...familyFormData,
+                          interactions: familyFormData.interactions.filter(
+                            (value) => value.index !== interaction.index
+                          ),
+                        },
+                        false
+                      );
+                    }}
+                    onSubmit={async (data) => {
+                      const interactions = [...familyFormData.interactions];
+                      interactions[index] = data;
+                      saveFamily(
+                        {
+                          ...familyFormData,
+                          interactions,
+                        },
+                        false
+                      );
+                    }}
+                    onToggleEdit={() => {
+                      const interactions = [...familyFormData.interactions];
+                      interactions[index].isEditing = true;
+                      setFamilyFormData({ ...familyFormData, interactions });
+                    }}
+                    users={users}
+                  />
+                ))
+            ) : (
+              <Box paddingLeft={2} paddingBottom={1}>
+                <Typography variant="body2">No recent interactions</Typography>
+              </Box>
+            )}
           </Box>
+        </Box>
+
+        <Box paddingTop={2}>
+          <Divider />
         </Box>
 
         <Typography variant="h3" className={classes.heading}>
