@@ -20,11 +20,8 @@ import { Add, Edit } from "@material-ui/icons";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
-import {
-  FamilyDetailResponse,
-  FamilyRequest,
-  EnrolmentRequest,
-} from "api/types";
+import FamilyAPI from "api/FamilyAPI";
+import { EnrolmentRequest, FamilyDetailResponse } from "api/types";
 import {
   familyFormDataToFamilyRequest,
   familyResponseToFamilyFormData,
@@ -93,7 +90,7 @@ type Props = {
   family: FamilyDetailResponse;
   isOpen: boolean;
   onEditCurrentEnrolment: (enrolment: EnrolmentRequest) => void;
-  onSaveFamily: (family: FamilyRequest) => void;
+  onSaveFamily: (family: FamilyDetailResponse, refetch: boolean) => void;
   onClose: () => void;
 };
 
@@ -140,8 +137,19 @@ const FamilySidebar = ({
     return () => {};
   }, [isOpen]);
 
-  const saveFamily = (data: FamilyFormData) => {
-    onSaveFamily(familyFormDataToFamilyRequest(data));
+  const saveFamily = async (data: FamilyFormData, refetch: boolean) => {
+    try {
+      onSaveFamily(
+        await FamilyAPI.putFamily({
+          ...familyFormDataToFamilyRequest(data),
+          id: family.id,
+        }),
+        refetch
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
+    }
   };
 
   // Family form =============================================================
@@ -187,9 +195,9 @@ const FamilySidebar = ({
   // Notes ====================================================================
 
   const debouncedSaveFamily = useCallback(
-    debounce(async (notes: string) => {
-      saveFamily({ ...familyFormData, notes });
-    }, 500),
+    debounce((notes: string) => {
+      saveFamily({ ...familyFormData, notes }, false);
+    }, 1000),
     []
   );
 
@@ -277,28 +285,26 @@ const FamilySidebar = ({
                   disabled={isEditing}
                   interaction={interaction}
                   onDelete={async () => {
-                    const prevNumInteractions =
-                      familyFormData.interactions.length;
-                    const interactions = familyFormData.interactions.filter(
-                      (value) => value.index !== interaction.index
+                    saveFamily(
+                      {
+                        ...familyFormData,
+                        interactions: familyFormData.interactions.filter(
+                          (value) => value.index !== interaction.index
+                        ),
+                      },
+                      false
                     );
-                    await setFamilyFormData({
-                      ...familyFormData,
-                      interactions,
-                    });
-                    // make a request only if the interaction previously existed in the backend
-                    if (interactions.length !== prevNumInteractions) {
-                      saveFamily(familyFormData);
-                    }
                   }}
                   onSubmit={async (data) => {
                     const interactions = [...familyFormData.interactions];
                     interactions[index] = data;
-                    await setFamilyFormData({
-                      ...familyFormData,
-                      interactions,
-                    });
-                    saveFamily(familyFormData);
+                    saveFamily(
+                      {
+                        ...familyFormData,
+                        interactions,
+                      },
+                      false
+                    );
                   }}
                   onToggleEdit={() => {
                     const interactions = [...familyFormData.interactions];
@@ -321,9 +327,9 @@ const FamilySidebar = ({
           fullWidth
           inputProps={{ "aria-label": "notes" }}
           multiline
-          onChange={async (e) => {
+          onChange={(e) => {
             const notes = e.target.value;
-            await setFamilyFormData({
+            setFamilyFormData({
               ...familyFormData,
               notes,
             });

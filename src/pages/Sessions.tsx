@@ -24,7 +24,6 @@ import {
   FamilyListResponse,
   FamilyDetailResponse,
   EnrolmentRequest,
-  FamilyRequest,
 } from "api/types";
 import Spinner from "components/common/spinner";
 import SpinnerOverlay from "components/common/spinner-overlay";
@@ -170,14 +169,14 @@ const Sessions = () => {
     });
   };
 
-  const onSaveFamily = async (data: FamilyRequest) => {
-    if (selectedFamily === null) {
-      return;
+  const onSaveFamily = async (
+    family: FamilyDetailResponse,
+    refetch: boolean
+  ) => {
+    setSelectedFamily(family);
+    if (refetch) {
+      resetSession();
     }
-    setSelectedFamily(
-      await FamilyAPI.putFamily({ ...data, id: selectedFamily.id })
-    );
-    resetSession();
   };
 
   const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
