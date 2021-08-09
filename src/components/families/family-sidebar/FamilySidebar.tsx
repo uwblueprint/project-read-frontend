@@ -22,6 +22,7 @@ import moment from "moment";
 
 import FamilyAPI from "api/FamilyAPI";
 import { EnrolmentRequest, FamilyDetailResponse } from "api/types";
+import SpinnerOverlay from "components/common/spinner-overlay";
 import {
   familyFormDataToFamilyRequest,
   familyResponseToFamilyFormData,
@@ -109,6 +110,7 @@ const FamilySidebar = ({
     familyResponseToFamilyFormData(family)
   );
   const [isEditingFamily, setIsEditingFamily] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEditing =
     isEditingFamily ||
@@ -130,6 +132,7 @@ const FamilySidebar = ({
   useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", handleClick);
+      setIsEditingFamily(false);
       return () => {
         document.removeEventListener("mousedown", handleClick);
       };
@@ -137,19 +140,22 @@ const FamilySidebar = ({
     return () => {};
   }, [isOpen]);
 
-  const saveFamily = async (data: FamilyFormData, refetch: boolean) => {
+  const saveFamily = async (
+    data: FamilyFormData,
+    refetch: boolean
+  ): Promise<boolean> => {
     try {
-      onSaveFamily(
-        await FamilyAPI.putFamily({
-          ...familyFormDataToFamilyRequest(data),
-          id: family.id,
-        }),
-        refetch
-      );
+      const res = await FamilyAPI.putFamily({
+        ...familyFormDataToFamilyRequest(data),
+        id: family.id,
+      });
+      onSaveFamily(res, refetch);
     } catch (err) {
       // eslint-disable-next-line no-alert
       alert(err);
+      return false;
     }
+    return true;
   };
 
   // Family form =============================================================
@@ -169,9 +175,13 @@ const FamilySidebar = ({
     setIsEditingFamily(editing);
   };
 
-  const onSubmitFamilyForm = () => {
-    // TODO: make PUT request
-    setIsEditingFamily(false);
+  const onSubmitFamilyForm = async () => {
+    setIsLoading(true);
+    const success = await saveFamily(familyFormData, true);
+    if (success) {
+      setIsEditingFamily(false);
+    }
+    setIsLoading(false);
   };
 
   // Interactions =============================================================
@@ -219,6 +229,8 @@ const FamilySidebar = ({
       }}
       PaperProps={{ ref: sidebar }}
     >
+      {isLoading && <SpinnerOverlay />}
+
       <Box padding={3} paddingBottom={isEditingFamily ? 10 : 3}>
         <Typography variant="h2">
           {family.parent.first_name} {family.parent.last_name}
@@ -348,6 +360,7 @@ const FamilySidebar = ({
           value={familyFormData.notes}
         />
       </Box>
+
       {isEditingFamily && (
         <Box
           alignContent="end"
