@@ -16,9 +16,6 @@ const denseStyles = (theme: Theme) => ({
     fontSize: 14,
     height: 32,
   },
-  multipleSelectValueChip: {
-    height: 22,
-  },
   select: {
     paddingBottom: 8,
     paddingTop: 8,
@@ -31,19 +28,11 @@ const useStyles = makeStyles<Theme, { dense: boolean | undefined }>(
       height: 56,
       ...(dense && denseStyles(theme).input),
     }),
-    label: ({ dense }) => (dense ? denseStyles(theme).label : {}),
-    menuItem: ({ dense }) => (dense ? denseStyles(theme).menuItem : {}),
-    multipleSelectCheckbox: {
-      marginRight: 8,
-      padding: 0,
-      "& svg": {
-        height: 20,
-        width: 20,
-      },
-    },
-    multipleSelectValueChip: ({ dense }) => ({
-      marginRight: 4,
-      ...(dense && denseStyles(theme).multipleSelectValueChip),
+    label: ({ dense }) => ({
+      ...(dense && denseStyles(theme).label),
+    }),
+    menuItem: ({ dense }) => ({
+      ...(dense && denseStyles(theme).menuItem),
     }),
     select: ({ dense }) => ({
       ...(dense && denseStyles(theme).select),
