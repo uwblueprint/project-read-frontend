@@ -75,7 +75,7 @@ const FormRow = ({
   const classes = useStyles({ dense, variant });
 
   const inputLabelProps =
-    questionType === QuestionType.MULTIPLE_CHOICE ? { id } : { htmlFor: id };
+    questionType === QuestionType.SELECT ? { id } : { htmlFor: id };
 
   return (
     <div className={classes.formRow}>
@@ -96,7 +96,9 @@ const FormRow = ({
           </InputLabel>
         }
       </div>
-      <Box flexGrow={1}>{children}</Box>
+      <Box flexGrow={1} overflow="hidden" textOverflow="clip">
+        {children}
+      </Box>
     </div>
   );
 };

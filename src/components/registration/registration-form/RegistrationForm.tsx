@@ -216,7 +216,7 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
         <FormRow
           id="preferred-class"
           label="What are your preferred dates?"
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
           variant={FieldVariant.STACKED}
         >
           <Select
@@ -264,7 +264,7 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
         <FormRow
           id="status"
           label="Which status would you like to assign?"
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
           variant={FieldVariant.STACKED}
         >
           <Select

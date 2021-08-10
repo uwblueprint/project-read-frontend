@@ -2,13 +2,13 @@ import React from "react";
 
 import {
   Box,
+  Checkbox,
+  Chip,
   MenuItem,
   OutlinedInput,
   Select,
-  Theme,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
 import moment from "moment";
 
 import DateInput from "components/common/date-input";
@@ -18,36 +18,7 @@ import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DefaultField, DynamicField } from "types";
 
-const denseStyles = (theme: Theme) => ({
-  input: {
-    backgroundColor: theme.palette.background.paper,
-    fontSize: 14,
-    paddingBottom: 0,
-    paddingTop: 0,
-    height: 32,
-  },
-  label: {
-    fontSize: 14,
-  },
-  menuItem: {
-    fontSize: 14,
-    height: 32,
-  },
-  select: {
-    paddingBottom: 8,
-    paddingTop: 8,
-  },
-});
-
-const useStyles = makeStyles<Theme, Pick<Props, "dense">>((theme) => ({
-  input: ({ dense }) => (dense ? denseStyles(theme).input : {}),
-  label: ({ dense }) => (dense ? denseStyles(theme).label : {}),
-  menuItem: ({ dense }) => (dense ? denseStyles(theme).menuItem : {}),
-  select: ({ dense }) => (dense ? denseStyles(theme).select : {}),
-  selectPlaceholder: {
-    color: "rgba(0, 0, 0, 0.38)",
-  },
-}));
+import useStyles from "./styles";
 
 type Props = {
   dense?: boolean;
@@ -76,8 +47,9 @@ const Field = ({
 }: Props) => {
   const classes = useStyles({ dense });
   const id = `${field.role} ${index || ""} ${field.name} `;
-
   const compact = variant === FieldVariant.COMPACT;
+  const valueArray: string[] = value.split("\n");
+  const valueString: string = valueArray.join(", ");
 
   if (!isEditing) {
     return (
@@ -88,11 +60,15 @@ const Field = ({
           </Typography>
         </Box>
         <Box>
-          <Typography variant="body2">{value}</Typography>
+          <Typography variant="body2">{valueString}</Typography>
         </Box>
       </Box>
     );
   }
+
+  const dynamicOptions = [...valueArray].filter(
+    (val) => val && !field.options.includes(val)
+  );
 
   return (
     <FormRow
@@ -113,10 +89,10 @@ const Field = ({
               inputProps={{ "data-testid": id }}
               placeholder={compact ? field.name : ""}
               onChange={(e) => onChange(e.target.value)}
-              value={value}
+              value={valueString}
             />
           ),
-          [QuestionType.MULTIPLE_CHOICE]: (
+          [QuestionType.SELECT]: (
             <Select
               aria-label={field.name}
               className={classes.input}
@@ -124,19 +100,35 @@ const Field = ({
               fullWidth
               inputProps={{ "data-testid": id, className: classes.select }}
               labelId={id}
+              MenuProps={{
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "left",
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "left",
+                },
+                getContentAnchorEl: null,
+              }}
               onChange={(e) => onChange(e.target.value as string)}
-              value={value}
+              value={valueString}
               variant="outlined"
             >
               <MenuItem value="" className={classes.menuItem}>
-                {compact ? (
-                  <span className={classes.selectPlaceholder}>
-                    {field.name}
-                  </span>
-                ) : (
-                  "Select"
-                )}
+                <span className={classes.selectPlaceholder}>
+                  {compact ? field.name : "Select"}
+                </span>
               </MenuItem>
+              {valueString && !field.options.includes(valueString) && (
+                <MenuItem
+                  key={valueString}
+                  value={valueString}
+                  className={classes.menuItem}
+                >
+                  {valueString}
+                </MenuItem>
+              )}
               {field.options.map((option) => (
                 <MenuItem
                   key={option}
@@ -148,6 +140,68 @@ const Field = ({
               ))}
             </Select>
           ),
+          [QuestionType.MULTIPLE_SELECT]: (
+            <Select
+              aria-label={field.name}
+              className={classes.input}
+              displayEmpty
+              fullWidth
+              inputProps={{
+                "data-testid": id,
+                className: classes.select,
+              }}
+              labelId={id}
+              MenuProps={{
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "left",
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "left",
+                },
+                getContentAnchorEl: null,
+              }}
+              multiple
+              onChange={(e) =>
+                onChange((e.target.value as string[]).join("\n"))
+              }
+              renderValue={(val) => {
+                const values = val as string[];
+                if (!values.length) {
+                  return (
+                    <span className={classes.selectPlaceholder}>
+                      {compact ? field.name : "Select"}
+                    </span>
+                  );
+                }
+                return (values as string[]).map((selectedOption) => (
+                  <Chip
+                    label={selectedOption}
+                    className={classes.multipleSelectValueChip}
+                  />
+                ));
+              }}
+              value={value.length ? value.split("\n") : []}
+              variant="outlined"
+            >
+              {field.options.concat(dynamicOptions).map((option) => (
+                <MenuItem
+                  key={option}
+                  value={option}
+                  className={classes.menuItem}
+                >
+                  <Checkbox
+                    checked={valueArray.includes(option)}
+                    color="primary"
+                  />
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          ),
+          // there are no date dynamic fields, so array/string values don't
+          // need to be handled here
           [QuestionType.DATE]: (
             <DateInput
               dense={dense}

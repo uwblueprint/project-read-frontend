@@ -84,7 +84,7 @@ const EnrolmentForm = ({ enrolment, onChange }: Props) => {
           dense
           id={`${baseId}-status`}
           label="Status"
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
         >
           <Select
             input={<InputBase className={classes.input} />}

@@ -42,7 +42,7 @@ const EnrolmentFormRow = ({ children, id, label, link }: Props) => {
           dense
           id={`${baseId}-${id}`}
           label={label}
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
         >
           {children}
         </FormRow>
