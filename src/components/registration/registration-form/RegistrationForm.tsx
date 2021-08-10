@@ -8,6 +8,7 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
@@ -41,6 +42,9 @@ const useStyles = makeStyles(() => ({
   heading: {
     marginBottom: 24,
     marginTop: 32,
+  },
+  placeholder: {
+    color: grey[500],
   },
   sessionLabel: {
     fontSize: 24,
@@ -233,7 +237,9 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
             value={enrolment.preferred_class || ""}
             variant="outlined"
           >
-            <MenuItem value="">Select</MenuItem>
+            <MenuItem value="">
+              <span className={classes.placeholder}>Select</span>
+            </MenuItem>
             {session.classes.map((classObj) => (
               <MenuItem key={classObj.id} value={classObj.id.toString()}>
                 {classObj.name}

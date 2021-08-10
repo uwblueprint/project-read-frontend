@@ -1,4 +1,5 @@
 import { Theme } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
 const denseStyles = (theme: Theme) => ({
@@ -38,7 +39,7 @@ const useStyles = makeStyles<Theme, { dense: boolean | undefined }>(
       ...(dense && denseStyles(theme).select),
     }),
     selectPlaceholder: {
-      color: "rgba(0, 0, 0, 0.38)",
+      color: grey[500],
     },
   })
 );
