@@ -152,7 +152,7 @@ const StudentForm = ({
                 )}
               </Box>
             )}
-            <Box flex="auto">
+            <Box flex="auto" width={isEditing && dense ? 224 : null}>
               <Field
                 field={{ ...DefaultFields.FIRST_NAME, role }}
                 index={i}

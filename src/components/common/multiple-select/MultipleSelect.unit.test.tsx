@@ -33,15 +33,15 @@ describe("StatusChip", () => {
     fireEvent.mouseDown(getByRole("button"));
     const options = getAllByRole("option");
     expect(options).toHaveLength(3);
-    expect(options[0]).toHaveTextContent("dogs");
-    expect(options[1]).toHaveTextContent("cats");
-    expect(options[2]).toHaveTextContent("frogs");
+    expect(options[0]).toHaveTextContent("frogs");
+    expect(options[1]).toHaveTextContent("dogs");
+    expect(options[2]).toHaveTextContent("cats");
   });
 
   it("calls onChange with a newline separated string when selecting a value", () => {
     fireEvent.mouseDown(getByRole("button"));
     const options = getAllByRole("option");
-    fireEvent.click(options[1]);
+    fireEvent.click(options[2]);
     expect(onChange).toBeCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith(`dogs\nfrogs\ncats`);
   });
@@ -49,7 +49,7 @@ describe("StatusChip", () => {
   it("calls onChange with a newline separated string when deselecting a value", () => {
     fireEvent.mouseDown(getByRole("button"));
     const options = getAllByRole("option");
-    fireEvent.click(options[2]);
+    fireEvent.click(options[0]);
     expect(onChange).toBeCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith("dogs");
   });

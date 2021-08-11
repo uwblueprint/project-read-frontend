@@ -38,35 +38,23 @@ const MultipleSelect = ({
         className: classes.select,
       }}
       labelId={id}
-      MenuProps={{
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "left",
-        },
-        transformOrigin: {
-          vertical: "top",
-          horizontal: "left",
-        },
-        getContentAnchorEl: null,
-      }}
       multiple
       onChange={(e) => onChange((e.target.value as string[]).join("\n"))}
-      renderValue={() => {
-        if (!values.length) {
-          return (
-            <span className={classes.placeholder}>
-              {compact ? label : "Select"}
-            </span>
-          );
-        }
-        return values.map((valueText) => (
-          <Chip key={valueText} label={valueText} className={classes.chip} />
-        ));
-      }}
+      renderValue={() =>
+        values.length ? (
+          values.map((valueText) => (
+            <Chip key={valueText} label={valueText} className={classes.chip} />
+          ))
+        ) : (
+          <span className={classes.placeholder}>
+            {compact ? label : "Select"}
+          </span>
+        )
+      }
       value={values}
       variant="outlined"
     >
-      {options.concat(dynamicOptions).map((option) => (
+      {dynamicOptions.concat(options).map((option) => (
         <MenuItem key={option} value={option} className={classes.menuItem}>
           <Checkbox
             checked={values.includes(option)}
