@@ -59,8 +59,8 @@ const MultipleSelect = ({
             </span>
           );
         }
-        return values.map((selectedOption) => (
-          <Chip label={selectedOption} className={classes.chip} />
+        return values.map((valueText) => (
+          <Chip key={valueText} label={valueText} className={classes.chip} />
         ));
       }}
       value={values}
