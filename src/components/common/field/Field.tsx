@@ -94,17 +94,6 @@ const Field = ({
               fullWidth
               inputProps={{ "data-testid": id, className: classes.select }}
               labelId={id}
-              MenuProps={{
-                anchorOrigin: {
-                  vertical: "bottom",
-                  horizontal: "left",
-                },
-                transformOrigin: {
-                  vertical: "top",
-                  horizontal: "left",
-                },
-                getContentAnchorEl: null,
-              }}
               onChange={(e) => onChange(e.target.value as string)}
               value={valueText}
               variant="outlined"
