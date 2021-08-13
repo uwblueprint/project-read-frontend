@@ -140,6 +140,7 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
         ...enrolment,
         family: familyResponse.id,
         enrolled_class: null,
+        // TODO: select students who are attending the session
         students: [familyResponse.parent.id],
       });
       onRegister(familyResponse);
