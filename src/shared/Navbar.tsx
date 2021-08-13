@@ -5,11 +5,15 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccountCircle } from "@material-ui/icons";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import app from "firebase/config";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  link: {
+    color: theme.palette.text.primary,
+    textDecoration: "none",
+  },
   navbar: {
     backgroundColor: "#F3F3F3",
   },
@@ -42,6 +46,7 @@ function Navbar() {
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
+            onClick={handleClose}
             onClose={handleClose}
             getContentAnchorEl={null}
             anchorOrigin={{
@@ -53,6 +58,9 @@ function Navbar() {
               horizontal: "right",
             }}
           >
+            <Link to="/fields" className={classes.link}>
+              <MenuItem>Configure global questions</MenuItem>
+            </Link>
             <MenuItem
               onClick={() => {
                 handleClose();

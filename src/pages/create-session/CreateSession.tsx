@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -11,7 +11,9 @@ import {
 import { NavigateBefore } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
+import FormEditor from "components/form-editor";
 import SessionConfig from "components/sessions/session-config";
+import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
 enum CreateSessionStepLabel {
   ADD_CLASSES = "Add classes",
@@ -27,15 +29,41 @@ const steps = [
 
 const CreateSession = () => {
   const history = useHistory();
+  const {
+    parentDynamicFields,
+    childDynamicFields,
+    guestDynamicFields,
+    sessionDynamicFields,
+  } = useContext(DynamicFieldsContext);
+
   const [session, setSession] = useState<{
     name: string;
     startDate: Date | null;
+    fields: number[];
   }>({
     name: "",
     startDate: null,
+    fields: [],
   });
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeStep = steps[activeStepIndex];
+
+  useEffect(() => {
+    setSession({
+      ...session,
+      fields: [
+        ...parentDynamicFields.map((field) => field.id),
+        ...childDynamicFields.map((field) => field.id),
+        ...guestDynamicFields.map((field) => field.id),
+        ...sessionDynamicFields.map((field) => field.id),
+      ],
+    });
+  }, [
+    parentDynamicFields,
+    childDynamicFields,
+    guestDynamicFields,
+    sessionDynamicFields,
+  ]);
 
   const goToSessions = () => {
     history.push("/sessions");
@@ -79,6 +107,15 @@ const CreateSession = () => {
           />
         );
       case CreateSessionStepLabel.CONFIGURE_FORM:
+        return (
+          <FormEditor
+            isReadOnly
+            enabledFieldIds={session.fields}
+            onChangeEnabledFieldIds={(fields) =>
+              setSession({ ...session, fields })
+            }
+          />
+        );
       // fall through
       case CreateSessionStepLabel.ADD_CLASSES:
       // fall through
