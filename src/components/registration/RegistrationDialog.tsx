@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 
 import {
   Box,
@@ -13,16 +13,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
 
 import FamilyAPI from "api/FamilyAPI";
-import {
-  FamilyDetailResponse,
-  FamilySearchResponse,
-  SessionDetailResponse,
-} from "api/types";
+import { FamilySearchResponse } from "api/types";
 import RoundedOutlinedButton from "components/common/rounded-outlined-button";
 import FamilySearchResultsTable from "components/family-search/family-search-results-table";
 import StudentSearchBar from "components/family-search/student-search-bar";
-
-import RegistrationForm from "./registration-form";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -45,10 +39,16 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   open: boolean;
   onClose: () => void;
-  session: SessionDetailResponse;
+  onSelectFamily: (id: number | null) => void;
+  registrationForm: ReactNode;
 };
 
-const RegistrationDialog = ({ open, onClose, session }: Props) => {
+const RegistrationDialog = ({
+  open,
+  onClose,
+  onSelectFamily,
+  registrationForm,
+}: Props) => {
   const classes = useStyles();
   const [shouldDisplaySearch, setShouldDisplaySearch] = useState(true);
   const [firstName, setFirstName] = useState("");
@@ -59,18 +59,13 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
   const [shouldDisplayFamilyResults, setShouldDisplayFamilyResults] = useState(
     false
   );
-  const [
-    selectedFamily,
-    setSelectedFamily,
-  ] = useState<FamilyDetailResponse | null>(null);
 
   const resetDialog = () => {
     setFirstName("");
     setLastName("");
+    setShouldDisplaySearch(true);
     setShouldDisplayFamilyResults(false);
     setFamilyResults([]);
-    setSelectedFamily(null);
-    setShouldDisplaySearch(true);
   };
 
   useEffect(() => {
@@ -84,9 +79,9 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
     );
   };
 
-  const onSelectFamily = async (id: number) => {
-    setSelectedFamily(await FamilyAPI.getFamilyById(id));
+  const handleSelectFamily = (id: number | null) => {
     setShouldDisplaySearch(false);
+    onSelectFamily(id);
   };
 
   return (
@@ -131,7 +126,7 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
                 </Typography>
                 <FamilySearchResultsTable
                   families={familyResults}
-                  onSelectFamily={onSelectFamily}
+                  onSelectFamily={handleSelectFamily}
                 />
                 <Typography variant="h4" className={classes.dialogSubheading}>
                   Not found?
@@ -139,9 +134,7 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
               </>
             )}
             <Box marginTop={2}>
-              <RoundedOutlinedButton
-                onClick={() => setShouldDisplaySearch(false)}
-              >
+              <RoundedOutlinedButton onClick={() => handleSelectFamily(null)}>
                 Register a new client
               </RoundedOutlinedButton>
             </Box>
@@ -152,11 +145,7 @@ const RegistrationDialog = ({ open, onClose, session }: Props) => {
               <NavigateBefore />
               Go back
             </Button>
-            <RegistrationForm
-              existingFamily={selectedFamily}
-              onSubmit={resetDialog}
-              session={session}
-            />
+            {registrationForm}
           </>
         )}
       </DialogContent>

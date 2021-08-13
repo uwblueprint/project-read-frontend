@@ -121,6 +121,12 @@ export type EnrolmentFamilyRequest = Pick<Enrolment, "status"> & {
   preferred_class: number | null;
 };
 
+export type EnrolmentFamilyResponse = Pick<Enrolment, "status"> & {
+  family: FamilyDetailResponse;
+  session: number;
+  preferred_class: number | null;
+};
+
 export type DynamicFieldsResponse = {
   parent_fields: DynamicField[];
   child_fields: DynamicField[];

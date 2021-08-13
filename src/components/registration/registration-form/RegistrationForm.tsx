@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -14,6 +14,7 @@ import EnrolmentAPI from "api/EnrolmentAPI";
 import {
   StudentRequest,
   SessionDetailResponse,
+  EnrolmentFamilyResponse,
   FamilyDetailResponse,
 } from "api/types";
 import FormRow from "components/common/form-row";
@@ -74,17 +75,18 @@ const defaultFamilyData: FamilyFormData = {
   guests: [],
 };
 
-type RegistrationFormProps = {
+export const defaultEnrolmentData = {
+  preferred_class: null,
+  status: EnrolmentStatus.REGISTERED,
+};
+
+type Props = {
   existingFamily: FamilyDetailResponse | null;
-  onSubmit: () => void;
+  onRegister: (enrolment: EnrolmentFamilyResponse) => void;
   session: SessionDetailResponse;
 };
 
-const RegistrationForm = ({
-  existingFamily,
-  onSubmit,
-  session,
-}: RegistrationFormProps) => {
+const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
   const classes = useStyles();
   const {
     childDynamicFields,
@@ -94,40 +96,47 @@ const RegistrationForm = ({
   } = useContext(DynamicFieldsContext);
 
   const [enrolment, setEnrolment] = useState<EnrolmentFormData>({
-    family:
-      existingFamily !== null
-        ? familyResponseToFamilyFormData(existingFamily)
-        : defaultFamilyData,
-    preferred_class: null,
+    family: { ...defaultFamilyData },
     session: session.id,
-    status: EnrolmentStatus.REGISTERED,
+    ...defaultEnrolmentData,
   });
+
+  useEffect(() => {
+    setEnrolment({
+      family:
+        existingFamily !== null
+          ? familyResponseToFamilyFormData(existingFamily)
+          : defaultFamilyData,
+      session: session.id,
+      ...defaultEnrolmentData,
+    });
+  }, [existingFamily]);
 
   const getSessionDynamicFields = (dynamicFields: DynamicField[]) =>
     dynamicFields.filter((dynamicField) =>
       session.fields.includes(dynamicField.id)
     );
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (existingFamily === null) {
       try {
-        await EnrolmentAPI.postEnrolment({
-          ...enrolment,
-          family: familyFormDataToFamilyRequest(enrolment.family),
-        });
+        onRegister(
+          await EnrolmentAPI.postEnrolment({
+            ...enrolment,
+            family: familyFormDataToFamilyRequest(enrolment.family),
+          })
+        );
       } catch (err) {
         // eslint-disable-next-line no-alert
         alert(err);
-        return;
       }
     }
-    // TODO: if there was an existing family, make a PUT request
-    onSubmit();
+    // TODO: if there was an existing family, make a PUT request and call onRegister
   };
 
   return (
-    <form data-testid={TestId.RegistrationForm} onSubmit={handleSubmit}>
+    <form data-testid={TestId.RegistrationForm} onSubmit={onSubmit}>
       <Typography
         variant="body1"
         data-testid={TestId.SessionLabel}
