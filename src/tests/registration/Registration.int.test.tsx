@@ -7,7 +7,11 @@ import userEvent from "@testing-library/user-event";
 import moment from "moment";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
-import { EnrolmentFamilyResponse, SessionDetailResponse } from "api/types";
+import {
+  EnrolmentResponse,
+  FamilyDetailResponse,
+  SessionDetailResponse,
+} from "api/types";
 import RegistrationForm, {
   TestId,
 } from "components/registration/registration-form/RegistrationForm";
@@ -24,9 +28,20 @@ import {
   TEST_PARENT_DYNAMIC_FIELD,
   TEST_SESSION_DYNAMIC_FIELD,
 } from "./constants";
+import FamilyAPI from "api/FamilyAPI";
 
 describe("RegistrationForm", () => {
-  it("structures the data in the required format", async () => {
+  it("creates a family and enrolment when registering a new family", async () => {
+    jest.spyOn(FamilyAPI, "postFamily").mockResolvedValue({
+      id: 1,
+      parent: {
+        id: 2,
+      },
+    } as FamilyDetailResponse);
+    jest
+      .spyOn(EnrolmentAPI, "postEnrolment")
+      .mockResolvedValue({} as EnrolmentResponse);
+
     const session: SessionDetailResponse = {
       classes: [
         { id: 1, name: "Class 1", colour: "FFFFFF" },
@@ -43,11 +58,7 @@ describe("RegistrationForm", () => {
       name: "Fall 2021",
       start_date: "2021-09-01",
     };
-
-    jest
-      .spyOn(EnrolmentAPI, "postEnrolment")
-      .mockResolvedValue({} as EnrolmentFamilyResponse);
-    const onSubmit = jest.fn(() => {});
+    const onRegister = jest.fn(() => {});
     const { getByLabelText, getByRole, getByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DynamicFieldsContext.Provider
@@ -60,7 +71,7 @@ describe("RegistrationForm", () => {
         >
           <RegistrationForm
             existingFamily={null}
-            onRegister={onSubmit}
+            onRegister={onRegister}
             session={session}
           />
         </DynamicFieldsContext.Provider>
@@ -201,61 +212,66 @@ describe("RegistrationForm", () => {
 
     fireEvent.click(getByRole("button", { name: "Done" }));
 
+    await waitFor(() => expect(FamilyAPI.postFamily).toHaveBeenCalledTimes(1));
+    expect(FamilyAPI.postFamily).toHaveBeenCalledWith({
+      address: TestValue.Address,
+      cell_number: TestValue.CellNumber,
+      children: [
+        {
+          date_of_birth: moment(TestValue.ChildDob, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
+          first_name: TestValue.ChildFirstName,
+          information: {
+            [TEST_CHILD_DYNAMIC_FIELD.id]: TestValue.ChildFavouriteColour,
+          },
+          last_name: TestValue.LastName,
+        },
+      ],
+      email: TestValue.Email,
+      guests: [
+        {
+          date_of_birth: moment(TestValue.GuestDob, "MMDDYYYY").format(
+            "YYYY-MM-DD"
+          ),
+          first_name: TestValue.GuestFirstName,
+          information: {
+            [TEST_GUEST_DYNAMIC_FIELD.id]: TestValue.GuestFavouriteColour,
+          },
+          last_name: TestValue.LastName,
+        },
+      ],
+      home_number: TestValue.HomeNumber,
+      interactions: [],
+      notes: TestValue.Notes,
+      parent: {
+        date_of_birth: moment(TestValue.ParentDob, "MMDDYYYY").format(
+          "YYYY-MM-DD"
+        ),
+        first_name: TestValue.ParentFirstName,
+        information: {
+          [TEST_PARENT_DYNAMIC_FIELD.id]: TestValue.ParentFavouriteColour,
+          [TEST_SESSION_DYNAMIC_FIELD.id]: TestValue.TimeInCanada,
+        },
+        last_name: TestValue.LastName,
+      },
+      preferred_comms: "",
+      preferred_number: "",
+      work_number: TestValue.WorkNumber,
+    });
+
     await waitFor(() =>
       expect(EnrolmentAPI.postEnrolment).toHaveBeenCalledTimes(1)
     );
     expect(EnrolmentAPI.postEnrolment).toHaveBeenCalledWith({
-      family: {
-        address: TestValue.Address,
-        cell_number: TestValue.CellNumber,
-        children: [
-          {
-            date_of_birth: moment(TestValue.ChildDob, "MMDDYYYY").format(
-              "YYYY-MM-DD"
-            ),
-            first_name: TestValue.ChildFirstName,
-            information: {
-              [TEST_CHILD_DYNAMIC_FIELD.id]: TestValue.ChildFavouriteColour,
-            },
-            last_name: TestValue.LastName,
-          },
-        ],
-        email: TestValue.Email,
-        guests: [
-          {
-            date_of_birth: moment(TestValue.GuestDob, "MMDDYYYY").format(
-              "YYYY-MM-DD"
-            ),
-            first_name: TestValue.GuestFirstName,
-            information: {
-              [TEST_GUEST_DYNAMIC_FIELD.id]: TestValue.GuestFavouriteColour,
-            },
-            last_name: TestValue.LastName,
-          },
-        ],
-        home_number: TestValue.HomeNumber,
-        interactions: [],
-        notes: TestValue.Notes,
-        parent: {
-          date_of_birth: moment(TestValue.ParentDob, "MMDDYYYY").format(
-            "YYYY-MM-DD"
-          ),
-          first_name: TestValue.ParentFirstName,
-          information: {
-            [TEST_PARENT_DYNAMIC_FIELD.id]: TestValue.ParentFavouriteColour,
-            [TEST_SESSION_DYNAMIC_FIELD.id]: TestValue.TimeInCanada,
-          },
-          last_name: TestValue.LastName,
-        },
-        preferred_comms: "",
-        preferred_number: "",
-        work_number: TestValue.WorkNumber,
-      },
+      enrolled_class: null,
+      family: 1,
       preferred_class: session.classes[1].id,
       session: session.id,
       status: EnrolmentStatus.SIGNED_UP,
+      students: [2],
     });
 
-    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onRegister).toHaveBeenCalledTimes(1);
   });
 });

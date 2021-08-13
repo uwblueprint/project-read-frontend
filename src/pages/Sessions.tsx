@@ -358,11 +358,11 @@ const Sessions = () => {
                 ) : (
                   <RegistrationForm
                     existingFamily={selectedFamily}
-                    onRegister={(enrolment) => {
+                    onRegister={(family) => {
                       setDisplayRegDialog(false);
                       setClassTabIndex(ALL_CLASSES_TAB_INDEX);
                       setSnackbarMessage(
-                        `Successfully added ${enrolment.family.parent.first_name} ${enrolment.family.parent.last_name} to this session.`
+                        `Successfully added ${family.parent.first_name} ${family.parent.last_name} to this session.`
                       );
                       updateSelectedSession(selectedSession.id);
                     }}
