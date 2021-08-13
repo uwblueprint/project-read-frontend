@@ -105,9 +105,7 @@ export type FamilyBaseRequest = Pick<
   | DefaultFieldKey.WORK_NUMBER
 >;
 
-export type SessionRequest = {
-  name: string;
-  startDate: Date | null;
+export type SessionRequest = Pick<Session, "name" | "start_date" | "fields"> & {
   classes: ClassListRequest[];
 };
 
