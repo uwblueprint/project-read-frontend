@@ -1,10 +1,12 @@
 import React from "react";
 
 import MomentUtils from "@date-io/moment";
+import { ThemeProvider } from "@material-ui/core";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { fireEvent, render } from "@testing-library/react";
 
 import { TestId as SessionConfigTestId } from "components/sessions/session-config/SessionConfig";
+import theme from "theme";
 
 import CreateSession from "./CreateSession";
 
@@ -14,9 +16,11 @@ describe("CreateSession", () => {
 
   beforeEach(() => {
     ({ getByRole, getByTestId } = render(
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <CreateSession />
-      </MuiPickersUtilsProvider>
+      <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <CreateSession />
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
     ));
   });
 
