@@ -1,6 +1,7 @@
 import * as APIUtils from "./APIUtils";
 import {
   EnrolmentFamilyRequest,
+  EnrolmentFamilyResponse,
   EnrolmentRequest,
   EnrolmentResponse,
 } from "./types";
@@ -16,8 +17,8 @@ export const enrolmentResponseToRequest = (
 
 const postEnrolment = (
   data: EnrolmentFamilyRequest
-): Promise<EnrolmentResponse> =>
-  APIUtils.post("/enrolments/", data) as Promise<EnrolmentResponse>;
+): Promise<EnrolmentFamilyResponse> =>
+  APIUtils.post("/enrolments/", data) as Promise<EnrolmentFamilyResponse>;
 
 const putEnrolment = (data: EnrolmentRequest): Promise<EnrolmentResponse> =>
   APIUtils.put(`/enrolments/${data.id}/`, data) as Promise<EnrolmentResponse>;

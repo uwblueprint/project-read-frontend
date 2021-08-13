@@ -7,6 +7,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Snackbar,
   Typography,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
@@ -26,6 +27,7 @@ import {
 } from "api/types";
 import FamilySidebar from "components/families/family-sidebar";
 import FamilyTable from "components/families/family-table";
+import RegistrationForm from "components/registration/registration-form";
 import RegistrationDialog from "components/registration/RegistrationDialog";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
@@ -61,8 +63,10 @@ const Sessions = () => {
     selectedFamily,
     setSelectedFamily,
   ] = useState<FamilyDetailResponse | null>(null);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const updateSelectedSession = async (id: number) => {
+    await setIsLoadingSession(true);
     await setSelectedSession(await SessionAPI.getSession(id));
     setIsLoadingSession(false);
   };
@@ -92,7 +96,6 @@ const Sessions = () => {
   };
 
   useEffect(() => {
-    setIsLoadingSession(true);
     if (sessionId !== undefined) {
       updateSelectedSession(Number(sessionId));
     }
@@ -144,10 +147,9 @@ const Sessions = () => {
     return classObj !== undefined ? classObj.families : [];
   };
 
-  const onSelectFamily = async (id: number) => {
-    const family = await FamilyAPI.getFamilyById(id);
+  const onSelectFamily = async (id: number | null) => {
+    const family = id ? await FamilyAPI.getFamilyById(id) : null;
     setSelectedFamily(family);
-    setIsSidebarOpen(true);
   };
 
   const onEditFamily = async () => {
@@ -174,6 +176,15 @@ const Sessions = () => {
     <>
       <Box display="flex">
         <Box display="flex" flexGrow={1} alignItems="center">
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            autoHideDuration={5000}
+            message={snackbarMessage}
+            onClose={() => {
+              setSnackbarMessage("");
+            }}
+            open={snackbarMessage !== ""}
+          />
           <Box mr={3}>
             <Typography variant="h1">Session:</Typography>
           </Box>
@@ -210,7 +221,21 @@ const Sessions = () => {
             <RegistrationDialog
               open={displayRegDialog}
               onClose={handleCloseFormDialog}
-              session={selectedSession}
+              onSelectFamily={onSelectFamily}
+              registrationForm={
+                <RegistrationForm
+                  existingFamily={selectedFamily}
+                  onRegister={(enrolment) => {
+                    setDisplayRegDialog(false);
+                    setClassTabIndex(ALL_CLASSES_TAB_INDEX);
+                    setSnackbarMessage(
+                      `Successfully added ${enrolment.family.parent.first_name} ${enrolment.family.parent.last_name} to this session.`
+                    );
+                    updateSelectedSession(selectedSession.id);
+                  }}
+                  session={selectedSession}
+                />
+              }
             />
           </>
         )}
@@ -230,7 +255,10 @@ const Sessions = () => {
                     : []
                 }
                 shouldDisplayDynamicFields={false}
-                onSelectFamily={onSelectFamily}
+                onSelectFamily={async (id) => {
+                  onSelectFamily(id);
+                  setIsSidebarOpen(true);
+                }}
               />
               {selectedFamily && (
                 <FamilySidebar

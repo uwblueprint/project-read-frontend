@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 import moment from "moment";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
-import { SessionDetailResponse } from "api/types";
+import { EnrolmentFamilyResponse, SessionDetailResponse } from "api/types";
 import DefaultFields from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
 import QuestionType from "constants/QuestionType";
@@ -34,7 +34,7 @@ describe("when the registration form is opened", () => {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <RegistrationForm
           existingFamily={null}
-          onSubmit={() => {}}
+          onRegister={() => {}}
           session={session}
         />
       </MuiPickersUtilsProvider>
@@ -151,7 +151,7 @@ describe("when text fields are submitted", () => {
         >
           <RegistrationForm
             existingFamily={null}
-            onSubmit={() => {}}
+            onRegister={() => {}}
             session={session}
           />
         </DynamicFieldsContext.Provider>
@@ -175,8 +175,8 @@ describe("when text fields are submitted", () => {
   it("structures the data in the required format", async () => {
     const session: SessionDetailResponse = {
       classes: [
-        { id: 1, name: "Class 1" },
-        { id: 2, name: "Class 2" },
+        { id: 1, name: "Class 1", colour: "FFFFFF" },
+        { id: 2, name: "Class 2", colour: "FFFFFF" },
       ],
       families: [],
       fields: [
@@ -190,7 +190,9 @@ describe("when text fields are submitted", () => {
       start_date: "2021-09-01",
     };
 
-    jest.spyOn(EnrolmentAPI, "postEnrolment").mockResolvedValue({});
+    jest
+      .spyOn(EnrolmentAPI, "postEnrolment")
+      .mockResolvedValue({} as EnrolmentFamilyResponse);
     const onSubmit = jest.fn(() => {});
     const { getByLabelText, getByRole, getByTestId } = render(
       <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -204,7 +206,7 @@ describe("when text fields are submitted", () => {
         >
           <RegistrationForm
             existingFamily={null}
-            onSubmit={onSubmit}
+            onRegister={onSubmit}
             session={session}
           />
         </DynamicFieldsContext.Provider>

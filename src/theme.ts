@@ -56,6 +56,17 @@ const theme = createMuiTheme({
         wordBreak: "break-word",
       },
     },
+    MuiSnackbar: {
+      root: {
+        top: "80px !important",
+      },
+    },
+    MuiSnackbarContent: {
+      root: {
+        backgroundColor: "#ECE0FD",
+        color: defaultTheme.palette.text.primary,
+      },
+    },
     MuiTab: {
       root: {
         minWidth: 0,
