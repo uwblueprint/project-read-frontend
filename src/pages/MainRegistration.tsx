@@ -9,6 +9,7 @@ import {
   FamilyDetailResponse,
   FamilyListResponse,
 } from "api/types";
+import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
 import FamilyTable from "components/families/family-table";
 import DefaultFields from "constants/DefaultFields";
@@ -20,8 +21,13 @@ const MainRegistration = () => {
     selectedFamily,
     setSelectedFamily,
   ] = useState<FamilyDetailResponse | null>(null);
+  const [isLoadingFamilies, setIsLoadingFamilies] = useState(true);
 
-  const resetFamilies = async () => setFamilies(await FamilyAPI.getFamilies());
+  const resetFamilies = async () => {
+    setIsLoadingFamilies(true);
+    setFamilies(await FamilyAPI.getFamilies());
+    setIsLoadingFamilies(false);
+  };
 
   useEffect(() => {
     resetFamilies();
@@ -53,6 +59,7 @@ const MainRegistration = () => {
 
   return (
     <>
+      {isLoadingFamilies && <SpinnerOverlay />}
       <Typography variant="h1">Main registration</Typography>
       <FamilyTable
         families={families}
