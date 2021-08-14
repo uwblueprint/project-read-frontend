@@ -36,6 +36,7 @@ const options: MUIDataTableOptions = {
 const stickyColumnStyles = {
   backgroundColor: "inherit",
   left: 0,
+  maxWidth: stickyColumnWidth,
   minWidth: stickyColumnWidth,
   position: "sticky",
   zIndex: 101,
@@ -146,7 +147,7 @@ const FamilyTable = ({
     label: field.name,
     options: {
       display: field.is_default && (!isDynamic || shouldDisplayDynamicFields),
-      filter: field.question_type === QuestionType.MULTIPLE_CHOICE,
+      filter: field.question_type === QuestionType.SELECT,
       searchable: field.question_type === QuestionType.TEXT,
       customBodyRender: (value) => (
         <Typography noWrap variant="body2">
