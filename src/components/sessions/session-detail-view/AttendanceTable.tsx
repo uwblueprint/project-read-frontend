@@ -167,7 +167,6 @@ const AttendanceTable = ({
     };
     const dateColumns: MUIDataTableColumn[] = data.attendance.map(
       (currClass) => {
-        // eslint-disable-next-line prefer-template
         const dateColumn: MUIDataTableColumn = {
           name: currClass.date,
           label: moment(currClass.date).format("MMM D"),
