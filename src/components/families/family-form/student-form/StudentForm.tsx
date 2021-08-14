@@ -20,6 +20,7 @@ import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
 
 import StudentDynamicFields from "../student-dynamic-fields";
+import { StudentFormData } from "../types";
 
 // unique identifier for children form components
 let CHILD_KEY_COUNTER = 1;
@@ -79,8 +80,6 @@ export const generateKey = (
   }
   return key;
 };
-
-export type StudentFormData = StudentRequest & { index: number };
 
 const defaultStudentData: StudentRequest = {
   [DefaultFieldKey.FIRST_NAME]: "",
