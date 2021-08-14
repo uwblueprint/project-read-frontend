@@ -39,11 +39,14 @@ const MainRegistration = () => {
     setIsSidebarOpen(true);
   };
 
-  const onEditFamily = async () => {
-    if (selectedFamily === null) {
-      return;
+  const onSaveFamily = async (
+    family: FamilyDetailResponse,
+    refetch: boolean
+  ) => {
+    setSelectedFamily(family);
+    if (refetch) {
+      resetFamilies();
     }
-    resetFamilies();
   };
 
   const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
@@ -77,7 +80,7 @@ const MainRegistration = () => {
           family={selectedFamily}
           onClose={() => setIsSidebarOpen(false)}
           onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
-          onEditFamily={onEditFamily}
+          onSaveFamily={onSaveFamily}
         />
       )}
     </>

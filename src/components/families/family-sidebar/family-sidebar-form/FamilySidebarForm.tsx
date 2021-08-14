@@ -6,10 +6,8 @@ import { makeStyles } from "@material-ui/styles";
 import { FamilyRequest } from "api/types";
 import FamilyParentFields from "components/families/family-form/family-parent-fields";
 import StudentForm from "components/families/family-form/student-form";
-import {
-  FamilyFormData,
-  familyFormDataToFamilyRequest,
-} from "components/families/family-form/utils";
+import { FamilyFormData } from "components/families/family-form/types";
+import { familyFormDataToFamilyRequest } from "components/families/family-form/utils";
 import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 

@@ -162,8 +162,21 @@ const Sessions = () => {
     setIsLoadingFamily(false);
   };
 
-  const onEditFamily = async () => {
-    // TODO: make put request
+  const resetSession = () => {
+    updateSelectedSession(selectedSession!.id);
+    classesMap.forEach(({ id }) => {
+      resetClass(id);
+    });
+  };
+
+  const onSaveFamily = async (
+    family: FamilyDetailResponse,
+    refetch: boolean
+  ) => {
+    setSelectedFamily(family);
+    if (refetch) {
+      resetSession();
+    }
   };
 
   const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
@@ -174,12 +187,7 @@ const Sessions = () => {
       ...selectedFamily,
       current_enrolment: await EnrolmentAPI.putEnrolment(data),
     });
-    if (selectedSession) {
-      updateSelectedSession(selectedSession.id);
-    }
-    classesMap.forEach(({ id }) => {
-      resetClass(id);
-    });
+    resetSession();
   };
 
   return (
@@ -281,7 +289,7 @@ const Sessions = () => {
                   family={selectedFamily}
                   onClose={() => setIsSidebarOpen(false)}
                   onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
-                  onEditFamily={onEditFamily}
+                  onSaveFamily={onSaveFamily}
                 />
               )}
             </>
