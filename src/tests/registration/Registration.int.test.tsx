@@ -7,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 import moment from "moment";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
+import FamilyAPI from "api/FamilyAPI";
 import {
   EnrolmentResponse,
   FamilyDetailResponse,
@@ -28,7 +29,6 @@ import {
   TEST_PARENT_DYNAMIC_FIELD,
   TEST_SESSION_DYNAMIC_FIELD,
 } from "./constants";
-import FamilyAPI from "api/FamilyAPI";
 
 describe("RegistrationForm", () => {
   it("creates a family and enrolment when registering a new family", async () => {
