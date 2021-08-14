@@ -5,6 +5,6 @@ const getClass = (id: number): Promise<ClassDetailResponse> =>
   APIUtils.get(`/classes/${id}`) as Promise<ClassDetailResponse>;
 
 const putClass = (data: ClassRequest): Promise<ClassDetailResponse> =>
-  APIUtils.put(`/classes/${data.id}/`, data);
+  APIUtils.put(`/classes/${data.id}/`, data) as Promise<ClassDetailResponse>;
 
 export default { getClass, putClass };
