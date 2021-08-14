@@ -32,6 +32,7 @@ import {
 
 describe("RegistrationForm", () => {
   it("creates a family and enrolment when registering a new family", async () => {
+    jest.setTimeout(10000);
     jest.spyOn(FamilyAPI, "postFamily").mockResolvedValue({
       id: 1,
       parent: {
