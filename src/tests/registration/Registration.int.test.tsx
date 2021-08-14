@@ -32,12 +32,13 @@ import {
 
 describe("RegistrationForm", () => {
   it("creates a family and enrolment when registering a new family", async () => {
-    jest.setTimeout(10000);
     jest.spyOn(FamilyAPI, "postFamily").mockResolvedValue({
       id: 1,
       parent: {
         id: 2,
       },
+      children: [{ id: 3 }],
+      guests: [{ id: 4 }],
     } as FamilyDetailResponse);
     jest
       .spyOn(EnrolmentAPI, "postEnrolment")
@@ -270,9 +271,9 @@ describe("RegistrationForm", () => {
       preferred_class: session.classes[1].id,
       session: session.id,
       status: EnrolmentStatus.SIGNED_UP,
-      students: [2],
+      students: [2, 3, 4],
     });
 
     expect(onRegister).toHaveBeenCalledTimes(1);
-  });
+  }, 15000);
 });

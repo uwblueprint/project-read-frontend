@@ -141,7 +141,11 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
         family: familyResponse.id,
         enrolled_class: null,
         // TODO: select students who are attending the session
-        students: [familyResponse.parent.id],
+        students: [
+          familyResponse.parent.id,
+          ...familyResponse.children.map((child) => child.id),
+          ...familyResponse.guests.map((guest) => guest.id),
+        ],
       });
       onRegister(familyResponse);
     } catch (err) {
