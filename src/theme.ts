@@ -116,6 +116,19 @@ const theme = createMuiTheme({
     MuiButton: {
       disableElevation: true,
     },
+    MuiSelect: {
+      MenuProps: {
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "left",
+        },
+        transformOrigin: {
+          vertical: "top",
+          horizontal: "left",
+        },
+        getContentAnchorEl: null,
+      },
+    },
   },
   typography: {
     h1: {

@@ -56,7 +56,11 @@ const ClassSelect = ({ id, onChange, options, value }: Props) => {
         None
       </MenuItem>
       {options?.map((option) => (
-        <MenuItem className={classes.menuItem} value={option.id}>
+        <MenuItem
+          key={option.id}
+          className={classes.menuItem}
+          value={option.id}
+        >
           {option.name}
         </MenuItem>
       ))}

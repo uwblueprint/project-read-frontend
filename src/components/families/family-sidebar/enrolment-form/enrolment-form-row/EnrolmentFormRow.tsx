@@ -37,12 +37,12 @@ const EnrolmentFormRow = ({ children, id, label, link }: Props) => {
 
   return (
     <Box display="flex" flexDirection="row">
-      <Box width={280}>
+      <Box width={296}>
         <FormRow
           dense
           id={`${baseId}-${id}`}
           label={label}
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
         >
           {children}
         </FormRow>

@@ -84,7 +84,7 @@ const EnrolmentForm = ({ enrolment, onChange }: Props) => {
           dense
           id={`${baseId}-status`}
           label="Status"
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
         >
           <Select
             input={<InputBase className={classes.input} />}
@@ -101,7 +101,7 @@ const EnrolmentForm = ({ enrolment, onChange }: Props) => {
             {Object.values(EnrolmentStatus)
               .filter((status) => status !== EnrolmentStatus.UNASSIGNED)
               .map((status) => (
-                <MenuItem value={status}>
+                <MenuItem key={status} value={status}>
                   <StatusChip className={classes.statusChip} status={status} />
                 </MenuItem>
               ))}

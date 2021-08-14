@@ -76,12 +76,12 @@ const FamilySidebarForm = ({
           students={family.children}
         />
       )}
-      {!isEditing && (
+      {family.guests.length > 0 && !isEditing && (
         <Box paddingY={2}>
           <Divider />
         </Box>
       )}
-      {(family.guests.length || isEditing) && (
+      {(family.guests.length > 0 || isEditing) && (
         <StudentForm
           dense
           dynamicFields={guestDynamicFields}

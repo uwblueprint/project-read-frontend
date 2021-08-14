@@ -124,7 +124,7 @@ const InteractionCard = ({
             dense
             id={`${id} contacted by`}
             label={`${id} contacted by`}
-            questionType={QuestionType.MULTIPLE_CHOICE}
+            questionType={QuestionType.SELECT}
             variant={FieldVariant.COMPACT}
           >
             <Select
