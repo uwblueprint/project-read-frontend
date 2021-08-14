@@ -83,22 +83,35 @@ const Sessions = () => {
     setIsLoadingSession(false);
   };
 
+  const goToLatestOrProvidedSession = () => {
+    if (!sessions.length) {
+      return;
+    }
+    if (!sessionId) {
+      history.push(`/sessions/${sessions[0].id}`);
+    } else {
+      updateSelectedSession(Number(sessionId));
+    }
+  };
+
   useEffect(() => {
     const fetchSessions = async () => {
       const sessionsData = await SessionAPI.getSessions();
       setSessions(sessionsData);
-      if (sessionId !== undefined) {
-        // if a session id was provided in the url, set it to that
-        updateSelectedSession(Number(sessionId));
-      } else if (sessionsData.length) {
-        // redirect to the most recent session
-        history.push(`/sessions/${sessionsData[0].id}`);
-        updateSelectedSession(sessionsData[0].id);
-      }
     };
     setIsLoadingSession(true);
-    fetchSessions();
-  }, []);
+    if (!sessions.length) {
+      fetchSessions();
+      return;
+    }
+    goToLatestOrProvidedSession();
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (sessions.length) {
+      goToLatestOrProvidedSession();
+    }
+  }, [sessions]);
 
   const handleOpenFormDialog = () => {
     setDisplayRegDialog(true);
@@ -107,13 +120,6 @@ const Sessions = () => {
   const handleCloseFormDialog = () => {
     setDisplayRegDialog(false);
   };
-
-  useEffect(() => {
-    setIsLoadingSession(true);
-    if (sessionId !== undefined) {
-      updateSelectedSession(Number(sessionId));
-    }
-  }, [sessionId]);
 
   const resetClass = async (id: number) => {
     setIsLoadingClass(true);
