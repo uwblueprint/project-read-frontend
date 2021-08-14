@@ -22,6 +22,8 @@ import { DynamicField } from "types";
 import StudentDynamicFields from "../student-dynamic-fields";
 import { StudentFormData } from "../types";
 
+const DENSE_FIELD_WIDTH = 224;
+
 // unique identifier for children form components
 let CHILD_KEY_COUNTER = 1;
 let GUEST_KEY_COUNTER = 1;
@@ -152,7 +154,10 @@ const StudentForm = ({
                 )}
               </Box>
             )}
-            <Box flex="auto" width={isEditing && dense ? 224 : null}>
+            <Box
+              flex="auto"
+              width={isEditing && dense ? DENSE_FIELD_WIDTH : null}
+            >
               <Field
                 field={{ ...DefaultFields.FIRST_NAME, role }}
                 index={i}
