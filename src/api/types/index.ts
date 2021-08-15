@@ -21,6 +21,7 @@ export type ClassDetailResponse = Class & {
 export type SessionListResponse = Pick<Session, "id" | "name"> & {
   classes: ClassListResponse[];
 };
+export type ClassRequest = ClassDetailResponse;
 
 export type SessionDetailResponse = Session & {
   classes: ClassListResponse[];
@@ -64,6 +65,7 @@ export type FamilyDetailResponse = Pick<
 export type FamilyListResponse = Pick<
   Family,
   | DefaultFieldKey.CHILDREN
+  | DefaultFieldKey.GUESTS
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.ID
   | DefaultFieldKey.NUM_CHILDREN
