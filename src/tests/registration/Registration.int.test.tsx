@@ -166,14 +166,6 @@ describe("RegistrationForm", () => {
       }
     );
 
-    // session section
-    fireEvent.change(
-      getByTestId(`${StudentRole.PARENT} ${TEST_SESSION_DYNAMIC_FIELD.name}`),
-      {
-        target: { value: TestValue.TimeInCanada },
-      }
-    );
-
     const guestDobInput = getByLabelText(
       `${StudentRole.GUEST} ${DefaultFields.DATE_OF_BIRTH.name}`
     ) as HTMLInputElement;
@@ -187,9 +179,17 @@ describe("RegistrationForm", () => {
       }
     );
 
+    // session section
     fireEvent.change(getByTestId(TestId.PreferredClassSelect), {
       target: { value: session.classes[1].id },
     });
+
+    fireEvent.change(
+      getByTestId(`${StudentRole.PARENT} ${TEST_SESSION_DYNAMIC_FIELD.name}`),
+      {
+        target: { value: TestValue.TimeInCanada },
+      }
+    );
 
     fireEvent.change(getByTestId(TestId.StatusSelect), {
       target: { value: EnrolmentStatus.SIGNED_UP },
