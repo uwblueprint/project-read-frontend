@@ -4,7 +4,17 @@ const url = process.env.REACT_APP_API_URL;
 
 async function getIdToken() {
   const user = app.auth().currentUser;
-  return user ? user.getIdToken() : "";
+  if (!user) {
+    return "";
+  }
+  const idTokenResult = await user.getIdTokenResult();
+  const lastLoggedIn = new Date(idTokenResult.authTime).getDate();
+  if (lastLoggedIn !== new Date().getDate()) {
+    await app.auth().signOut();
+    return "";
+  }
+
+  return user.getIdToken();
 }
 
 export const get = async (path: string): Promise<unknown> => {
