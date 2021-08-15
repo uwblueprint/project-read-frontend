@@ -9,6 +9,7 @@ import { DynamicFieldsProvider } from "context/DynamicFieldsContext";
 import { UsersProvider } from "context/UsersContext";
 import CreateSession from "pages/create-session";
 import MainRegistration from "pages/MainRegistration";
+import NotFound from "pages/not-found";
 import Sessions from "pages/Sessions";
 
 import Navbar from "./Navbar";
@@ -37,7 +38,8 @@ function ProjectREAD() {
                 ]}
                 component={Sessions}
               />
-              <Redirect to="/" />
+              <PrivateRoute exact path="/oops" component={NotFound} />
+              <Redirect to="/oops" />
             </Switch>
           </MuiPickersUtilsProvider>
         </Container>
