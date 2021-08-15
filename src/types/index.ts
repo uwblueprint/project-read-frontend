@@ -48,6 +48,7 @@ export type Family = {
   [DefaultFieldKey.NOTES]: string;
   [DefaultFieldKey.NUM_CHILDREN]: number;
   [DefaultFieldKey.CHILDREN]: Student[];
+  [DefaultFieldKey.GUESTS]: Student[];
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.PREFERRED_NUMBER]: string;
