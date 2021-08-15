@@ -242,7 +242,10 @@ const Sessions = () => {
               : []
           }
           shouldDisplayDynamicFields={false}
-          onSelectFamily={onSelectFamily}
+          onSelectFamily={async (id) => {
+            await onSelectFamily(id);
+            setIsSidebarOpen(true);
+          }}
         />
         {selectedFamily && (
           <FamilySidebar
