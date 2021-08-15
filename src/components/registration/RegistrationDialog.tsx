@@ -89,7 +89,6 @@ const RegistrationDialog = ({
 
   const handleSelectFamily = (id: number | null) => {
     setShouldDisplaySearch(false);
-    window.onbeforeunload = () => true;
     onSelectFamily(id);
   };
 
