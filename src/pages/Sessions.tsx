@@ -186,8 +186,9 @@ const Sessions = () => {
     setIsTakingAttendance(!isEditingAttendance);
   };
 
-  const onSelectFamily = async (id: number) => {
-    const family = await FamilyAPI.getFamilyById(id);
+  const onSelectFamily = async (id: number | null) => {
+    setIsLoadingFamily(true);
+    const family = id ? await FamilyAPI.getFamilyById(id) : null;
     setSelectedFamily(family);
     setIsLoadingFamily(false);
   };
@@ -249,7 +250,7 @@ const Sessions = () => {
             family={selectedFamily}
             onClose={() => setIsSidebarOpen(false)}
             onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
-            onEditFamily={onEditFamily}
+            onSaveFamily={onSaveFamily}
           />
         )}
       </>
