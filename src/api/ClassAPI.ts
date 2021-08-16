@@ -7,4 +7,7 @@ const getClass = (id: number): Promise<ClassDetailResponse> =>
 const putClass = (data: ClassDetailRequest): Promise<ClassDetailResponse> =>
   APIUtils.put(`/classes/${data.id}/`, data) as Promise<ClassDetailResponse>;
 
-export default { getClass, putClass };
+const exportClasses = (): Promise<string> =>
+  APIUtils.get(`/export/classes`) as Promise<string>;
+
+export default { getClass, putClass, exportClasses };
