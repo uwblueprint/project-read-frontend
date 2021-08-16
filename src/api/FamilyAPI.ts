@@ -20,6 +20,9 @@ const getFamiliesByParentName = (
 const getFamilyById = (id: number): Promise<FamilyDetailResponse> =>
   APIUtils.get(`/families/${id}`) as Promise<FamilyDetailResponse>;
 
+const postFamily = (data: FamilyRequest): Promise<FamilyDetailResponse> =>
+  APIUtils.post(`/families/`, data) as Promise<FamilyDetailResponse>;
+
 const putFamily = (
   data: FamilyRequest & { id: number }
 ): Promise<FamilyDetailResponse> =>
@@ -29,5 +32,6 @@ export default {
   getFamilies,
   getFamiliesByParentName,
   getFamilyById,
+  postFamily,
   putFamily,
 };

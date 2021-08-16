@@ -28,16 +28,13 @@ export type SessionDetailResponse = Session & {
   families: FamilyListResponse[];
 };
 
-export type EnrolmentResponse = Pick<
-  Enrolment,
-  "id" | "status" | "students"
-> & {
+export type EnrolmentResponse = Enrolment & {
   session: SessionListResponse;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
 };
 
-export type EnrolmentRequest = Pick<Enrolment, "id" | "status" | "students"> & {
+export type EnrolmentRequest = Enrolment & {
   session: number;
   preferred_class: number | null;
   enrolled_class: number | null;
@@ -112,18 +109,6 @@ export type FamilyRequest = FamilyBaseRequest & {
   guests: StudentRequest[];
   parent: StudentRequest;
   interactions: Interaction[];
-};
-
-export type EnrolmentFamilyRequest = Pick<Enrolment, "status"> & {
-  family: FamilyRequest;
-  session: number;
-  preferred_class: number | null;
-};
-
-export type EnrolmentFamilyResponse = Pick<Enrolment, "status"> & {
-  family: FamilyDetailResponse;
-  session: number;
-  preferred_class: number | null;
 };
 
 export type DynamicFieldsResponse = {
