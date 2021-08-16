@@ -13,13 +13,23 @@ const useStyles = makeStyles(() => ({
 
 type Props = {
   children: ReactNode;
-  onClick: () => void;
+  disabled?: boolean;
+  onClick?: () => void;
 };
 
-const RoundedOutlinedButton = ({ children, onClick }: Props) => {
+const RoundedOutlinedButton = ({
+  children,
+  disabled = false,
+  onClick = () => {},
+}: Props) => {
   const classes = useStyles();
   return (
-    <Button onClick={onClick} variant="outlined" className={classes.button}>
+    <Button
+      disabled={disabled}
+      onClick={onClick}
+      variant="outlined"
+      className={classes.button}
+    >
       {children}
     </Button>
   );

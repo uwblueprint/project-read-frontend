@@ -10,10 +10,11 @@ import {
   TableCell,
   TableFooter,
   TableContainer,
+  Tooltip,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-import { FamilySearchResponse } from "api/types";
+import { FamilySearchResponse, SessionDetailResponse } from "api/types";
 import RoundedOutlinedButton from "components/common/rounded-outlined-button/RoundedOutlinedButton";
 import DefaultFields from "constants/DefaultFields";
 
@@ -33,10 +34,19 @@ const useStyles = makeStyles(() => ({
 type Props = {
   families: FamilySearchResponse[];
   onSelectFamily: (id: number) => void;
+  session: SessionDetailResponse;
 };
 
-const FamilySearchResultsTable = ({ families, onSelectFamily }: Props) => {
+const FamilySearchResultsTable = ({
+  families,
+  onSelectFamily,
+  session,
+}: Props) => {
   const classes = useStyles();
+
+  const isFamilyRegistered = (id: number): boolean =>
+    session.families.find((family) => family.id === id) !== undefined;
+
   return (
     <Box marginY={2}>
       <TableContainer
@@ -66,13 +76,26 @@ const FamilySearchResultsTable = ({ families, onSelectFamily }: Props) => {
                   <TableCell>{family.email}</TableCell>
                   <TableCell>{family.num_children}</TableCell>
                   <TableCell className={classes.selectButtonTableCell}>
-                    <RoundedOutlinedButton
-                      onClick={() => {
-                        onSelectFamily(family.id);
-                      }}
-                    >
-                      Select
-                    </RoundedOutlinedButton>
+                    {isFamilyRegistered(family.id) ? (
+                      <Tooltip
+                        title={`This family is already registered in ${session.name}`}
+                        aria-label="already registered"
+                      >
+                        <span>
+                          <RoundedOutlinedButton disabled>
+                            Select
+                          </RoundedOutlinedButton>
+                        </span>
+                      </Tooltip>
+                    ) : (
+                      <RoundedOutlinedButton
+                        onClick={() => {
+                          onSelectFamily(family.id);
+                        }}
+                      >
+                        Select
+                      </RoundedOutlinedButton>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

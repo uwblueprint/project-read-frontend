@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Close, NavigateBefore } from "@material-ui/icons";
 
 import FamilyAPI from "api/FamilyAPI";
-import { FamilySearchResponse } from "api/types";
+import { FamilySearchResponse, SessionDetailResponse } from "api/types";
 import RoundedOutlinedButton from "components/common/rounded-outlined-button";
 import FamilySearchResultsTable from "components/family-search/family-search-results-table";
 import StudentSearchBar from "components/family-search/student-search-bar";
@@ -41,6 +41,7 @@ type Props = {
   onClose: () => void;
   onSelectFamily: (id: number | null) => void;
   registrationForm: ReactNode;
+  session: SessionDetailResponse;
 };
 
 const RegistrationDialog = ({
@@ -48,6 +49,7 @@ const RegistrationDialog = ({
   onClose,
   onSelectFamily,
   registrationForm,
+  session,
 }: Props) => {
   const classes = useStyles();
   const [shouldDisplaySearch, setShouldDisplaySearch] = useState(true);
@@ -127,6 +129,7 @@ const RegistrationDialog = ({
                 <FamilySearchResultsTable
                   families={familyResults}
                   onSelectFamily={handleSelectFamily}
+                  session={session}
                 />
                 <Typography variant="h4" className={classes.dialogSubheading}>
                   Not found?

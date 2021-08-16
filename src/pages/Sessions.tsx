@@ -370,6 +370,7 @@ const Sessions = () => {
                   />
                 )
               }
+              session={selectedSession}
             />
           </>
         )}
