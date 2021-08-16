@@ -82,8 +82,16 @@ const Sessions = () => {
   const [isLoadingClass, setIsLoadingClass] = useState(false);
   const [isLoadingFamily, setIsLoadingFamily] = useState(false);
 
+  const goTo404 = () => {
+    history.push("/oops");
+  };
+
   const updateSelectedSession = async (id: number) => {
-    setSelectedSession(await SessionAPI.getSession(id));
+    try {
+      setSelectedSession(await SessionAPI.getSession(id));
+    } catch (err) {
+      goTo404();
+    }
     setIsLoadingSession(false);
   };
 
@@ -127,7 +135,12 @@ const Sessions = () => {
 
   const resetClass = async (id: number) => {
     setIsLoadingClass(true);
-    const classObj = await ClassAPI.getClass(id);
+    let classObj: ClassDetailResponse;
+    try {
+      classObj = await ClassAPI.getClass(id);
+    } catch (err) {
+      goTo404();
+    }
     setClassesMap(
       (prevMap) => new Map([...Array.from(prevMap), [classObj.id, classObj]])
     );
