@@ -20,6 +20,8 @@ import FieldVariant from "constants/FieldVariant";
 import QuestionType from "constants/QuestionType";
 import { UsersContext } from "context/UsersContext";
 
+import DaysPicker from "./DaysPicker";
+
 // unique identifier for children form components
 let CLASS_COUNTER = 1;
 
@@ -112,6 +114,8 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
     onChange(classesObjs);
   };
 
+  console.log(classesData);
+
   return (
     <Box display="flex">
       <Box alignSelf="center" width="100%">
@@ -170,6 +174,12 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
                   value={classData.location}
                 />
               </FormRow>
+              <DaysPicker
+                days={classData.days}
+                onChange={(days) => {
+                  onUpdateClass(i, { ...classData, days });
+                }}
+              />
               <FormRow
                 id="class-facilitator"
                 label="Facilitator"

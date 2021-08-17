@@ -5,7 +5,7 @@ import { Box, Typography } from "@material-ui/core";
 
 import { ClassListRequest } from "api/types";
 
-import ClassForm, { ClassFormData, generateKey } from "./ClassForm";
+import ClassForm, { ClassFormData } from "./ClassForm";
 
 type Props = {
   classes: ClassListRequest[];
