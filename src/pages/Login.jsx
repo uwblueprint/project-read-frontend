@@ -13,8 +13,7 @@ function Login(props) {
     : "/";
 
   const uiConfig = {
-    signInFlow: "popup",
-    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+    signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
     callbacks: {
       signInSuccess: () => false,
     },

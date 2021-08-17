@@ -3,7 +3,7 @@ import { DefaultField } from "types";
 import DefaultFieldKey from "./DefaultFieldKey";
 import QuestionType from "./QuestionType";
 
-export const DefaultFields: Record<string, DefaultField> = Object.freeze({
+const DefaultFields: Record<string, DefaultField> = Object.freeze({
   ADDRESS: {
     id: DefaultFieldKey.ADDRESS,
     is_default: false,
@@ -18,25 +18,18 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     question_type: QuestionType.TEXT,
     options: [],
   },
-  CURRENT_CLASS: {
-    id: DefaultFieldKey.CURRENT_CLASS,
+  CHILDREN: {
+    id: DefaultFieldKey.CHILDREN,
     is_default: true,
-    name: "Current Class",
-    question_type: QuestionType.MULTIPLE_CHOICE,
+    name: "Children",
+    question_type: QuestionType.TEXT,
     options: [],
   },
-  CURRENT_SESSION: {
-    id: DefaultFieldKey.CURRENT_SESSION,
+  ENROLLED_CLASS: {
+    id: DefaultFieldKey.ENROLLED_CLASS,
     is_default: true,
-    name: "Session",
-    question_type: QuestionType.MULTIPLE_CHOICE,
-    options: [],
-  },
-  CURRENT_PREFERRED_CLASS: {
-    id: DefaultFieldKey.CURRENT_PREFERRED_CLASS,
-    is_default: false,
-    name: "Preferred Class",
-    question_type: QuestionType.MULTIPLE_CHOICE,
+    name: "Class",
+    question_type: QuestionType.SELECT,
     options: [],
   },
   DATE_OF_BIRTH: {
@@ -51,13 +44,6 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     is_default: true,
     name: "Email",
     question_type: QuestionType.TEXT,
-    options: [],
-  },
-  IS_ENROLLED: {
-    id: DefaultFieldKey.IS_ENROLLED,
-    is_default: true,
-    name: "Enrolled",
-    question_type: QuestionType.MULTIPLE_CHOICE,
     options: [],
   },
   FIRST_NAME: {
@@ -95,13 +81,6 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     question_type: QuestionType.TEXT,
     options: [],
   },
-  CHILDREN: {
-    id: DefaultFieldKey.CHILDREN,
-    is_default: true,
-    name: "Children",
-    question_type: QuestionType.TEXT,
-    options: [],
-  },
   PHONE_NUMBER: {
     id: DefaultFieldKey.PHONE_NUMBER,
     is_default: true,
@@ -109,25 +88,39 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
     question_type: QuestionType.TEXT,
     options: [],
   },
+  PREFERRED_CLASS: {
+    id: DefaultFieldKey.PREFERRED_CLASS,
+    is_default: false,
+    name: "Preferred class",
+    question_type: QuestionType.SELECT,
+    options: [],
+  },
   PREFERRED_CONTACT: {
     id: DefaultFieldKey.PREFERRED_CONTACT,
     is_default: true,
     name: "Preferred contact",
-    question_type: QuestionType.MULTIPLE_CHOICE,
+    question_type: QuestionType.SELECT,
     options: ["Phone", "Email"],
   },
   PREFERRED_NUMBER: {
     id: DefaultFieldKey.PREFERRED_NUMBER,
     is_default: false,
     name: "Preferred number",
-    question_type: QuestionType.MULTIPLE_CHOICE,
+    question_type: QuestionType.SELECT,
     options: ["Home", "Cell", "Work"],
+  },
+  SESSION: {
+    id: DefaultFieldKey.SESSION,
+    is_default: true,
+    name: "Current session",
+    question_type: QuestionType.SELECT,
+    options: [],
   },
   STATUS: {
     id: DefaultFieldKey.STATUS,
     is_default: true,
     name: "Status",
-    question_type: QuestionType.MULTIPLE_CHOICE,
+    question_type: QuestionType.SELECT,
     options: [],
   },
   WORK_NUMBER: {
@@ -139,21 +132,4 @@ export const DefaultFields: Record<string, DefaultField> = Object.freeze({
   },
 });
 
-export const DefaultFamilyTableFields: DefaultField[] = [
-  DefaultFields.FIRST_NAME,
-  DefaultFields.LAST_NAME,
-  DefaultFields.PHONE_NUMBER,
-  DefaultFields.EMAIL,
-  DefaultFields.NUM_CHILDREN,
-  DefaultFields.CHILDREN,
-  DefaultFields.PREFERRED_CONTACT,
-];
-
-export const DefaultFamilyFormFields: DefaultField[] = [
-  DefaultFields.HOME_NUMBER,
-  DefaultFields.CELL_NUMBER,
-  DefaultFields.WORK_NUMBER,
-  DefaultFields.PREFERRED_NUMBER,
-  DefaultFields.EMAIL,
-  DefaultFields.PREFERRED_CONTACT,
-];
+export default DefaultFields;

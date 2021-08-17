@@ -5,10 +5,8 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  Theme,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
 import moment from "moment";
 
 import DateInput from "components/common/date-input";
@@ -18,40 +16,13 @@ import QuestionType from "constants/QuestionType";
 import StudentRole from "constants/StudentRole";
 import { DefaultField, DynamicField } from "types";
 
-const denseStyles = (theme: Theme) => ({
-  input: {
-    backgroundColor: theme.palette.background.paper,
-    fontSize: 14,
-    paddingBottom: 0,
-    paddingTop: 0,
-    height: 32,
-  },
-  label: {
-    fontSize: 14,
-  },
-  menuItem: {
-    fontSize: 14,
-    height: 32,
-  },
-  select: {
-    paddingBottom: 8,
-    paddingTop: 8,
-  },
-});
-
-const useStyles = makeStyles<Theme, Pick<Props, "dense">>((theme) => ({
-  input: ({ dense }) => (dense ? denseStyles(theme).input : {}),
-  label: ({ dense }) => (dense ? denseStyles(theme).label : {}),
-  menuItem: ({ dense }) => (dense ? denseStyles(theme).menuItem : {}),
-  select: ({ dense }) => (dense ? denseStyles(theme).select : {}),
-  selectPlaceholder: {
-    color: "rgba(0, 0, 0, 0.38)",
-  },
-}));
+import MultipleSelect from "../multiple-select";
+import useStyles from "./styles";
 
 type Props = {
   dense?: boolean;
   field: (DefaultField & { role: StudentRole }) | DynamicField;
+  index?: number | null;
   isEditing: boolean;
   onChange: (value: string) => void;
   value: string;
@@ -60,21 +31,23 @@ type Props = {
 
 const defaultProps = {
   dense: false,
+  index: null,
   variant: FieldVariant.DEFAULT,
 };
 
 const Field = ({
   dense,
   field,
+  index,
   isEditing,
   onChange,
   value,
   variant,
 }: Props) => {
   const classes = useStyles({ dense });
-  const id = `${field.role} ${field.name}`;
-
+  const id = `${field.role} ${index || ""} ${field.name} `;
   const compact = variant === FieldVariant.COMPACT;
+  const valueText: string = value.split("\n").join(", ");
 
   if (!isEditing) {
     return (
@@ -85,7 +58,7 @@ const Field = ({
           </Typography>
         </Box>
         <Box>
-          <Typography variant="body2">{value}</Typography>
+          <Typography variant="body2">{valueText}</Typography>
         </Box>
       </Box>
     );
@@ -110,10 +83,10 @@ const Field = ({
               inputProps={{ "data-testid": id }}
               placeholder={compact ? field.name : ""}
               onChange={(e) => onChange(e.target.value)}
-              value={value}
+              value={valueText}
             />
           ),
-          [QuestionType.MULTIPLE_CHOICE]: (
+          [QuestionType.SELECT]: (
             <Select
               aria-label={field.name}
               className={classes.input}
@@ -122,18 +95,23 @@ const Field = ({
               inputProps={{ "data-testid": id, className: classes.select }}
               labelId={id}
               onChange={(e) => onChange(e.target.value as string)}
-              value={value}
+              value={valueText}
               variant="outlined"
             >
               <MenuItem value="" className={classes.menuItem}>
-                {compact ? (
-                  <span className={classes.selectPlaceholder}>
-                    {field.name}
-                  </span>
-                ) : (
-                  "Select"
-                )}
+                <span className={classes.selectPlaceholder}>
+                  {compact ? field.name : "Select"}
+                </span>
               </MenuItem>
+              {valueText && !field.options.includes(valueText) && (
+                <MenuItem
+                  key={valueText}
+                  value={valueText}
+                  className={classes.menuItem}
+                >
+                  {valueText}
+                </MenuItem>
+              )}
               {field.options.map((option) => (
                 <MenuItem
                   key={option}
@@ -145,6 +123,19 @@ const Field = ({
               ))}
             </Select>
           ),
+          [QuestionType.MULTIPLE_SELECT]: (
+            <MultipleSelect
+              compact={compact}
+              dense={dense!}
+              id={id}
+              label={field.name}
+              onChange={onChange}
+              options={field.options}
+              value={value}
+            />
+          ),
+          // there are no date dynamic fields, so array/string values don't
+          // need to be handled here
           [QuestionType.DATE]: (
             <DateInput
               dense={dense}

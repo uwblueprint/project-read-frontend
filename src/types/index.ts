@@ -43,6 +43,12 @@ export type Student = {
   role: StudentRole;
 };
 
+export type Interaction = {
+  date: string;
+  type: string;
+  user_id: number;
+};
+
 export type Family = {
   [DefaultFieldKey.ADDRESS]: string;
   [DefaultFieldKey.CELL_NUMBER]: string;
@@ -52,11 +58,13 @@ export type Family = {
   [DefaultFieldKey.NOTES]: string;
   [DefaultFieldKey.NUM_CHILDREN]: number;
   [DefaultFieldKey.CHILDREN]: Student[];
+  [DefaultFieldKey.GUESTS]: Student[];
   [DefaultFieldKey.PHONE_NUMBER]: string;
   [DefaultFieldKey.PREFERRED_CONTACT]: string;
   [DefaultFieldKey.PREFERRED_NUMBER]: string;
   [DefaultFieldKey.WORK_NUMBER]: string;
   parent: Student;
+  interactions: Interaction[];
 };
 
 export type Session = {
@@ -71,19 +79,16 @@ export type Attendance = {
   attendees: number[];
 };
 
-export type Interaction = {
-  date: string;
-  type: string;
-};
-
 export type Class = {
   id: number;
-  name: string;
   attendance: Attendance[];
+  colour: string;
+  name: string;
 };
 
 export type Enrolment = {
   id: number;
+  family: number; // family id
   status: EnrolmentStatus;
   students: number[];
 };

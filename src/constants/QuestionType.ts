@@ -1,6 +1,7 @@
 enum QuestionType {
   DATE = "Date",
-  MULTIPLE_CHOICE = "Multiple Choice",
+  MULTIPLE_SELECT = "Multiple Select",
+  SELECT = "Select",
   TEXT = "Text",
 }
 

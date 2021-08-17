@@ -1,9 +1,5 @@
 import * as APIUtils from "./APIUtils";
-import {
-  EnrolmentFamilyRequest,
-  EnrolmentRequest,
-  EnrolmentResponse,
-} from "./types";
+import { EnrolmentRequest, EnrolmentResponse } from "./types";
 
 export const enrolmentResponseToRequest = (
   data: EnrolmentResponse
@@ -14,11 +10,13 @@ export const enrolmentResponseToRequest = (
   enrolled_class: data.enrolled_class?.id || null,
 });
 
-const postEnrolment = (data: EnrolmentFamilyRequest) =>
-  APIUtils.post("/enrolments/", data);
+const postEnrolment = (
+  data: Omit<EnrolmentRequest, "id">
+): Promise<EnrolmentResponse> =>
+  APIUtils.post("/enrolments/", data) as Promise<EnrolmentResponse>;
 
-const putEnrolment = (data: EnrolmentRequest) =>
-  APIUtils.put(`/enrolments/${data.id}/`, data);
+const putEnrolment = (data: EnrolmentRequest): Promise<EnrolmentResponse> =>
+  APIUtils.put(`/enrolments/${data.id}/`, data) as Promise<EnrolmentResponse>;
 
 export default {
   postEnrolment,

@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import {
   Box,
@@ -14,21 +20,22 @@ import { Add, Edit } from "@material-ui/icons";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
+import FamilyAPI from "api/FamilyAPI";
+import { EnrolmentRequest, FamilyDetailResponse } from "api/types";
+import SpinnerOverlay from "components/common/spinner-overlay";
 import {
-  FamilyDetailResponse,
-  FamilyRequest,
-  EnrolmentRequest,
-} from "api/types";
-import {
-  FamilyFormData,
+  familyFormDataToFamilyRequest,
   familyResponseToFamilyFormData,
+  generateInteractionsKey,
 } from "components/families/family-form/utils";
+import { UsersContext } from "context/UsersContext";
 
+import { FamilyFormData } from "../family-form/types";
 import EnrolmentForm from "./enrolment-form";
-import FamilySidebarCard from "./family-sidebar-card";
 import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
+import InteractionCard from "./interaction-card";
 
-const drawerWidth = 416;
+const DRAWER_WIDTH = 416;
 
 const useStyles = makeStyles((theme) => ({
   actionButton: {
@@ -42,14 +49,14 @@ const useStyles = makeStyles((theme) => ({
     width: 20,
   },
   drawer: {
-    width: drawerWidth,
+    width: DRAWER_WIDTH,
   },
   drawerPaper: {
     backgroundColor: theme.palette.backgroundSecondary.paper,
     borderLeft: "none",
     height: "calc(100% - 64px)",
     marginTop: 64,
-    width: drawerWidth,
+    width: DRAWER_WIDTH,
   },
   formActionRow: {
     backgroundColor: theme.palette.backgroundSecondary.paper,
@@ -58,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontWeight: 700,
-    fontSize: 16,
+    fontSize: 18,
     paddingBottom: 20,
     paddingTop: 20,
   },
@@ -84,7 +91,7 @@ type Props = {
   family: FamilyDetailResponse;
   isOpen: boolean;
   onEditCurrentEnrolment: (enrolment: EnrolmentRequest) => void;
-  onEditFamily: (family: FamilyRequest) => void;
+  onSaveFamily: (family: FamilyDetailResponse, refetch: boolean) => void;
   onClose: () => void;
 };
 
@@ -93,15 +100,21 @@ const FamilySidebar = ({
   isOpen,
   onClose,
   onEditCurrentEnrolment,
-  onEditFamily,
+  onSaveFamily,
 }: Props) => {
+  const { currentUser, users } = useContext(UsersContext);
   const classes = useStyles();
   const sidebar = useRef<HTMLDivElement>(null);
 
   const [familyFormData, setFamilyFormData] = useState<FamilyFormData>(
     familyResponseToFamilyFormData(family)
   );
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingFamily, setIsEditingFamily] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isEditing =
+    isEditingFamily ||
+    familyFormData.interactions.some((interaction) => interaction.isEditing);
 
   const handleClick = (e: MouseEvent) => {
     const sidebarRef = sidebar?.current;
@@ -119,12 +132,33 @@ const FamilySidebar = ({
   useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", handleClick);
+      setIsEditingFamily(false);
       return () => {
         document.removeEventListener("mousedown", handleClick);
       };
     }
     return () => {};
   }, [isOpen]);
+
+  const saveFamily = async (
+    data: FamilyFormData,
+    refetch: boolean
+  ): Promise<boolean> => {
+    try {
+      const res = await FamilyAPI.putFamily({
+        ...familyFormDataToFamilyRequest(data),
+        id: family.id,
+      });
+      onSaveFamily(res, refetch);
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
+      return false;
+    }
+    return true;
+  };
+
+  // Family form =============================================================
 
   const resetFormData = () => {
     setFamilyFormData(familyResponseToFamilyFormData(family));
@@ -135,21 +169,45 @@ const FamilySidebar = ({
   }, [family]);
 
   const onToggleEdit = (editing: boolean) => {
-    if (isEditing) {
+    if (isEditingFamily) {
       resetFormData();
     }
-    setIsEditing(editing);
+    setIsEditingFamily(editing);
   };
 
-  const onSubmitFamilyForm = () => {
-    // TODO: make PUT request
-    setIsEditing(false);
+  const onSubmitFamilyForm = async () => {
+    setIsLoading(true);
+    const success = await saveFamily(familyFormData, true);
+    if (success) {
+      setIsEditingFamily(false);
+    }
+    setIsLoading(false);
   };
+
+  // Interactions =============================================================
+
+  const addInteraction = () => {
+    setFamilyFormData({
+      ...familyFormData,
+      interactions: [
+        ...familyFormData.interactions,
+        {
+          date: moment().format("YYYY-MM-DD"),
+          index: generateInteractionsKey(),
+          isEditing: true,
+          type: "",
+          user_id: currentUser ? currentUser.id : users[0].id,
+        },
+      ],
+    });
+  };
+
+  // Notes ====================================================================
 
   const debouncedSaveFamily = useCallback(
-    debounce(async (data: FamilyRequest) => {
-      onEditFamily(data);
-    }, 500),
+    debounce((notes: string) => {
+      saveFamily({ ...familyFormData, notes }, false);
+    }, 1000),
     []
   );
 
@@ -171,8 +229,10 @@ const FamilySidebar = ({
       }}
       PaperProps={{ ref: sidebar }}
     >
-      <Box padding={3} paddingBottom={isEditing ? 10 : 3}>
-        <Typography variant="h2">
+      {isLoading && <SpinnerOverlay />}
+
+      <Box padding={3} paddingBottom={isEditingFamily ? 10 : 3}>
+        <Typography component="h2" variant="h3">
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
 
@@ -192,7 +252,8 @@ const FamilySidebar = ({
           <Box position="absolute" top={8} right={0}>
             <IconButton
               className={classes.actionButton}
-              onClick={() => onToggleEdit(!isEditing)}
+              disabled={isEditing}
+              onClick={() => onToggleEdit(!isEditingFamily)}
             >
               <Edit />
             </IconButton>
@@ -200,14 +261,14 @@ const FamilySidebar = ({
           <Box>
             <FamilySidebarForm
               family={familyFormData}
-              isEditing={isEditing}
+              isEditing={isEditingFamily}
               onChange={setFamilyFormData}
               onSubmit={onSubmitFamilyForm}
             />
           </Box>
         </Box>
 
-        {!isEditing && (
+        {!isEditingFamily && (
           <Box paddingTop={2}>
             <Divider />
           </Box>
@@ -215,7 +276,11 @@ const FamilySidebar = ({
 
         <Box position="relative">
           <Box position="absolute" top={8} right={0}>
-            <IconButton className={classes.actionButton}>
+            <IconButton
+              className={classes.actionButton}
+              disabled={isEditing}
+              onClick={addInteraction}
+            >
               <Add />
             </IconButton>
           </Box>
@@ -223,23 +288,55 @@ const FamilySidebar = ({
             <Typography variant="h3" className={classes.heading}>
               Recent interactions
             </Typography>
-            {family.interactions.map((interaction) => (
-              <FamilySidebarCard
-                title={
-                  <Typography variant="body2">{interaction.type}</Typography>
-                }
-                content={
-                  <Typography variant="body2">
-                    {interaction.user.first_name}{" "}
-                    {interaction.user.last_name.charAt(0)}. -{" "}
-                    {moment(interaction.date, "YYYY-MM-DD").format(
-                      "MMM. D, YYYY"
-                    )}
-                  </Typography>
-                }
-              />
-            ))}
+            {familyFormData.interactions.length > 0 ? (
+              familyFormData.interactions
+                // sort with most recent interaction first
+                .sort((a, b) => moment(b.date).diff(moment(a.date), "days"))
+                .map((interaction, index) => (
+                  <InteractionCard
+                    key={interaction.index}
+                    disabled={isEditing}
+                    interaction={interaction}
+                    onDelete={async () => {
+                      saveFamily(
+                        {
+                          ...familyFormData,
+                          interactions: familyFormData.interactions.filter(
+                            (value) => value.index !== interaction.index
+                          ),
+                        },
+                        false
+                      );
+                    }}
+                    onSubmit={async (data) => {
+                      const interactions = [...familyFormData.interactions];
+                      interactions[index] = data;
+                      saveFamily(
+                        {
+                          ...familyFormData,
+                          interactions,
+                        },
+                        false
+                      );
+                    }}
+                    onToggleEdit={() => {
+                      const interactions = [...familyFormData.interactions];
+                      interactions[index].isEditing = true;
+                      setFamilyFormData({ ...familyFormData, interactions });
+                    }}
+                    users={users}
+                  />
+                ))
+            ) : (
+              <Box paddingLeft={2} paddingBottom={1}>
+                <Typography variant="body2">No recent interactions</Typography>
+              </Box>
+            )}
           </Box>
+        </Box>
+
+        <Box paddingTop={2}>
+          <Divider />
         </Box>
 
         <Typography variant="h3" className={classes.heading}>
@@ -247,21 +344,23 @@ const FamilySidebar = ({
         </Typography>
         <InputBase
           className={classes.notes}
-          defaultValue=""
+          disabled={isEditing}
           fullWidth
           inputProps={{ "aria-label": "notes" }}
           multiline
           onChange={(e) => {
-            setFamilyFormData({ ...familyFormData, notes: e.target.value });
-            debouncedSaveFamily({
-              ...family,
-              notes: e.target.value,
+            const notes = e.target.value;
+            setFamilyFormData({
+              ...familyFormData,
+              notes,
             });
+            debouncedSaveFamily(notes);
           }}
           value={familyFormData.notes}
         />
       </Box>
-      {isEditing && (
+
+      {isEditingFamily && (
         <Box
           alignContent="end"
           bottom={0}
@@ -270,7 +369,7 @@ const FamilySidebar = ({
           justifyContent="flex-end"
           paddingY={2}
           position="fixed"
-          width={drawerWidth}
+          width={DRAWER_WIDTH}
         >
           <Button
             onClick={() => onToggleEdit(false)}

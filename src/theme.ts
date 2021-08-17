@@ -56,6 +56,17 @@ const theme = createMuiTheme({
         wordBreak: "break-word",
       },
     },
+    MuiSnackbar: {
+      root: {
+        top: "80px !important",
+      },
+    },
+    MuiSnackbarContent: {
+      root: {
+        backgroundColor: "#ECE0FD",
+        color: defaultTheme.palette.text.primary,
+      },
+    },
     MuiTab: {
       root: {
         minWidth: 0,
@@ -86,6 +97,14 @@ const theme = createMuiTheme({
         borderColor: defaultTheme.palette.divider,
       },
     },
+    MuiTableRow: {
+      root: {
+        backgroundColor: defaultTheme.palette.background.paper,
+        "&$hover:hover": {
+          backgroundColor: "rgb(245, 245, 245)",
+        },
+      },
+    },
     MuiTabs: {
       root: {
         backgroundColor: "white",
@@ -96,6 +115,19 @@ const theme = createMuiTheme({
   props: {
     MuiButton: {
       disableElevation: true,
+    },
+    MuiSelect: {
+      MenuProps: {
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "left",
+        },
+        transformOrigin: {
+          vertical: "top",
+          horizontal: "left",
+        },
+        getContentAnchorEl: null,
+      },
     },
   },
   typography: {

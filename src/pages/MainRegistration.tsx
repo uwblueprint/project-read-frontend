@@ -9,9 +9,10 @@ import {
   FamilyDetailResponse,
   FamilyListResponse,
 } from "api/types";
+import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
 import FamilyTable from "components/families/family-table";
-import { DefaultFields } from "constants/DefaultFields";
+import DefaultFields from "constants/DefaultFields";
 
 const MainRegistration = () => {
   const [families, setFamilies] = useState<FamilyListResponse[]>([]);
@@ -20,8 +21,13 @@ const MainRegistration = () => {
     selectedFamily,
     setSelectedFamily,
   ] = useState<FamilyDetailResponse | null>(null);
+  const [isLoadingFamilies, setIsLoadingFamilies] = useState(true);
 
-  const resetFamilies = async () => setFamilies(await FamilyAPI.getFamilies());
+  const resetFamilies = async () => {
+    setIsLoadingFamilies(true);
+    setFamilies(await FamilyAPI.getFamilies());
+    setIsLoadingFamilies(false);
+  };
 
   useEffect(() => {
     resetFamilies();
@@ -33,11 +39,14 @@ const MainRegistration = () => {
     setIsSidebarOpen(true);
   };
 
-  const onEditFamily = async () => {
-    if (selectedFamily === null) {
-      return;
+  const onSaveFamily = async (
+    family: FamilyDetailResponse,
+    refetch: boolean
+  ) => {
+    setSelectedFamily(family);
+    if (refetch) {
+      resetFamilies();
     }
-    resetFamilies();
   };
 
   const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
@@ -53,13 +62,14 @@ const MainRegistration = () => {
 
   return (
     <>
+      {isLoadingFamilies && <SpinnerOverlay />}
       <Typography variant="h1">Main registration</Typography>
       <FamilyTable
         families={families}
         enrolmentFields={[
-          DefaultFields.CURRENT_PREFERRED_CLASS,
-          DefaultFields.IS_ENROLLED,
-          DefaultFields.CURRENT_CLASS,
+          DefaultFields.PREFERRED_CLASS,
+          DefaultFields.SESSION,
+          DefaultFields.ENROLLED_CLASS,
         ]}
         shouldDisplayDynamicFields
         onSelectFamily={onSelectFamily}
@@ -70,7 +80,7 @@ const MainRegistration = () => {
           family={selectedFamily}
           onClose={() => setIsSidebarOpen(false)}
           onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
-          onEditFamily={onEditFamily}
+          onSaveFamily={onSaveFamily}
         />
       )}
     </>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -8,21 +8,23 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
 import EnrolmentAPI from "api/EnrolmentAPI";
+import FamilyAPI from "api/FamilyAPI";
 import {
   StudentRequest,
   SessionDetailResponse,
   FamilyDetailResponse,
+  EnrolmentRequest,
 } from "api/types";
 import FormRow from "components/common/form-row";
 import FamilyParentFields from "components/families/family-form/family-parent-fields";
 import StudentDynamicFields from "components/families/family-form/student-dynamic-fields";
 import StudentForm from "components/families/family-form/student-form";
+import { FamilyFormData } from "components/families/family-form/types";
 import {
-  EnrolmentFormData,
-  FamilyFormData,
   familyFormDataToFamilyRequest,
   familyResponseToFamilyFormData,
 } from "components/families/family-form/utils";
@@ -38,6 +40,9 @@ const useStyles = makeStyles(() => ({
   heading: {
     marginBottom: 24,
     marginTop: 32,
+  },
+  placeholder: {
+    color: grey[500],
   },
   sessionLabel: {
     fontSize: 24,
@@ -72,19 +77,23 @@ const defaultFamilyData: FamilyFormData = {
   parent: { ...defaultStudentData },
   children: [{ ...defaultStudentData, index: 0 }],
   guests: [],
+  interactions: [],
 };
 
-type RegistrationFormProps = {
+export const defaultEnrolmentData = {
+  enrolled_class: null,
+  preferred_class: null,
+  status: EnrolmentStatus.REGISTERED,
+  students: [],
+};
+
+type Props = {
   existingFamily: FamilyDetailResponse | null;
-  onSubmit: () => void;
+  onRegister: (family: FamilyDetailResponse) => void;
   session: SessionDetailResponse;
 };
 
-const RegistrationForm = ({
-  existingFamily,
-  onSubmit,
-  session,
-}: RegistrationFormProps) => {
+const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
   const classes = useStyles();
   const {
     childDynamicFields,
@@ -93,40 +102,60 @@ const RegistrationForm = ({
     sessionDynamicFields,
   } = useContext(DynamicFieldsContext);
 
-  const [enrolment, setEnrolment] = useState<EnrolmentFormData>({
-    family:
+  const [family, setFamily] = useState<FamilyFormData>(
+    existingFamily !== null
+      ? familyResponseToFamilyFormData(existingFamily)
+      : defaultFamilyData
+  );
+  const [enrolment, setEnrolment] = useState<
+    Omit<EnrolmentRequest, "family" | "id">
+  >({
+    session: session.id,
+    ...defaultEnrolmentData,
+  });
+
+  useEffect(() => {
+    setFamily(
       existingFamily !== null
         ? familyResponseToFamilyFormData(existingFamily)
-        : defaultFamilyData,
-    preferred_class: null,
-    session: session.id,
-    status: EnrolmentStatus.REGISTERED,
-  });
+        : defaultFamilyData
+    );
+  }, [existingFamily]);
 
   const getSessionDynamicFields = (dynamicFields: DynamicField[]) =>
     dynamicFields.filter((dynamicField) =>
       session.fields.includes(dynamicField.id)
     );
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (existingFamily === null) {
-      const response = await EnrolmentAPI.postEnrolment({
+    try {
+      const familyResponse = existingFamily
+        ? await FamilyAPI.putFamily({
+            ...familyFormDataToFamilyRequest(family),
+            id: existingFamily.id,
+          })
+        : await FamilyAPI.postFamily(familyFormDataToFamilyRequest(family));
+      await EnrolmentAPI.postEnrolment({
         ...enrolment,
-        family: familyFormDataToFamilyRequest(enrolment.family),
+        family: familyResponse.id,
+        enrolled_class: null,
+        // TODO: select students who are attending the session
+        students: [
+          familyResponse.parent.id,
+          ...familyResponse.children.map((child) => child.id),
+          ...familyResponse.guests.map((guest) => guest.id),
+        ],
       });
-      if (response.non_field_errors) {
-        // eslint-disable-next-line no-alert
-        alert(response.non_field_errors);
-        return;
-      }
+      onRegister(familyResponse);
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
     }
-    // TODO: if there was an existing family, make a PUT request
-    onSubmit();
   };
 
   return (
-    <form data-testid={TestId.RegistrationForm} onSubmit={handleSubmit}>
+    <form data-testid={TestId.RegistrationForm} onSubmit={onSubmit}>
       <Typography
         variant="body1"
         data-testid={TestId.SessionLabel}
@@ -157,11 +186,11 @@ const RegistrationForm = ({
           dense={false}
           dynamicFields={getSessionDynamicFields(parentDynamicFields)}
           isEditing
-          family={enrolment.family}
+          family={family}
           onChange={(value) =>
-            setEnrolment({
-              ...enrolment,
-              family: { ...enrolment.family, ...value },
+            setFamily({
+              ...family,
+              ...value,
             })
           }
         />
@@ -173,26 +202,26 @@ const RegistrationForm = ({
           dynamicFields={getSessionDynamicFields(childDynamicFields)}
           isEditing
           onChange={(children) =>
-            setEnrolment({
-              ...enrolment,
-              family: { ...enrolment.family, children },
+            setFamily({
+              ...family,
+              children,
             })
           }
           role={StudentRole.CHILD}
-          students={enrolment.family.children}
+          students={family.children}
         />
         <StudentForm
           dense={false}
           dynamicFields={getSessionDynamicFields(guestDynamicFields)}
           isEditing
           onChange={(guests) =>
-            setEnrolment({
-              ...enrolment,
-              family: { ...enrolment.family, guests },
+            setFamily({
+              ...family,
+              guests,
             })
           }
           role={StudentRole.GUEST}
-          students={enrolment.family.guests}
+          students={family.guests}
         />
       </Box>
 
@@ -203,7 +232,7 @@ const RegistrationForm = ({
         <FormRow
           id="preferred-class"
           label="What are your preferred dates?"
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
           variant={FieldVariant.STACKED}
         >
           <Select
@@ -220,7 +249,9 @@ const RegistrationForm = ({
             value={enrolment.preferred_class || ""}
             variant="outlined"
           >
-            <MenuItem value="">Select</MenuItem>
+            <MenuItem value="">
+              <span className={classes.placeholder}>Select</span>
+            </MenuItem>
             {session.classes.map((classObj) => (
               <MenuItem key={classObj.id} value={classObj.id.toString()}>
                 {classObj.name}
@@ -231,15 +262,12 @@ const RegistrationForm = ({
         <StudentDynamicFields
           dense={false}
           dynamicFields={getSessionDynamicFields(sessionDynamicFields)}
-          information={enrolment.family.parent.information}
+          information={family.parent.information}
           isEditing
           onChange={(value) =>
-            setEnrolment({
-              ...enrolment,
-              family: {
-                ...enrolment.family,
-                parent: { ...enrolment.family.parent, information: value },
-              },
+            setFamily({
+              ...family,
+              parent: { ...family.parent, information: value },
             })
           }
           variant={FieldVariant.STACKED}
@@ -251,7 +279,7 @@ const RegistrationForm = ({
         <FormRow
           id="status"
           label="Which status would you like to assign?"
-          questionType={QuestionType.MULTIPLE_CHOICE}
+          questionType={QuestionType.SELECT}
           variant={FieldVariant.STACKED}
         >
           <Select
@@ -293,12 +321,12 @@ const RegistrationForm = ({
             inputProps={{ "data-testid": TestId.NotesInput }}
             multiline
             onChange={(e) =>
-              setEnrolment({
-                ...enrolment,
-                family: { ...enrolment.family, notes: e.target.value },
+              setFamily({
+                ...family,
+                notes: e.target.value,
               })
             }
-            value={enrolment.family.notes}
+            value={family.notes}
           />
         </FormRow>
       </Box>

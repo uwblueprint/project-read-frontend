@@ -4,10 +4,20 @@ const url = process.env.REACT_APP_API_URL;
 
 async function getIdToken() {
   const user = app.auth().currentUser;
-  return user ? user.getIdToken() : "";
+  if (!user) {
+    return "";
+  }
+  const idTokenResult = await user.getIdTokenResult();
+  const lastLoggedIn = new Date(idTokenResult.authTime).getDate();
+  if (lastLoggedIn !== new Date().getDate()) {
+    await app.auth().signOut();
+    return "";
+  }
+
+  return user.getIdToken();
 }
 
-export async function get(path) {
+export const get = async (path: string): Promise<unknown> => {
   const token = await getIdToken();
   const res = await fetch(url + path, {
     headers: {
@@ -15,10 +25,14 @@ export async function get(path) {
     },
   });
 
-  return res.json();
-}
+  if (!res.ok) {
+    throw Error(res.statusText);
+  }
 
-export async function post(path, data) {
+  return res.json();
+};
+
+export const post = async (path: string, data: unknown): Promise<unknown> => {
   const token = await getIdToken();
   const res = await fetch(url + path, {
     method: "POST",
@@ -29,10 +43,14 @@ export async function post(path, data) {
     body: JSON.stringify(data),
   });
 
-  return res.json();
-}
+  if (!res.ok) {
+    throw Error(res.statusText);
+  }
 
-export async function put(path, data) {
+  return res.json();
+};
+
+export const put = async (path: string, data: unknown): Promise<unknown> => {
   const token = await getIdToken();
   const res = await fetch(url + path, {
     method: "PUT",
@@ -43,5 +61,9 @@ export async function put(path, data) {
     body: JSON.stringify(data),
   });
 
+  if (!res.ok) {
+    throw Error(res.statusText);
+  }
+
   return res.json();
-}
+};

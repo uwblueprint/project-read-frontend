@@ -13,7 +13,7 @@ import {
 
 export type UserResponse = Pick<User, "id" | "first_name" | "last_name">;
 
-export type ClassListResponse = Pick<Class, "id" | "name">;
+export type ClassListResponse = Pick<Class, "id" | "name" | "colour">;
 
 export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
@@ -22,29 +22,23 @@ export type ClassDetailResponse = Class & {
 export type SessionListResponse = Pick<Session, "id" | "name"> & {
   classes: ClassListResponse[];
 };
+export type ClassRequest = ClassDetailResponse;
 
 export type SessionDetailResponse = Session & {
   classes: ClassListResponse[];
   families: FamilyListResponse[];
 };
 
-export type EnrolmentResponse = Pick<
-  Enrolment,
-  "id" | "status" | "students"
-> & {
+export type EnrolmentResponse = Enrolment & {
   session: SessionListResponse;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
 };
 
-export type EnrolmentRequest = Pick<Enrolment, "id" | "status" | "students"> & {
+export type EnrolmentRequest = Enrolment & {
   session: number;
   preferred_class: number | null;
   enrolled_class: number | null;
-};
-
-export type InteractionResponse = Interaction & {
-  user: UserResponse;
 };
 
 export type FamilyDetailResponse = Pick<
@@ -59,16 +53,17 @@ export type FamilyDetailResponse = Pick<
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
   | "parent"
+  | "interactions"
 > & {
   children: Student[];
   current_enrolment: EnrolmentResponse | null;
   guests: Student[];
-  interactions: InteractionResponse[];
 };
 
 export type FamilyListResponse = Pick<
   Family,
   | DefaultFieldKey.CHILDREN
+  | DefaultFieldKey.GUESTS
   | DefaultFieldKey.EMAIL
   | DefaultFieldKey.ID
   | DefaultFieldKey.NUM_CHILDREN
@@ -127,12 +122,7 @@ export type FamilyRequest = FamilyBaseRequest & {
   children: StudentRequest[];
   guests: StudentRequest[];
   parent: StudentRequest;
-};
-
-export type EnrolmentFamilyRequest = Pick<Enrolment, "status"> & {
-  family: FamilyRequest;
-  session: number;
-  preferred_class: number | null;
+  interactions: Interaction[];
 };
 
 export type DynamicFieldsResponse = {

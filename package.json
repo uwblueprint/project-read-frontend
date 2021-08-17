@@ -25,6 +25,7 @@
     "react-firebaseui": "^4.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "react-spinners": "^0.11.0",
     "typescript": "^4.2.4",
     "web-vitals": "^1.0.1"
   },
@@ -53,7 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.171",
+    "@types/lodash": "^4.14.172",
     "@types/mui-datatables": "^3.7.3",
     "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^4.22.1",

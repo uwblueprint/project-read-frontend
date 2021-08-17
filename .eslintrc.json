@@ -28,6 +28,7 @@
     ],
     "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-props-no-spreading": [1, { "exceptions": ["Field"] }],
+    "react/require-default-props": [1, { "ignoreFunctionalComponents": true }],
     "no-use-before-define": "off",
     "import/order": [
       "error",
