@@ -146,7 +146,7 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
                   autoComplete="new-password" // disable autocomplete
                   className={classes.input}
                   fullWidth
-                  id="classname"
+                  id={`classname-${classData.index}`}
                   placeholder="Class name"
                   onChange={(e) =>
                     onUpdateClass(i, { ...classData, name: e.target.value })
@@ -170,7 +170,7 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
                   autoComplete="new-password" // disable autocomplete
                   className={classes.input}
                   fullWidth
-                  id="location"
+                  id={`location-${classData.index}`}
                   placeholder="Location"
                   onChange={(e) =>
                     onUpdateClass(i, { ...classData, location: e.target.value })
