@@ -114,8 +114,6 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
     onChange(classesObjs);
   };
 
-  console.log(classesData);
-
   return (
     <Box display="flex">
       <Box alignSelf="center" width="100%">
