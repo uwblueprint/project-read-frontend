@@ -1,5 +1,6 @@
 import React from "react";
 
+import { makeStyles } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 import FormRow from "components/common/form-row";
@@ -38,12 +39,23 @@ const DAYS_IN_WEEK = [
   },
 ];
 
+const useStyles = makeStyles(() => ({
+  toggleButton: {
+    "&.Mui-selected": {
+      color: "#5A19B9",
+      backgroundColor: "#CCA8FF",
+    },
+  },
+}));
+
 type Props = {
   days: DaysOfWeek[];
   onChange: (days: DaysOfWeek[]) => void;
 };
 
 const DaysPicker = ({ days, onChange }: Props) => {
+  const classes = useStyles();
+
   const onUpdateDate = (
     e: React.MouseEvent<HTMLElement>,
     newDays: DaysOfWeek[]
@@ -66,7 +78,11 @@ const DaysPicker = ({ days, onChange }: Props) => {
         aria-label="Select dates of the week"
       >
         {DAYS_IN_WEEK.map((day) => (
-          <ToggleButton value={day.value} key={day.label}>
+          <ToggleButton
+            className={classes.toggleButton}
+            value={day.value}
+            key={day.label}
+          >
             {day.label}
           </ToggleButton>
         ))}
