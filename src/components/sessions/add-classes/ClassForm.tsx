@@ -154,6 +154,12 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
                   value={classData.name}
                 />
               </FormRow>
+              <DaysPicker
+                days={classData.days}
+                onChange={(days) => {
+                  onUpdateClass(i, { ...classData, days });
+                }}
+              />
               <FormRow
                 id="session-location"
                 label="Location"
@@ -172,12 +178,6 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
                   value={classData.location}
                 />
               </FormRow>
-              <DaysPicker
-                days={classData.days}
-                onChange={(days) => {
-                  onUpdateClass(i, { ...classData, days });
-                }}
-              />
               <FormRow
                 id="class-facilitator"
                 label="Facilitator"
