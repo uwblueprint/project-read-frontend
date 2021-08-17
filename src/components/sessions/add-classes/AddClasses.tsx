@@ -3,18 +3,18 @@
 import React, { useState } from "react";
 import { Box, Typography } from "@material-ui/core";
 
-import { ClassRequest } from "api/types";
+import { ClassListRequest } from "api/types";
 
 import ClassForm, { ClassFormData, generateKey } from "./ClassForm";
 
 type Props = {
-  classes: ClassRequest[];
-  onChangeClasses: (classes: ClassRequest[]) => void;
+  classes: ClassListRequest[];
+  onChangeClasses: (classes: ClassListRequest[]) => void;
 };
 
 const AddClasses = ({ classes, onChangeClasses }: Props) => {
   const classRequestToClassFormData = (
-    classesData: ClassRequest[]
+    classesData: ClassListRequest[]
   ): ClassFormData[] =>
     classesData.map((classData, i) => ({ ...classData, index: i }));
 
@@ -25,7 +25,7 @@ const AddClasses = ({ classes, onChangeClasses }: Props) => {
   const handleChange = (classesData: ClassFormData[]) => {
     setClassFormData(classesData);
     const submitClassesData = classesData.map(
-      (classData) => classData as ClassRequest
+      (classData) => classData as ClassListRequest
     );
     onChangeClasses(submitClassesData);
   };

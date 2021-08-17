@@ -14,7 +14,7 @@ import {
 import { Add, RemoveCircle } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 
-import { ClassRequest } from "api/types";
+import { ClassListRequest } from "api/types";
 import { User } from "types";
 // import Field from "components/common/field";
 // import FieldVariant from "constants/FieldVariant";
@@ -70,9 +70,9 @@ export const generateKey = (): number => {
   return key;
 };
 
-export type ClassFormData = ClassRequest & { index: number };
+export type ClassFormData = ClassListRequest & { index: number };
 
-const defaultClassData: ClassRequest = {
+const defaultClassData: ClassListRequest = {
   name: "",
   days: [],
   location: "",
@@ -93,7 +93,7 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
     onChange([...classesData, { ...defaultClassData, index: generateKey() }]);
   };
 
-  const onUpdateClass = (index: number, data: ClassRequest): void => {
+  const onUpdateClass = (index: number, data: ClassListRequest): void => {
     const classesObjs = [...classesData];
     classesObjs[index] = { ...classesObjs[index], ...data };
     onChange([...classesObjs]);

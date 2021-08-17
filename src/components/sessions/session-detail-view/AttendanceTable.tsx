@@ -15,7 +15,7 @@ import MUIDataTable, {
   MUIDataTableOptions,
 } from "mui-datatables";
 
-import { ClassDetailResponse, ClassRequest } from "api/types";
+import { ClassDetailResponse, ClassDetailRequest } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 
 type AttendanceTableRow = {
@@ -28,7 +28,7 @@ type AttendanceTableRow = {
 type AttendanceTableProps = {
   classObj: ClassDetailResponse;
   isEditing: boolean;
-  onSubmit: (data: ClassRequest) => void;
+  onSubmit: (data: ClassDetailRequest) => void;
 };
 
 const useStyles = makeStyles(() => ({
@@ -52,7 +52,7 @@ const AttendanceTable = ({
   onSubmit,
 }: AttendanceTableProps) => {
   const classes = useStyles();
-  const [data, setData] = useState<ClassRequest>(_.cloneDeep(classObj));
+  const [data, setData] = useState<ClassDetailRequest>(_.cloneDeep(classObj));
   const [tableRows, setTableRows] = useState<AttendanceTableRow[]>([]);
 
   const handleCheckboxOnClick = (id: number, date: string) => {
