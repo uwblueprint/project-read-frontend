@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 
 import {
   Box,
@@ -15,9 +15,10 @@ import { Add, RemoveCircle } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 
 import { ClassListRequest } from "api/types";
-import { User } from "types";
-// import Field from "components/common/field";
-// import FieldVariant from "constants/FieldVariant";
+import FormRow from "components/common/form-row";
+import FieldVariant from "constants/FieldVariant";
+import QuestionType from "constants/QuestionType";
+import { UsersContext } from "context/UsersContext";
 
 // unique identifier for children form components
 let CLASS_COUNTER = 1;
@@ -51,10 +52,6 @@ const useStyles = makeStyles<Theme, Pick<Props, "dense">>(() => ({
     height: 16,
     width: 16,
   },
-  roleLabel: ({ dense }) => ({
-    width: 128,
-    ...(dense && denseStyles().roleLabel),
-  }),
   rowContainer: ({ dense }) => ({
     alignItems: "center",
     display: "flex",
@@ -87,7 +84,7 @@ type Props = {
 
 const ClassForm = ({ dense, onChange, classesData }: Props) => {
   const classes = useStyles({ dense });
-  const facilitators = useState<User[]>([]);
+  const { users } = useContext(UsersContext);
 
   const onAddClass = (): void => {
     onChange([...classesData, { ...defaultClassData, index: generateKey() }]);
@@ -132,59 +129,78 @@ const ClassForm = ({ dense, onChange, classesData }: Props) => {
               )}
             </Box>
             <Box flex="auto">
-              <Typography variant="body1">
-                Class {classData.index + 1}
-              </Typography>
-              <OutlinedInput
-                autoComplete="new-password" // disable autocomplete
-                className={classes.input}
-                fullWidth
-                id="classname"
-                placeholder="Class name"
-                onChange={(e) =>
-                  onUpdateClass(i, { ...classData, name: e.target.value })
-                }
-                value={classData.name}
-              />
-              <OutlinedInput
-                autoComplete="new-password" // disable autocomplete
-                className={classes.input}
-                fullWidth
-                id="location"
-                placeholder="Location"
-                onChange={(e) =>
-                  onUpdateClass(i, { ...classData, location: e.target.value })
-                }
-                value={classData.location}
-              />
-              <Select
-                aria-label="Facilitator"
-                className={classes.input}
-                displayEmpty
-                fullWidth
-                labelId="facilitator"
-                onChange={(e) =>
-                  onUpdateClass(i, {
-                    ...classData,
-                    facilitator: e.target.value,
-                  })
-                }
-                value={classData.facilitator}
-                variant="outlined"
+              <Box marginBottom={2}>
+                <Typography variant="h4">
+                  Class {classData.index + 1}
+                </Typography>
+              </Box>
+              <FormRow
+                id="session-name"
+                label="Name"
+                questionType={QuestionType.TEXT}
+                variant={FieldVariant.COMPACT}
               >
-                <MenuItem value="" className={classes.menuItem}>
-                  Select
-                </MenuItem>
-                {facilitators.options.map((option) => (
-                  <MenuItem
-                    key={option}
-                    value={option}
-                    className={classes.menuItem}
-                  >
-                    {option}
+                <OutlinedInput
+                  autoComplete="new-password" // disable autocomplete
+                  className={classes.input}
+                  fullWidth
+                  id="classname"
+                  placeholder="Class name"
+                  onChange={(e) =>
+                    onUpdateClass(i, { ...classData, name: e.target.value })
+                  }
+                  value={classData.name}
+                />
+              </FormRow>
+              <FormRow
+                id="session-location"
+                label="Location"
+                questionType={QuestionType.TEXT}
+                variant={FieldVariant.COMPACT}
+              >
+                <OutlinedInput
+                  autoComplete="new-password" // disable autocomplete
+                  className={classes.input}
+                  fullWidth
+                  id="location"
+                  placeholder="Location"
+                  onChange={(e) =>
+                    onUpdateClass(i, { ...classData, location: e.target.value })
+                  }
+                  value={classData.location}
+                />
+              </FormRow>
+              <FormRow
+                id="class-facilitator"
+                label="Facilitator"
+                questionType={QuestionType.SELECT}
+                variant={FieldVariant.COMPACT}
+              >
+                <Select
+                  aria-label="Class facilitator"
+                  className={classes.input}
+                  displayEmpty
+                  fullWidth
+                  labelId={`class ${classData.index}`}
+                  onChange={(e) =>
+                    onUpdateClass(i, {
+                      ...classData,
+                      facilitator: e.target.value as number,
+                    })
+                  }
+                  value={classData.facilitator || ""}
+                  variant="outlined"
+                >
+                  <MenuItem value="" className={classes.menuItem}>
+                    None
                   </MenuItem>
-                ))}
-              </Select>
+                  {users?.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.first_name} {option.last_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormRow>
               {i < classesData.length - 1 && (
                 <Box paddingY={2}>
                   <Divider />
