@@ -24,9 +24,10 @@ const AddClasses = ({ classes, onChangeClasses }: Props) => {
 
   const handleChange = (classesData: ClassFormData[]) => {
     setClassFormData(classesData);
-    const submitClassesData = classesData.map(
-      (classData) => classData as ClassListRequest
-    );
+    const submitClassesData = classesData.map((classData) => {
+      const { index, ...req } = classData;
+      return req as ClassListRequest;
+    });
     onChangeClasses(submitClassesData);
   };
 
