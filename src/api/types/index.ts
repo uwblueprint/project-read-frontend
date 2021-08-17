@@ -1,6 +1,7 @@
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import {
   Class,
+  DaysOfWeek,
   DynamicField,
   Enrolment,
   Family,
@@ -100,6 +101,19 @@ export type FamilyBaseRequest = Pick<
   | DefaultFieldKey.PREFERRED_NUMBER
   | DefaultFieldKey.WORK_NUMBER
 >;
+
+export type ClassRequest = {
+  name: string;
+  days: DaysOfWeek[];
+  location: string;
+  facilitator: number | null;
+};
+
+export type SessionRequest = {
+  name: string;
+  startDate: Date | null;
+  classes: ClassRequest[];
+};
 
 export type StudentRequest = Pick<
   Student,
