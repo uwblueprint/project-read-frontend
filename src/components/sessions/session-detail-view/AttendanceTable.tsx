@@ -5,6 +5,7 @@ import {
   Checkbox,
   createMuiTheme,
   MuiThemeProvider,
+  Tooltip,
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
@@ -122,9 +123,11 @@ const AttendanceTable = ({
         </Button>
         {isEditing ? (
           <>
-            <IconButton onClick={() => setOpen(true)}>
-              <AddIcon />
-            </IconButton>
+            <Tooltip title="Add Date">
+              <IconButton onClick={() => setOpen(true)}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
             <KeyboardDatePicker
               disableToolbar
               open={open}
