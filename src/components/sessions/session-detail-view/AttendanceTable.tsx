@@ -5,8 +5,12 @@ import {
   Checkbox,
   createMuiTheme,
   MuiThemeProvider,
+  Tooltip,
 } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
 import CheckIcon from "@material-ui/icons/Check";
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/styles";
 import _ from "lodash";
 import moment from "moment";
@@ -17,6 +21,7 @@ import MUIDataTable, {
 
 import { ClassDetailResponse, ClassRequest } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
+import { Attendance } from "types/index";
 
 type AttendanceTableRow = {
   id: string;
@@ -52,6 +57,7 @@ const AttendanceTable = ({
   onSubmit,
 }: AttendanceTableProps) => {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState<ClassRequest>(_.cloneDeep(classObj));
   const [tableRows, setTableRows] = useState<AttendanceTableRow[]>([]);
 
@@ -69,6 +75,21 @@ const AttendanceTable = ({
       newData.attendance[dateIndex].attendees.splice(idIndex, 1);
     }
     setData(newData);
+  };
+
+  const addDate = (date: string) => {
+    const dateIndex = data.attendance.findIndex(
+      (element: { date: string }) => element.date === date
+    );
+    if (dateIndex === -1) {
+      const newData: ClassDetailResponse = _.cloneDeep(data);
+      const newDate: Attendance = {
+        date,
+        attendees: [],
+      };
+      newData.attendance.push(newDate);
+      setData(newData);
+    }
   };
 
   const getMuiTheme = () =>
@@ -90,15 +111,37 @@ const AttendanceTable = ({
     selectableRows: "none",
     elevation: 0,
     customToolbar: () => (
-      <Button
-        variant="outlined"
-        color={!isEditing ? "default" : "primary"}
-        onClick={() => onSubmit(data)}
-        className={classes.button}
-      >
-        {!isEditing ? "Take attendance " : "Done attendance "}
-        <CheckIcon className={classes.checkmark} />
-      </Button>
+      <>
+        <Button
+          variant="outlined"
+          color={!isEditing ? "default" : "primary"}
+          onClick={() => onSubmit(data)}
+          className={classes.button}
+        >
+          {!isEditing ? "Take attendance " : "Done attendance "}
+          <CheckIcon className={classes.checkmark} />
+        </Button>
+        {isEditing ? (
+          <>
+            <Tooltip title="Add Date">
+              <IconButton onClick={() => setOpen(true)}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+            <KeyboardDatePicker
+              disableToolbar
+              open={open}
+              onOpen={() => setOpen(true)}
+              onClose={() => setOpen(false)}
+              onChange={(date) =>
+                date ? addDate(date.toDate().toISOString().split("T")[0]) : null
+              }
+              TextFieldComponent={() => null}
+              value={null}
+            />
+          </>
+        ) : null}
+      </>
     ),
   };
 
