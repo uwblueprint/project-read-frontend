@@ -13,6 +13,7 @@ import { useHistory } from "react-router-dom";
 
 import { SessionRequest } from "api/types";
 import AddClasses from "components/sessions/add-classes";
+import { defaultClassData } from "components/sessions/add-classes/AddClasses";
 import SessionConfig from "components/sessions/session-config";
 
 enum CreateSessionStepLabel {
@@ -32,14 +33,7 @@ const CreateSession = () => {
   const [session, setSession] = useState<SessionRequest>({
     name: "",
     startDate: null,
-    classes: [
-      {
-        name: "",
-        days: [],
-        location: "",
-        facilitator: null,
-      },
-    ],
+    classes: [defaultClassData],
   });
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeStep = steps[activeStepIndex];
@@ -90,7 +84,7 @@ const CreateSession = () => {
       case CreateSessionStepLabel.ADD_CLASSES:
         return (
           <AddClasses
-            classes={session.classes}
+            classList={session.classes}
             onChangeClasses={(classes) => setSession({ ...session, classes })}
           />
         );
