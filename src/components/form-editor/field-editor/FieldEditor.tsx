@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Box,
   Card,
   Checkbox,
   IconButton,
+  Input,
+  InputBase,
   MenuItem,
   OutlinedInput,
   Radio,
@@ -12,7 +14,7 @@ import {
   Switch,
   Typography,
 } from "@material-ui/core";
-import { DragIndicator, EditOutlined } from "@material-ui/icons";
+import { Clear, DragIndicator, EditOutlined } from "@material-ui/icons";
 
 import ConfirmationDialog from "components/common/confirmation-dialog";
 import FormActionIconButtons from "components/common/form-action-icon-buttons";
@@ -24,12 +26,30 @@ import { DefaultField, DynamicField } from "types";
 import QuestionTypeLabel from "../question-type-label";
 import useStyles from "./styles";
 
+// unique identifier for options
+let OPTION_KEY_COUNTER = 1;
+
+export const generateKey = (): number => {
+  const key = OPTION_KEY_COUNTER;
+  OPTION_KEY_COUNTER += 1;
+  return key;
+};
+
 const getSelectIndicator = (className: string, questionType: string) =>
   questionType === QuestionType.MULTIPLE_SELECT ? (
     <Checkbox className={className} disabled size="small" />
   ) : (
     <Radio className={className} disabled size="small" />
   );
+
+type OptionFormData = {
+  index: number;
+  value: string;
+};
+
+type FieldFormData = Omit<DefaultField | DynamicField, "options"> & {
+  options: OptionFormData[];
+};
 
 type Props = {
   field: DefaultField | DynamicField;
@@ -52,7 +72,10 @@ const FieldEditor = ({
 }: Props) => {
   const classes = useStyles({ isDefault });
   const [isEditing, setIsEditing] = useState(false);
-  const [fieldFormData, setFieldFormData] = useState({ ...field });
+  const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
+    ...field,
+    options: [],
+  });
   const [showEditConfirmationDialog, setShowEditConfirmationDialog] = useState(
     false
   );
@@ -60,6 +83,39 @@ const FieldEditor = ({
     showDeleteConfirmationDialog,
     setShowDeleteConfirmationDialog,
   ] = useState(false);
+
+  useEffect(() => {
+    setFieldFormData({
+      ...field,
+      options: field.options.map((option) => ({
+        index: generateKey(),
+        value: option,
+      })),
+    });
+  }, [field]);
+
+  const onAddOption = (): void => {
+    setFieldFormData({
+      ...fieldFormData,
+      options: [...fieldFormData.options, { index: generateKey(), value: "" }],
+    });
+  };
+
+  const onUpdateOption = (data: OptionFormData): void => {
+    const options = [...fieldFormData.options];
+    const optionIndex = options.findIndex(
+      (option) => option.index === data.index
+    );
+    options[optionIndex] = data;
+    setFieldFormData({ ...fieldFormData, options });
+  };
+
+  const onDeleteOption = (index: number): void => {
+    setFieldFormData({
+      ...fieldFormData,
+      options: fieldFormData.options.filter((option) => option.index !== index),
+    });
+  };
 
   return (
     <>
@@ -212,15 +268,41 @@ const FieldEditor = ({
           </Box>
         </Box>
         {isEditing && fieldFormData.question_type !== QuestionType.TEXT && (
-          // TODO: implement adding, editing, and deleting options
-          <Box marginTop={1} paddingLeft={1.5}>
-            {fieldFormData.options.map((option) => (
-              <Box display="flex" alignItems="center">
+          <Box marginTop={1} paddingLeft={1.5} width={435}>
+            {fieldFormData.options.map((option, i) => (
+              <Box key={option.index} display="flex" alignItems="center">
                 {getSelectIndicator(
                   classes.selectIndicator,
                   fieldFormData.question_type
                 )}
-                <Typography variant="body2">{option}</Typography>
+                <FormRow
+                  dense
+                  id={`${field.id} option ${i}`}
+                  label={`Option ${i}`}
+                  questionType={QuestionType.TEXT}
+                  variant={FieldVariant.COMPACT}
+                >
+                  <Input
+                    autoFocus={i === fieldFormData.options.length - 1}
+                    className={classes.input}
+                    fullWidth
+                    id={`${field.id} option ${i}`}
+                    onChange={(e) =>
+                      onUpdateOption({
+                        index: option.index,
+                        value: e.target.value,
+                      })
+                    }
+                    value={option.value}
+                  />
+                </FormRow>
+                <IconButton
+                  aria-label="Delete option"
+                  onClick={() => onDeleteOption(option.index)}
+                  size="small"
+                >
+                  <Clear fontSize="small" />
+                </IconButton>
               </Box>
             ))}
             <Box display="flex" alignItems="center">
@@ -228,7 +310,14 @@ const FieldEditor = ({
                 classes.selectIndicator,
                 fieldFormData.question_type
               )}
-              <Typography variant="body2">Add new option</Typography>
+              <InputBase
+                className={classes.input}
+                inputProps={{ "aria-label": "new option" }}
+                onChange={onAddOption}
+                onClick={onAddOption}
+                placeholder="New option"
+                value=""
+              />
             </Box>
           </Box>
         )}
