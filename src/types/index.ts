@@ -72,6 +72,7 @@ export type Session = {
   id: number;
   name: string;
   start_date: string;
+  active: boolean;
 };
 
 export type Attendance = {

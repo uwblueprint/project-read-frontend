@@ -369,14 +369,16 @@ const FamilySidebar = ({
             <Typography variant="h3" className={classes.heading}>
               Previous Enrolments
             </Typography>
-            {family.enrolments.map((enrolment) => (
-              <FamilySidebarEnrolmentCard
-                enrolment={enrolment}
-                students={family.children
-                  .concat(family.parent)
-                  .concat(family.guests)}
-              />
-            ))}
+            {family.enrolments
+              .filter((enrolment) => enrolment.session.active === true)
+              .map((enrolment) => (
+                <FamilySidebarEnrolmentCard
+                  enrolment={enrolment}
+                  students={family.children
+                    .concat(family.parent)
+                    .concat(family.guests)}
+                />
+              ))}
           </Box>
         </Box>
       </Box>

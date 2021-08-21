@@ -19,7 +19,7 @@ export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
 };
 
-export type SessionListResponse = Pick<Session, "id" | "name"> & {
+export type SessionListResponse = Pick<Session, "id" | "name" | "active"> & {
   classes: ClassListResponse[];
 };
 
