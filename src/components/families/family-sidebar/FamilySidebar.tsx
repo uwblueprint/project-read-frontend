@@ -371,10 +371,7 @@ const FamilySidebar = ({
             </Typography>
             {family.enrolments.map((enrolment) => (
               <FamilySidebarEnrolmentCard
-                session={enrolment.session!.name}
-                days={enrolment.enrolled_class!.name}
-                status={enrolment.status}
-                studentIDs={enrolment.students}
+                enrolment={enrolment}
                 students={family.children
                   .concat(family.parent)
                   .concat(family.guests)}

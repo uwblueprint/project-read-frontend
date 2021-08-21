@@ -41,7 +41,6 @@ export type EnrolmentResponse = Enrolment & {
   session: SessionListResponse;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
-  students: number[];
 };
 
 export type EnrolmentRequest = Enrolment & {
