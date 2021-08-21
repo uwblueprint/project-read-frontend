@@ -2,14 +2,6 @@ import { createMuiTheme } from "@material-ui/core/styles";
 
 const defaultTheme = createMuiTheme();
 
-// TODO: Toggle button theme
-// toggleButton: {
-//   "&.Mui-selected": {
-//     color: "#5A19B9",
-//     backgroundColor: "#CCA8FF",
-//   },
-// },
-
 const theme = createMuiTheme({
   palette: {
     type: "light",

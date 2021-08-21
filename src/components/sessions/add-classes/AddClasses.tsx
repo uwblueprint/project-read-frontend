@@ -146,12 +146,14 @@ const AddClasses = ({ classList, onChangeClasses }: Props) => {
                       value={classData.name}
                     />
                   </FormRow>
-                  <DaysPicker
-                    days={classData.days}
-                    onChange={(days) => {
-                      onUpdateClass(i, { ...classData, days });
-                    }}
-                  />
+                  <Box marginBottom={2}>
+                    <DaysPicker
+                      days={classData.days}
+                      onChange={(days) => {
+                        onUpdateClass(i, { ...classData, days });
+                      }}
+                    />
+                  </Box>
                   <FormRow
                     id={`location-${classData.index}`}
                     label="Location"
@@ -194,7 +196,7 @@ const AddClasses = ({ classList, onChangeClasses }: Props) => {
                       value={classData.facilitator || ""}
                       variant="outlined"
                     >
-                      <MenuItem value="" className={classes.menuItem}>
+                      <MenuItem value="" className={classes.selectPlaceholder}>
                         Facilitator
                       </MenuItem>
                       {users?.map((option) => (

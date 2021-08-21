@@ -2,9 +2,6 @@ import React from "react";
 
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
-import FormRow from "components/common/form-row";
-import FieldVariant from "constants/FieldVariant";
-import QuestionType from "constants/QuestionType";
 import { DaysOfWeek } from "types";
 
 const DAYS_IN_WEEK = [
@@ -54,24 +51,17 @@ const DaysPicker = ({ days, onChange }: Props) => {
   };
 
   return (
-    <FormRow
-      id="session-dates"
-      label="Dates"
-      questionType={QuestionType.MULTIPLE_SELECT}
-      variant={FieldVariant.COMPACT}
+    <ToggleButtonGroup
+      onChange={onUpdateDate}
+      value={days}
+      aria-label="Select dates of the week"
     >
-      <ToggleButtonGroup
-        onChange={onUpdateDate}
-        value={days}
-        aria-label="Select dates of the week"
-      >
-        {DAYS_IN_WEEK.map((day) => (
-          <ToggleButton value={day.value} key={day.label}>
-            {day.label}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-    </FormRow>
+      {DAYS_IN_WEEK.map((day) => (
+        <ToggleButton value={day.value} key={day.label}>
+          {day.label}
+        </ToggleButton>
+      ))}
+    </ToggleButtonGroup>
   );
 };
 
