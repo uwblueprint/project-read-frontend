@@ -1,7 +1,12 @@
 import React, { ReactNode } from "react";
 
 import { Box, Typography } from "@material-ui/core";
-import { CheckBox, ExpandMore, ShortText } from "@material-ui/icons";
+import {
+  CheckBox,
+  ExpandMore,
+  LockOutlined,
+  ShortText,
+} from "@material-ui/icons";
 
 import QuestionType from "constants/QuestionType";
 
@@ -17,6 +22,11 @@ const getQuestionTypeDisplay = (
   className: string
 ): QuestionTypeDisplay => {
   switch (type) {
+    case QuestionType.IDENTIFIER:
+      return {
+        icon: <LockOutlined className={className} />,
+        label: "Identifier",
+      };
     case QuestionType.SELECT:
       return {
         icon: <ExpandMore className={className} />,

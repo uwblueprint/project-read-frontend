@@ -12,7 +12,7 @@ import {
   Switch,
   Typography,
 } from "@material-ui/core";
-import { DragIndicator, EditOutlined, LockOutlined } from "@material-ui/icons";
+import { DragIndicator, EditOutlined } from "@material-ui/icons";
 
 import ConfirmationDialog from "components/common/confirmation-dialog";
 import FormActionIconButtons from "components/common/form-action-icon-buttons";
@@ -130,7 +130,7 @@ const FieldEditor = ({
               </FormRow>
             )}
           </Box>
-          <Box display="flex">
+          <Box display="flex" alignItems="center">
             <Box
               display="flex"
               justifyContent="flex-end"
@@ -138,19 +138,8 @@ const FieldEditor = ({
               width={160}
             >
               {isDefault ? (
-                <Box display="flex" marginRight={6}>
-                  <LockOutlined className={classes.labelIcon} />
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                    style={{
-                      fontSize: 12,
-                      alignSelf: "center",
-                      marginRight: 8,
-                    }}
-                  >
-                    Identifier
-                  </Typography>
+                <Box marginRight={6}>
+                  <QuestionTypeLabel questionType={QuestionType.IDENTIFIER} />
                 </Box>
               ) : (
                 <>
@@ -169,9 +158,6 @@ const FieldEditor = ({
                         className={classes.input}
                         displayEmpty
                         fullWidth
-                        inputProps={{
-                          className: classes.select,
-                        }}
                         labelId={`${field.id} question type`}
                         onChange={(e) =>
                           setFieldFormData({
@@ -182,24 +168,15 @@ const FieldEditor = ({
                         value={fieldFormData.question_type}
                         variant="outlined"
                       >
-                        <MenuItem
-                          value={QuestionType.TEXT}
-                          className={classes.menuItem}
-                        >
+                        <MenuItem value={QuestionType.TEXT}>
                           <QuestionTypeLabel questionType={QuestionType.TEXT} />
                         </MenuItem>
-                        <MenuItem
-                          value={QuestionType.SELECT}
-                          className={classes.menuItem}
-                        >
+                        <MenuItem value={QuestionType.SELECT}>
                           <QuestionTypeLabel
                             questionType={QuestionType.SELECT}
                           />
                         </MenuItem>
-                        <MenuItem
-                          value={QuestionType.MULTIPLE_SELECT}
-                          className={classes.menuItem}
-                        >
+                        <MenuItem value={QuestionType.MULTIPLE_SELECT}>
                           <QuestionTypeLabel
                             questionType={QuestionType.MULTIPLE_SELECT}
                           />
@@ -235,6 +212,7 @@ const FieldEditor = ({
           </Box>
         </Box>
         {isEditing && fieldFormData.question_type !== QuestionType.TEXT && (
+          // TODO: implement adding, editing, and deleting options
           <Box marginTop={1} paddingLeft={1.5}>
             {fieldFormData.options.map((option) => (
               <Box display="flex" alignItems="center">
