@@ -370,9 +370,10 @@ const FamilySidebar = ({
               Previous Enrolments
             </Typography>
             {family.enrolments
-              .filter((enrolment) => enrolment.session.active === true)
+              .filter((enrolment) => !enrolment.session.active)
               .map((enrolment) => (
                 <FamilySidebarEnrolmentCard
+                  key={enrolment.id}
                   enrolment={enrolment}
                   students={family.children
                     .concat(family.parent)
