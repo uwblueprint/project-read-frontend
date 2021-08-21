@@ -1,8 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import { Box, Typography } from "@material-ui/core";
 
-import ConfirmationDialog from "components/common/confirmation-dialog";
 import DefaultFields from "constants/DefaultFields";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
@@ -28,14 +27,6 @@ const FormEditor = ({
     sessionDynamicFields,
   } = useContext(DynamicFieldsContext);
   const classes = useStyles();
-  const [
-    showEditConfirmationDialog,
-    //  setShowEditConfirmationDialog,
-  ] = useState(false);
-  const [
-    showDeleteConfirmationDialog,
-    // setShowDeleteConfirmationDialog,
-  ] = useState(false);
 
   const handleChangeEnabledField = (id: number, enabled: boolean) =>
     enabled
@@ -44,20 +35,6 @@ const FormEditor = ({
 
   return (
     <Box width={800} marginX="auto">
-      <ConfirmationDialog
-        description="By editing this question, you will also be updating the question for existing clients."
-        onCancel={() => {}}
-        onConfirm={() => {}}
-        open={showEditConfirmationDialog}
-        title="Are you sure you want to edit this question?"
-      />
-      <ConfirmationDialog
-        description="By deleting this question, you will also be deleting the question for existing clients."
-        onCancel={() => {}}
-        onConfirm={() => {}}
-        open={showDeleteConfirmationDialog}
-        title="Are you sure you want to delete this question?"
-      />
       <Typography component="h2" variant="h3" className={classes.heading}>
         Basic information
       </Typography>

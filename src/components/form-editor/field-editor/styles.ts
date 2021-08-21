@@ -24,7 +24,6 @@ const useStyles = makeStyles<Theme, { isDefault: boolean | undefined }>(
       },
     },
     input: {
-      // backgroundColor: theme.palette.background.paper,
       fontSize: 14,
       paddingBottom: 0,
       paddingTop: 0,
@@ -40,6 +39,10 @@ const useStyles = makeStyles<Theme, { isDefault: boolean | undefined }>(
       marginRight: 8,
       height: 20,
       width: 20,
+    },
+    selectIndicator: {
+      paddingBottom: 2,
+      paddingTop: 2,
     },
   })
 );

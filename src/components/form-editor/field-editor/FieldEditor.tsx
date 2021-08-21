@@ -10,16 +10,11 @@ import {
   Radio,
   Select,
   Switch,
-  TextField,
   Typography,
 } from "@material-ui/core";
-import {
-  Clear,
-  DragIndicator,
-  EditOutlined,
-  LockOutlined,
-} from "@material-ui/icons";
+import { DragIndicator, EditOutlined, LockOutlined } from "@material-ui/icons";
 
+import ConfirmationDialog from "components/common/confirmation-dialog";
 import FormActionIconButtons from "components/common/form-action-icon-buttons";
 import FormRow from "components/common/form-row";
 import FieldVariant from "constants/FieldVariant";
@@ -51,161 +46,211 @@ const FieldEditor = ({
   const classes = useStyles({ isDefault });
   const [isEditing, setIsEditing] = useState(false);
   const [fieldFormData, setFieldFormData] = useState({ ...field });
+  const [showEditConfirmationDialog, setShowEditConfirmationDialog] = useState(
+    false
+  );
+  const [
+    showDeleteConfirmationDialog,
+    setShowDeleteConfirmationDialog,
+  ] = useState(false);
 
   return (
-    <Card className={classes.card} elevation={2}>
-      <Box display="flex" justifyContent="space-between">
-        <Box display="flex" flexGrow={1}>
-          <DragIndicator
-            color={isDefault ? "disabled" : "action"}
-            className={classes.dragIcon}
-          />
-          {isReadOnly && (
-            <Switch
-              size="small"
-              color="primary"
-              checked={isDefault || isEnabled}
-              disabled={isDefault}
-              onChange={(e, checked) => {
-                onChangeEnabled(checked);
-              }}
+    <>
+      <ConfirmationDialog
+        cancelButtonLabel="No, go back"
+        confirmButtonLabel="Yes"
+        description="By editing this question, you will also be updating the question for existing clients."
+        onCancel={() => setShowEditConfirmationDialog(false)}
+        onConfirm={() => {
+          setIsEditing(true);
+          setShowEditConfirmationDialog(false);
+        }}
+        open={showEditConfirmationDialog}
+        title="Are you sure you want to edit this question?"
+      />
+      <ConfirmationDialog
+        cancelButtonLabel="No, go back"
+        confirmButtonLabel="Yes"
+        description="By deleting this question, you will also be deleting the question for existing clients."
+        onCancel={() => setShowDeleteConfirmationDialog(false)}
+        onConfirm={() => {
+          onDeleteField();
+          setShowDeleteConfirmationDialog(false);
+        }}
+        open={showDeleteConfirmationDialog}
+        title="Are you sure you want to delete this question?"
+      />
+      <Card className={classes.card} elevation={2}>
+        <Box display="flex" justifyContent="space-between">
+          <Box display="flex" flexGrow={1}>
+            <DragIndicator
+              color={isDefault ? "disabled" : "action"}
+              className={classes.dragIcon}
             />
-          )}
-          {!isEditing ? (
-            <Typography variant="body2" className={classes.label}>
-              {field.name}
-            </Typography>
-          ) : (
-            <FormRow
-              id={`${field.id} name`}
-              label={`${fieldFormData.name} field name`}
-              multiple={false}
-              questionType={QuestionType.TEXT}
-              variant={FieldVariant.COMPACT}
-            >
-              <OutlinedInput
-                autoComplete="new-password" // disable autocomplete
-                className={classes.input}
-                fullWidth
-                id={`${field.id} name`}
-                onChange={(e) =>
-                  setFieldFormData({ ...fieldFormData, name: e.target.value })
-                }
-                value={fieldFormData.name}
+            {isReadOnly && (
+              <Switch
+                size="small"
+                color="primary"
+                checked={isDefault || isEnabled}
+                disabled={isDefault}
+                onChange={(e, checked) => {
+                  onChangeEnabled(checked);
+                }}
               />
-            </FormRow>
-          )}
-        </Box>
-        <Box display="flex">
-          <Box display="flex" paddingX={2}>
-            {isDefault ? (
-              <Box display="flex" marginRight={6}>
-                <LockOutlined className={classes.labelIcon} />
-                <Typography
-                  color="textSecondary"
-                  variant="body2"
-                  style={{ fontSize: 12, alignSelf: "center", marginRight: 8 }}
-                >
-                  Identifier
-                </Typography>
-              </Box>
+            )}
+            {!isEditing ? (
+              <Typography variant="body2" className={classes.label}>
+                {field.name}
+              </Typography>
             ) : (
-              <>
-                {!isEditing ? (
-                  <QuestionTypeLabel questionType={field.question_type} />
-                ) : (
-                  <FormRow
-                    id={`${field.id} question type`}
-                    label={`${field.name} field question type`}
-                    multiple={false}
-                    questionType={QuestionType.TEXT}
-                    variant={FieldVariant.COMPACT}
-                  >
-                    <Select
-                      aria-label={field.question_type}
-                      className={classes.input}
-                      displayEmpty
-                      fullWidth
-                      inputProps={{
-                        className: classes.select,
-                      }}
-                      labelId={`${field.id} question type`}
-                      onChange={(e) =>
-                        setFieldFormData({
-                          ...fieldFormData,
-                          question_type: e.target.value as string,
-                        })
-                      }
-                      value={fieldFormData.question_type}
-                      variant="outlined"
-                    >
-                      <MenuItem
-                        value={QuestionType.TEXT}
-                        className={classes.menuItem}
-                      >
-                        <QuestionTypeLabel questionType={QuestionType.TEXT} />
-                      </MenuItem>
-                      <MenuItem
-                        value={QuestionType.SELECT}
-                        className={classes.menuItem}
-                      >
-                        <QuestionTypeLabel questionType={QuestionType.SELECT} />
-                      </MenuItem>
-                      <MenuItem
-                        value={QuestionType.MULTIPLE_SELECT}
-                        className={classes.menuItem}
-                      >
-                        <QuestionTypeLabel
-                          questionType={QuestionType.MULTIPLE_SELECT}
-                        />
-                      </MenuItem>
-                    </Select>
-                  </FormRow>
-                )}
-              </>
+              <FormRow
+                id={`${field.id} name`}
+                label={`${fieldFormData.name} field name`}
+                multiple={false}
+                questionType={QuestionType.TEXT}
+                variant={FieldVariant.COMPACT}
+              >
+                <OutlinedInput
+                  autoComplete="new-password" // disable autocomplete
+                  className={classes.input}
+                  fullWidth
+                  id={`${field.id} name`}
+                  onChange={(e) =>
+                    setFieldFormData({ ...fieldFormData, name: e.target.value })
+                  }
+                  value={fieldFormData.name}
+                />
+              </FormRow>
             )}
           </Box>
-          {!isReadOnly && (
-            <Box justifyContent="right">
-              {!isDefault &&
-                (!isEditing ? (
-                  <IconButton
-                    size="small"
-                    className={classes.editButton}
-                    onClick={() => {
-                      setIsEditing(true);
+          <Box display="flex">
+            <Box
+              display="flex"
+              justifyContent="flex-end"
+              paddingX={2}
+              width={160}
+            >
+              {isDefault ? (
+                <Box display="flex" marginRight={6}>
+                  <LockOutlined className={classes.labelIcon} />
+                  <Typography
+                    color="textSecondary"
+                    variant="body2"
+                    style={{
+                      fontSize: 12,
+                      alignSelf: "center",
+                      marginRight: 8,
                     }}
                   >
-                    <EditOutlined />
-                  </IconButton>
-                ) : (
-                  <FormActionIconButtons
-                    onDelete={onDeleteField}
-                    onSubmit={onUpdateField}
-                  />
-                ))}
-            </Box>
-          )}
-        </Box>
-      </Box>
-      {isEditing && field.question_type !== QuestionType.TEXT && (
-        <Box display="flex" flexDirection="column" paddingLeft={1.5}>
-          {fieldFormData.options.map((option) => (
-            <Box>
-              {field.question_type === QuestionType.MULTIPLE_SELECT ? (
-                <Checkbox disabled />
+                    Identifier
+                  </Typography>
+                </Box>
               ) : (
-                <Radio disabled />
+                <>
+                  {!isEditing ? (
+                    <QuestionTypeLabel questionType={field.question_type} />
+                  ) : (
+                    <FormRow
+                      id={`${field.id} question type`}
+                      label={`${field.name} field question type`}
+                      multiple={false}
+                      questionType={QuestionType.TEXT}
+                      variant={FieldVariant.COMPACT}
+                    >
+                      <Select
+                        aria-label={field.question_type}
+                        className={classes.input}
+                        displayEmpty
+                        fullWidth
+                        inputProps={{
+                          className: classes.select,
+                        }}
+                        labelId={`${field.id} question type`}
+                        onChange={(e) =>
+                          setFieldFormData({
+                            ...fieldFormData,
+                            question_type: e.target.value as string,
+                          })
+                        }
+                        value={fieldFormData.question_type}
+                        variant="outlined"
+                      >
+                        <MenuItem
+                          value={QuestionType.TEXT}
+                          className={classes.menuItem}
+                        >
+                          <QuestionTypeLabel questionType={QuestionType.TEXT} />
+                        </MenuItem>
+                        <MenuItem
+                          value={QuestionType.SELECT}
+                          className={classes.menuItem}
+                        >
+                          <QuestionTypeLabel
+                            questionType={QuestionType.SELECT}
+                          />
+                        </MenuItem>
+                        <MenuItem
+                          value={QuestionType.MULTIPLE_SELECT}
+                          className={classes.menuItem}
+                        >
+                          <QuestionTypeLabel
+                            questionType={QuestionType.MULTIPLE_SELECT}
+                          />
+                        </MenuItem>
+                      </Select>
+                    </FormRow>
+                  )}
+                </>
               )}
-              <TextField key={option} value={option} size="small" />
-              <IconButton size="small">
-                <Clear />
-              </IconButton>
             </Box>
-          ))}
+            {!isReadOnly && (
+              <Box justifyContent="right">
+                {!isDefault &&
+                  (!isEditing ? (
+                    <IconButton
+                      size="small"
+                      className={classes.editButton}
+                      onClick={() => setShowEditConfirmationDialog(true)}
+                    >
+                      <EditOutlined />
+                    </IconButton>
+                  ) : (
+                    <FormActionIconButtons
+                      onDelete={() => setShowDeleteConfirmationDialog(true)}
+                      onSubmit={() => {
+                        onUpdateField();
+                        setIsEditing(false);
+                      }}
+                    />
+                  ))}
+              </Box>
+            )}
+          </Box>
         </Box>
-      )}
-    </Card>
+        {isEditing && field.question_type !== QuestionType.TEXT && (
+          <Box marginTop={1} paddingLeft={1.5}>
+            {fieldFormData.options.map((option) => (
+              <Box display="flex" alignItems="center">
+                {field.question_type === QuestionType.MULTIPLE_SELECT ? (
+                  <Checkbox
+                    className={classes.selectIndicator}
+                    disabled
+                    size="small"
+                  />
+                ) : (
+                  <Radio
+                    className={classes.selectIndicator}
+                    disabled
+                    size="small"
+                  />
+                )}
+                <Typography variant="body2">{option}</Typography>
+              </Box>
+            ))}
+          </Box>
+        )}
+      </Card>
+    </>
   );
 };
 
