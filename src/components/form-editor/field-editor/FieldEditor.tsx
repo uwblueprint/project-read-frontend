@@ -24,6 +24,13 @@ import { DefaultField, DynamicField } from "types";
 import QuestionTypeLabel from "../question-type-label";
 import useStyles from "./styles";
 
+const getSelectIndicator = (className: string, questionType: string) =>
+  questionType === QuestionType.MULTIPLE_SELECT ? (
+    <Checkbox className={className} disabled size="small" />
+  ) : (
+    <Radio className={className} disabled size="small" />
+  );
+
 type Props = {
   field: DefaultField | DynamicField;
   isDefault: boolean;
@@ -227,26 +234,24 @@ const FieldEditor = ({
             )}
           </Box>
         </Box>
-        {isEditing && field.question_type !== QuestionType.TEXT && (
+        {isEditing && fieldFormData.question_type !== QuestionType.TEXT && (
           <Box marginTop={1} paddingLeft={1.5}>
             {fieldFormData.options.map((option) => (
               <Box display="flex" alignItems="center">
-                {field.question_type === QuestionType.MULTIPLE_SELECT ? (
-                  <Checkbox
-                    className={classes.selectIndicator}
-                    disabled
-                    size="small"
-                  />
-                ) : (
-                  <Radio
-                    className={classes.selectIndicator}
-                    disabled
-                    size="small"
-                  />
+                {getSelectIndicator(
+                  classes.selectIndicator,
+                  fieldFormData.question_type
                 )}
                 <Typography variant="body2">{option}</Typography>
               </Box>
             ))}
+            <Box display="flex" alignItems="center">
+              {getSelectIndicator(
+                classes.selectIndicator,
+                fieldFormData.question_type
+              )}
+              <Typography variant="body2">Add new option</Typography>
+            </Box>
           </Box>
         )}
       </Card>
