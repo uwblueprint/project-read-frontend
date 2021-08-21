@@ -20,7 +20,7 @@ import FamilyAPI from "api/FamilyAPI";
 import SessionAPI from "api/SessionAPI";
 import {
   ClassDetailResponse,
-  ClassRequest,
+  ClassDetailRequest,
   SessionListResponse,
   SessionDetailResponse,
   FamilyListResponse,
@@ -190,7 +190,7 @@ const Sessions = () => {
     setIsTakingAttendance(false);
   }, [isOnAttendanceView, classTabIndex]);
 
-  const onSubmitAttendance = async (classObj: ClassRequest) => {
+  const onSubmitAttendance = async (classObj: ClassDetailRequest) => {
     const updatedClass = await ClassAPI.putClass(classObj);
     setClassesMap(
       (prevMap) =>

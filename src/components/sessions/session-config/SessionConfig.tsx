@@ -1,6 +1,6 @@
 import React from "react";
 
-import { OutlinedInput, Typography } from "@material-ui/core";
+import { Box, OutlinedInput, Typography } from "@material-ui/core";
 
 import DateInput from "components/common/date-input";
 import FormRow from "components/common/form-row";
@@ -25,28 +25,32 @@ const SessionConfig = ({
   onChangeStartDate,
 }: Props) => (
   <div data-testid={TestId.SessionConfig}>
-    <Typography variant="h2">Session information</Typography>
-    <FormRow id="session-name" label="Name" questionType={QuestionType.TEXT}>
-      <OutlinedInput
-        autoComplete="new-password" // disable autocomplete
-        fullWidth
-        id="session-name"
-        inputProps={{ "data-testid": TestId.NameInput }}
-        onChange={(e) => onChangeSessionName(e.target.value)}
-        value={sessionName}
-      />
-    </FormRow>
-    <FormRow
-      id="start-date"
-      label="Start date"
-      questionType={QuestionType.DATE}
-    >
-      <DateInput
+    <Box marginBottom={3}>
+      <Typography variant="h3">Session information</Typography>
+    </Box>
+    <Box width={408}>
+      <FormRow id="session-name" label="Name" questionType={QuestionType.TEXT}>
+        <OutlinedInput
+          autoComplete="new-password" // disable autocomplete
+          fullWidth
+          id="session-name"
+          inputProps={{ "data-testid": TestId.NameInput }}
+          onChange={(e) => onChangeSessionName(e.target.value)}
+          value={sessionName}
+        />
+      </FormRow>
+      <FormRow
         id="start-date"
-        value={startDate}
-        onChange={(date) => onChangeStartDate(date)}
-      />
-    </FormRow>
+        label="Start date"
+        questionType={QuestionType.DATE}
+      >
+        <DateInput
+          id="start-date"
+          value={startDate}
+          onChange={(date) => onChangeStartDate(date)}
+        />
+      </FormRow>
+    </Box>
   </div>
 );
 

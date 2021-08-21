@@ -2,6 +2,16 @@ import DefaultFieldKey from "constants/DefaultFieldKey";
 import EnrolmentStatus from "constants/EnrolmentStatus";
 import StudentRole from "constants/StudentRole";
 
+export enum DaysOfWeek {
+  Monday = "Monday",
+  Tuesday = "Tuesday",
+  Wednesday = "Wednesday",
+  Thursday = "Thursday",
+  Friday = "Friday",
+  Saturday = "Saturday",
+  Sunday = "Sunday",
+}
+
 export type User = {
   id: number;
   first_name: string;

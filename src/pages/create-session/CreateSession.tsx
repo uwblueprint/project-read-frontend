@@ -11,6 +11,9 @@ import {
 import { NavigateBefore } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
+import { SessionRequest } from "api/types";
+import AddClasses from "components/sessions/add-classes";
+import { defaultClassData } from "components/sessions/add-classes/AddClasses";
 import SessionConfig from "components/sessions/session-config";
 
 enum CreateSessionStepLabel {
@@ -27,12 +30,10 @@ const steps = [
 
 const CreateSession = () => {
   const history = useHistory();
-  const [session, setSession] = useState<{
-    name: string;
-    startDate: Date | null;
-  }>({
+  const [session, setSession] = useState<SessionRequest>({
     name: "",
     startDate: null,
+    classes: [defaultClassData],
   });
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeStep = steps[activeStepIndex];
@@ -81,7 +82,12 @@ const CreateSession = () => {
       case CreateSessionStepLabel.CONFIGURE_FORM:
       // fall through
       case CreateSessionStepLabel.ADD_CLASSES:
-      // fall through
+        return (
+          <AddClasses
+            classList={session.classes}
+            onChangeClasses={(classes) => setSession({ ...session, classes })}
+          />
+        );
       default:
         return null;
     }
