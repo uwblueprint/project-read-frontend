@@ -16,10 +16,19 @@ const useStyles = makeStyles<Theme, { isDefault: boolean | undefined }>(
       width: 16,
     }),
     editButton: {
+      borderRadius: 8,
+      marginLeft: 24,
       "& svg": {
         height: 20,
         width: 20,
       },
+    },
+    input: {
+      // backgroundColor: theme.palette.background.paper,
+      fontSize: 14,
+      paddingBottom: 0,
+      paddingTop: 0,
+      height: 32,
     },
     label: {
       alignSelf: "center",

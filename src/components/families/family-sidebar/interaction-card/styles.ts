@@ -18,15 +18,6 @@ const useStyles = makeStyles((theme) => ({
       width: 20,
     },
   },
-  formActionButton: {
-    borderRadius: 8,
-    height: 32,
-    width: 32,
-    "& svg": {
-      height: 20,
-      width: 20,
-    },
-  },
   input: {
     backgroundColor: theme.palette.background.paper,
     fontSize: 14,
