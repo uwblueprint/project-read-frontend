@@ -58,16 +58,12 @@ const QuestionTypeLabel = ({ questionType }: Props) => {
   const classes = useStyles();
 
   return (
-    <Box display="flex">
+    <Box display="flex" alignItems="center">
       {getQuestionTypeDisplay(questionType, classes.labelIcon).icon}
       <Typography
+        className={classes.label}
         color="textSecondary"
         variant="body2"
-        style={{
-          fontSize: 12,
-          alignSelf: "center",
-          marginRight: 8,
-        }}
       >
         {getQuestionTypeDisplay(questionType, classes.labelIcon).label}
       </Typography>

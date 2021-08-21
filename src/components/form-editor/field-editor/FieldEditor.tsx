@@ -138,7 +138,7 @@ const FieldEditor = ({
               width={160}
             >
               {isDefault ? (
-                <Box marginRight={6}>
+                <Box marginRight={isReadOnly ? 0 : 6}>
                   <QuestionTypeLabel questionType={QuestionType.IDENTIFIER} />
                 </Box>
               ) : (
