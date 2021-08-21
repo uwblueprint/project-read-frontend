@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Box, Divider, Typography } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
@@ -51,6 +51,10 @@ const FamilySidebarEnrolmentCard = ({ enrolment, students }: Props) => {
     setExpanded(!expanded);
   };
 
+  useEffect(() => {
+    setExpanded(false);
+  }, [enrolment]);
+
   return (
     <Box
       onClick={handleExpandClick}
@@ -61,18 +65,17 @@ const FamilySidebarEnrolmentCard = ({ enrolment, students }: Props) => {
       paddingY={1.5}
     >
       <Box display="flex" flexDirection="row" alignItems="center">
-        <div className={classes.bold}>
+        <Box className={classes.bold} width="100px">
           <Typography variant="body2">{enrolment.session.name}</Typography>
-        </div>
+        </Box>
         <Divider className={classes.divider} orientation="vertical" flexItem />
-        <div className={classes.bold}>
+        <Box className={classes.bold} width="100px">
           <Typography variant="body2">
             {enrolment.enrolled_class
               ? enrolment.enrolled_class.name
               : "Not Assigned"}
           </Typography>
-        </div>
-
+        </Box>
         <Divider
           classes={{ root: classes.divider }}
           orientation="vertical"
