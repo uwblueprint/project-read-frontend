@@ -31,13 +31,13 @@ const PreviousEnrolmentCard = ({ enrolment, students }: Props) => {
   return (
     <SidebarCard>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Box width="100px">
+        <Box width={100}>
           <Typography variant="body2">
             <b>{enrolment.session.name}</b>
           </Typography>
         </Box>
         <Divider className={classes.divider} orientation="vertical" flexItem />
-        <Box width="100px">
+        <Box width={100}>
           <Typography variant="body2">
             <b>
               {enrolment.enrolled_class
@@ -65,17 +65,15 @@ const PreviousEnrolmentCard = ({ enrolment, students }: Props) => {
         </IconButton>
       </Box>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Box>
-          <div className={classes.content}>
-            {students
-              .filter((student) => enrolment.students.includes(student.id))
-              .map((student) => (
-                <Typography key={student.id} variant="body2">
-                  {student.first_name} {student.last_name}
-                </Typography>
-              ))}
-          </div>
-        </Box>
+        <div className={classes.content}>
+          {students
+            .filter((student) => enrolment.students.includes(student.id))
+            .map((student) => (
+              <Typography key={student.id} variant="body2">
+                {student.first_name} {student.last_name}
+              </Typography>
+            ))}
+        </div>
       </Collapse>
     </SidebarCard>
   );
