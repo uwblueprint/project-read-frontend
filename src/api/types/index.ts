@@ -130,3 +130,10 @@ export type DynamicFieldsResponse = {
   guest_fields: DynamicField[];
   session_fields: DynamicField[];
 };
+
+export type DynamicFieldRequest = Pick<
+  DynamicField,
+  "id" | "name" | "options" | "question_type"
+>;
+
+export type DynamicFieldResponse = DynamicFieldRequest;

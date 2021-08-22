@@ -25,7 +25,7 @@ const FormEditor = ({
     childDynamicFields,
     guestDynamicFields,
     sessionDynamicFields,
-  } = useContext(DynamicFieldsContext);
+  } = useContext(DynamicFieldsContext).dynamicFields;
   const classes = useStyles();
 
   const handleChangeEnabledField = (id: number, enabled: boolean) =>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -16,11 +16,13 @@ import {
 } from "@material-ui/core";
 import { Clear, DragIndicator, EditOutlined } from "@material-ui/icons";
 
+import DynamicFieldAPI from "api/DynamicFieldAPI";
 import ConfirmationDialog from "components/common/confirmation-dialog";
 import FormActionIconButtons from "components/common/form-action-icon-buttons";
 import FormRow from "components/common/form-row";
 import FieldVariant from "constants/FieldVariant";
 import QuestionType from "constants/QuestionType";
+import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField } from "types";
 
 import QuestionTypeLabel from "../question-type-label";
@@ -29,7 +31,7 @@ import useStyles from "./styles";
 // unique identifier for options
 let OPTION_KEY_COUNTER = 1;
 
-export const generateKey = (): number => {
+const generateKey = (): number => {
   const key = OPTION_KEY_COUNTER;
   OPTION_KEY_COUNTER += 1;
   return key;
@@ -57,8 +59,6 @@ type Props = {
   isEnabled?: boolean;
   isReadOnly: boolean;
   onChangeEnabled?: (enabled: boolean) => void;
-  onDeleteField?: () => void;
-  onUpdateField?: () => void;
 };
 
 const FieldEditor = ({
@@ -67,9 +67,8 @@ const FieldEditor = ({
   isEnabled = true,
   isReadOnly,
   onChangeEnabled = () => {},
-  onDeleteField = () => {},
-  onUpdateField = () => {},
 }: Props) => {
+  const { fetchDynamicFields } = useContext(DynamicFieldsContext);
   const classes = useStyles({ isDefault });
   const [isEditing, setIsEditing] = useState(false);
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
@@ -117,6 +116,31 @@ const FieldEditor = ({
     });
   };
 
+  const onSubmitField = async () => {
+    const data = {
+      ...field,
+      id: Number(field.id),
+      options: fieldFormData.options.map((option) => option.value),
+    };
+    try {
+      await DynamicFieldAPI.putField(data);
+      fetchDynamicFields();
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
+    }
+  };
+
+  const onDeleteField = async () => {
+    try {
+      // TODO: call delete endpoint
+      fetchDynamicFields();
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
+    }
+  };
+
   return (
     <>
       <ConfirmationDialog
@@ -161,11 +185,7 @@ const FieldEditor = ({
                 }}
               />
             )}
-            {!isEditing ? (
-              <Typography variant="body2" className={classes.label}>
-                {field.name}
-              </Typography>
-            ) : (
+            {isEditing ? (
               <FormRow
                 id={`${field.id} name`}
                 label={`${fieldFormData.name} field name`}
@@ -184,6 +204,10 @@ const FieldEditor = ({
                   value={fieldFormData.name}
                 />
               </FormRow>
+            ) : (
+              <Typography variant="body2" className={classes.label}>
+                {field.name}
+              </Typography>
             )}
           </Box>
           <Box display="flex" alignItems="center">
@@ -199,9 +223,7 @@ const FieldEditor = ({
                 </Box>
               ) : (
                 <>
-                  {!isEditing ? (
-                    <QuestionTypeLabel questionType={field.question_type} />
-                  ) : (
+                  {isEditing ? (
                     <FormRow
                       id={`${field.id} question type`}
                       label={`${field.name} field question type`}
@@ -239,6 +261,8 @@ const FieldEditor = ({
                         </MenuItem>
                       </Select>
                     </FormRow>
+                  ) : (
+                    <QuestionTypeLabel questionType={field.question_type} />
                   )}
                 </>
               )}
@@ -258,7 +282,7 @@ const FieldEditor = ({
                     <FormActionIconButtons
                       onDelete={() => setShowDeleteConfirmationDialog(true)}
                       onSubmit={() => {
-                        onUpdateField();
+                        onSubmitField();
                         setIsEditing(false);
                       }}
                     />

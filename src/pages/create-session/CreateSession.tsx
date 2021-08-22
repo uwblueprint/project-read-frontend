@@ -36,7 +36,7 @@ const CreateSession = () => {
     childDynamicFields,
     guestDynamicFields,
     sessionDynamicFields,
-  } = useContext(DynamicFieldsContext);
+  } = useContext(DynamicFieldsContext).dynamicFields;
   const history = useHistory();
   const [session, setSession] = useState<SessionRequest>({
     name: "",

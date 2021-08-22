@@ -31,7 +31,6 @@ export type DefaultField = Field & {
 
 export type DynamicField = Field & {
   id: number;
-  role: StudentRole;
 };
 
 export type Student = {

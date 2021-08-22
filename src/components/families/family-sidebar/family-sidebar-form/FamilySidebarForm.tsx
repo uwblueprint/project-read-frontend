@@ -40,7 +40,7 @@ const FamilySidebarForm = ({
     guestDynamicFields,
     parentDynamicFields,
     sessionDynamicFields,
-  } = useContext(DynamicFieldsContext);
+  } = useContext(DynamicFieldsContext).dynamicFields;
 
   const onSubmitFamilyForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

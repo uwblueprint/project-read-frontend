@@ -100,7 +100,7 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
     guestDynamicFields,
     parentDynamicFields,
     sessionDynamicFields,
-  } = useContext(DynamicFieldsContext);
+  } = useContext(DynamicFieldsContext).dynamicFields;
 
   const [family, setFamily] = useState<FamilyFormData>(
     existingFamily !== null
@@ -270,6 +270,7 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
               parent: { ...family.parent, information: value },
             })
           }
+          role={StudentRole.SESSION}
           variant={FieldVariant.STACKED}
         />
 
