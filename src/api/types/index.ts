@@ -64,7 +64,6 @@ export type FamilyDetailResponse = Pick<
   | "interactions"
 > & {
   children: Student[];
-  current_enrolment: EnrolmentResponse | null;
   enrolments: EnrolmentResponse[];
   guests: Student[];
 };

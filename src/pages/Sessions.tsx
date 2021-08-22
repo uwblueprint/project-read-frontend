@@ -15,7 +15,6 @@ import { makeStyles } from "@material-ui/styles";
 import { useHistory, useParams } from "react-router-dom";
 
 import ClassAPI from "api/ClassAPI";
-import EnrolmentAPI from "api/EnrolmentAPI";
 import FamilyAPI from "api/FamilyAPI";
 import SessionAPI from "api/SessionAPI";
 import {
@@ -30,6 +29,7 @@ import {
 import Spinner from "components/common/spinner";
 import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
+import saveEnrolments from "components/families/family-sidebar/utils";
 import FamilyTable from "components/families/family-table";
 import RegistrationForm from "components/registration/registration-form";
 import RegistrationDialog from "components/registration/RegistrationDialog";
@@ -223,13 +223,14 @@ const Sessions = () => {
     }
   };
 
-  const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
-    if (selectedFamily === null || selectedFamily.current_enrolment === null) {
+  const onEditFamilyEnrolment = async (data: EnrolmentRequest) => {
+    if (selectedFamily === null) {
       return;
     }
+    const enrolments = await saveEnrolments(selectedFamily.enrolments, data);
     setSelectedFamily({
       ...selectedFamily,
-      current_enrolment: await EnrolmentAPI.putEnrolment(data),
+      enrolments,
     });
     resetSession();
   };
@@ -265,7 +266,7 @@ const Sessions = () => {
             isOpen={isSidebarOpen}
             family={selectedFamily}
             onClose={() => setIsSidebarOpen(false)}
-            onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
+            onEditEnrolment={onEditFamilyEnrolment}
             onSaveFamily={onSaveFamily}
           />
         )}
