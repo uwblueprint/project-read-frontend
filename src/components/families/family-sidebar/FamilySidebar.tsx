@@ -34,6 +34,7 @@ import { FamilyFormData } from "../family-form/types";
 import EnrolmentForm from "./enrolment-form";
 import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
 import InteractionCard from "./interaction-card";
+import PreviousEnrolmentCard from "./previous-enrolment-card";
 
 const DRAWER_WIDTH = 416;
 
@@ -358,6 +359,25 @@ const FamilySidebar = ({
           }}
           value={familyFormData.notes}
         />
+
+        <Box paddingTop={2}>
+          <Divider />
+        </Box>
+
+        <Typography variant="h3" className={classes.heading}>
+          Previous Enrolments
+        </Typography>
+        {family.enrolments
+          .filter((enrolment) => !enrolment.session.active)
+          .map((enrolment) => (
+            <PreviousEnrolmentCard
+              key={enrolment.id}
+              enrolment={enrolment}
+              students={family.children
+                .concat(family.parent)
+                .concat(family.guests)}
+            />
+          ))}
       </Box>
 
       {isEditingFamily && (

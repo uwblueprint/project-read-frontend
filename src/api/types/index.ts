@@ -19,7 +19,7 @@ export type ClassDetailResponse = Class & {
   families: FamilyListResponse[];
 };
 
-export type SessionListResponse = Pick<Session, "id" | "name"> & {
+export type SessionListResponse = Pick<Session, "active" | "id" | "name"> & {
   classes: ClassListResponse[];
 };
 
@@ -65,6 +65,7 @@ export type FamilyDetailResponse = Pick<
 > & {
   children: Student[];
   current_enrolment: EnrolmentResponse | null;
+  enrolments: EnrolmentResponse[];
   guests: Student[];
 };
 
