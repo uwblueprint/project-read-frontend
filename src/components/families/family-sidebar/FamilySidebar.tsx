@@ -244,7 +244,7 @@ const FamilySidebar = ({
         </Typography>
 
         <Typography variant="h3" className={classes.heading}>
-          Enrolments
+          Enrolment
         </Typography>
         {activeEnrolments.length ? (
           activeEnrolments.map((enrolment, i) => (

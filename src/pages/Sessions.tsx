@@ -100,7 +100,7 @@ const Sessions = () => {
       return;
     }
     if (!sessionId) {
-      history.push(`/sessions/${sessions[0].id}`);
+      history.push(`/sessions/${sessions[sessions.length - 1].id}`);
     } else {
       updateSelectedSession(Number(sessionId));
     }
