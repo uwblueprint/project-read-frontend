@@ -65,10 +65,13 @@ describe("RegistrationForm", () => {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DynamicFieldsContext.Provider
           value={{
-            parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
-            childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
-            guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
-            sessionDynamicFields: [TEST_SESSION_DYNAMIC_FIELD],
+            dynamicFields: {
+              parentDynamicFields: [TEST_PARENT_DYNAMIC_FIELD],
+              childDynamicFields: [TEST_CHILD_DYNAMIC_FIELD],
+              guestDynamicFields: [TEST_GUEST_DYNAMIC_FIELD],
+              sessionDynamicFields: [TEST_SESSION_DYNAMIC_FIELD],
+            },
+            fetchDynamicFields: () => {},
           }}
         >
           <RegistrationForm
@@ -198,7 +201,7 @@ describe("RegistrationForm", () => {
     });
 
     fireEvent.change(
-      getByTestId(`${StudentRole.PARENT} ${TEST_SESSION_DYNAMIC_FIELD.name}`),
+      getByTestId(`${StudentRole.SESSION} ${TEST_SESSION_DYNAMIC_FIELD.name}`),
       {
         target: { value: TestValue.TimeInCanada },
       }
