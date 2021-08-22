@@ -88,6 +88,7 @@ export type Class = {
 
 export type Enrolment = {
   id: number;
+  created_at: Date;
   family: number; // family id
   status: EnrolmentStatus;
   students: number[];

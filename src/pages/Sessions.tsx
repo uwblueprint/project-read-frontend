@@ -254,7 +254,9 @@ const Sessions = () => {
       <FamilyTable
         families={getFamilies()}
         enrolmentFields={
-          isOnAllClassesTab(classTabIndex) ? [DefaultFields.ENROLLED_CLASS] : []
+          isOnAllClassesTab(classTabIndex)
+            ? [DefaultFields.REGISTERED_AT, DefaultFields.ENROLLED_CLASS]
+            : [DefaultFields.REGISTERED_AT]
         }
         shouldDisplayDynamicFields={false}
         onSelectFamily={async (id) => {
