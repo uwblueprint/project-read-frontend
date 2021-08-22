@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 
-import { Box, Divider, IconButton, Typography } from "@material-ui/core";
-import Collapse from "@material-ui/core/Collapse";
+import {
+  Box,
+  Collapse,
+  Divider,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 
 import { EnrolmentResponse } from "api/types";
@@ -31,13 +36,13 @@ const PreviousEnrolmentCard = ({ enrolment, students }: Props) => {
   return (
     <SidebarCard>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Box width={100}>
+        <Box className={classes.headingContainer}>
           <Typography variant="body2">
             <b>{enrolment.session.name}</b>
           </Typography>
         </Box>
         <Divider className={classes.divider} orientation="vertical" flexItem />
-        <Box width={100}>
+        <Box className={classes.headingContainer}>
           <Typography variant="body2">
             <b>
               {enrolment.enrolled_class

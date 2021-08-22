@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
   expandButtonOpen: {
     transform: "rotate(180deg)",
   },
+  headingContainer: {
+    width: 100,
+  },
   statusChip: {
     height: 26,
   },
