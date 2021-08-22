@@ -271,7 +271,12 @@ const FieldEditor = ({
             {!isReadOnly && (
               <Box justifyContent="right">
                 {!isDefault &&
-                  (!isEditing ? (
+                  (isEditing ? (
+                    <FormActionIconButtons
+                      onDelete={() => setShowDeleteConfirmationDialog(true)}
+                      onSubmit={() => onSubmitField()}
+                    />
+                  ) : (
                     <IconButton
                       aria-label="edit question"
                       className={classes.editButton}
@@ -280,11 +285,6 @@ const FieldEditor = ({
                     >
                       <EditOutlined />
                     </IconButton>
-                  ) : (
-                    <FormActionIconButtons
-                      onDelete={() => setShowDeleteConfirmationDialog(true)}
-                      onSubmit={() => onSubmitField()}
-                    />
                   ))}
               </Box>
             )}
