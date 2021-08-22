@@ -99,8 +99,8 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     id: DefaultFieldKey.PREFERRED_CONTACT,
     is_default: true,
     name: "Preferred contact",
-    question_type: QuestionType.SELECT,
-    options: ["Phone", "Email"],
+    question_type: QuestionType.TEXT,
+    options: [],
   },
   PREFERRED_NUMBER: {
     id: DefaultFieldKey.PREFERRED_NUMBER,
