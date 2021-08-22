@@ -165,6 +165,10 @@ const FamilySidebar = ({
     (enrolment) => enrolment.session.active
   );
 
+  const previousEnrolments = family.enrolments.filter(
+    (enrolment) => !enrolment.session.active
+  );
+
   // Family form ==============================================================
 
   const resetFormData = () => {
@@ -383,9 +387,8 @@ const FamilySidebar = ({
         <Typography variant="h3" className={classes.heading}>
           Previous Enrolments
         </Typography>
-        {family.enrolments
-          .filter((enrolment) => !enrolment.session.active)
-          .map((enrolment) => (
+        {previousEnrolments.length ? (
+          previousEnrolments.map((enrolment) => (
             <PreviousEnrolmentCard
               key={enrolment.id}
               enrolment={enrolment}
@@ -393,7 +396,12 @@ const FamilySidebar = ({
                 .concat(family.parent)
                 .concat(family.guests)}
             />
-          ))}
+          ))
+        ) : (
+          <Box paddingLeft={2}>
+            <Typography variant="body2">No previous enrolments</Typography>
+          </Box>
+        )}
       </Box>
 
       {isEditingFamily && (
