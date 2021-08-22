@@ -33,7 +33,6 @@ const useStyles = makeStyles<Theme, Props>(() => ({
       status === EnrolmentStatus.CLASS_ALLOCATED ? 12 : 14,
     fontWeight: 500,
     width: 100,
-    height: "26px",
 
     "& .MuiChip-label": {
       paddingLeft: 6,
