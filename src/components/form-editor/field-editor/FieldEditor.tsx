@@ -70,7 +70,7 @@ const FieldEditor = ({
 }: Props) => {
   const { fetchDynamicFields } = useContext(DynamicFieldsContext);
   const classes = useStyles({ isDefault });
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
     ...field,
     options: [],
