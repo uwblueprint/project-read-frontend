@@ -15,16 +15,18 @@ const FormActionIconButtons = ({ onDelete, onSubmit }: Props) => {
   return (
     <>
       <IconButton
-        size="small"
+        aria-label="delete"
         className={classes.formActionButton}
         onClick={onDelete}
+        size="small"
       >
         <DeleteOutline />
       </IconButton>
       <IconButton
-        size="small"
+        aria-label="save"
         className={classes.formActionButton}
         onClick={onSubmit}
+        size="small"
       >
         <Check />
       </IconButton>

@@ -70,7 +70,7 @@ const FieldEditor = ({
 }: Props) => {
   const { fetchDynamicFields } = useContext(DynamicFieldsContext);
   const classes = useStyles({ isDefault });
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
     ...field,
     options: [],
@@ -124,6 +124,7 @@ const FieldEditor = ({
     };
     try {
       await DynamicFieldAPI.putField(data);
+      setIsEditing(false);
       fetchDynamicFields();
     } catch (err) {
       // eslint-disable-next-line no-alert
@@ -272,19 +273,17 @@ const FieldEditor = ({
                 {!isDefault &&
                   (!isEditing ? (
                     <IconButton
-                      size="small"
+                      aria-label="edit question"
                       className={classes.editButton}
                       onClick={() => setShowEditConfirmationDialog(true)}
+                      size="small"
                     >
                       <EditOutlined />
                     </IconButton>
                   ) : (
                     <FormActionIconButtons
                       onDelete={() => setShowDeleteConfirmationDialog(true)}
-                      onSubmit={() => {
-                        onSubmitField();
-                        setIsEditing(false);
-                      }}
+                      onSubmit={() => onSubmitField()}
                     />
                   ))}
               </Box>
