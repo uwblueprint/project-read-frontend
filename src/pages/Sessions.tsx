@@ -257,6 +257,11 @@ const Sessions = () => {
           <AddGuestDialog
             classObj={selectedClass}
             onClose={() => setDisplayAddGuestDialog(false)}
+            onSubmit={() => {
+              setDisplayAddGuestDialog(false);
+              setSnackbarMessage("Successfully added a guest to this session.");
+              resetClass(selectedClass.id);
+            }}
             open={displayAddGuestDialog}
             sessionId={selectedSession!.id}
           />

@@ -1,11 +1,12 @@
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   button: {
+    alignSelf: "center",
     order: -1,
     height: 36,
-    marginTop: 5,
-    marginRight: 15,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     textTransform: "none",
   },
   buttonIcon: {

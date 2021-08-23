@@ -82,6 +82,18 @@ const AttendanceTable = ({
     }
   };
 
+  const AddGuestButton = () => (
+    <Button
+      className={classes.button}
+      disabled={isEditing}
+      onClick={onClickAddGuest}
+      variant="outlined"
+    >
+      Add a guest
+      <Add className={classes.buttonIcon} />
+    </Button>
+  );
+
   const options: MUIDataTableOptions = {
     responsive: "standard",
     pagination: false,
@@ -98,15 +110,19 @@ const AttendanceTable = ({
           {!isEditing ? "Take attendance " : "Done attendance "}
           <Check className={classes.buttonIcon} />
         </Button>
-        <Button
-          variant="outlined"
-          onClick={onClickAddGuest}
-          className={classes.button}
-        >
-          Add a guest
-          <Add className={classes.buttonIcon} />
-        </Button>
         {isEditing ? (
+          <Tooltip
+            title="Please save attendance before adding a guest"
+            aria-label="currently editing attendance"
+          >
+            <span className={classes.button}>
+              <AddGuestButton />
+            </span>
+          </Tooltip>
+        ) : (
+          <AddGuestButton />
+        )}
+        {isEditing && (
           <>
             <Tooltip title="Add Date">
               <IconButton onClick={() => setOpen(true)}>
@@ -125,7 +141,7 @@ const AttendanceTable = ({
               value={null}
             />
           </>
-        ) : null}
+        )}
       </>
     ),
     setRowProps: (row, dataIndex, rowIndex) => ({
@@ -155,36 +171,40 @@ const AttendanceTable = ({
           : "no";
       });
       rows.push(parentRow);
-      family.children.forEach((child) => {
-        const childRow: AttendanceTableRow = {
-          family_id: family.id.toString(),
-          id: child.id.toString(),
-          role: StudentRole.CHILD,
-          first_name: child.first_name,
-          last_name: child.last_name,
-        };
-        data.attendance.forEach((currClass) => {
-          childRow[currClass.date] = currClass.attendees.includes(child.id)
-            ? "yes"
-            : "no";
+      family.children
+        .filter((child) => family.enrolment?.students.includes(child.id))
+        .forEach((child) => {
+          const childRow: AttendanceTableRow = {
+            family_id: family.id.toString(),
+            id: child.id.toString(),
+            role: StudentRole.CHILD,
+            first_name: child.first_name,
+            last_name: child.last_name,
+          };
+          data.attendance.forEach((currClass) => {
+            childRow[currClass.date] = currClass.attendees.includes(child.id)
+              ? "yes"
+              : "no";
+          });
+          rows.push(childRow);
         });
-        rows.push(childRow);
-      });
-      family.guests.forEach((guest) => {
-        const guestRow: AttendanceTableRow = {
-          family_id: family.id.toString(),
-          id: guest.id.toString(),
-          role: StudentRole.GUEST,
-          first_name: `${guest.first_name} (guest)`,
-          last_name: guest.last_name,
-        };
-        data.attendance.forEach((currClass) => {
-          guestRow[currClass.date] = currClass.attendees.includes(guest.id)
-            ? "yes"
-            : "no";
+      family.guests
+        .filter((guest) => family.enrolment?.students.includes(guest.id))
+        .forEach((guest) => {
+          const guestRow: AttendanceTableRow = {
+            family_id: family.id.toString(),
+            id: guest.id.toString(),
+            role: StudentRole.GUEST,
+            first_name: `${guest.first_name} (guest)`,
+            last_name: guest.last_name,
+          };
+          data.attendance.forEach((currClass) => {
+            guestRow[currClass.date] = currClass.attendees.includes(guest.id)
+              ? "yes"
+              : "no";
+          });
+          rows.push(guestRow);
         });
-        rows.push(guestRow);
-      });
     });
     return rows;
   };
