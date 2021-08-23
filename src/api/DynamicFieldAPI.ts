@@ -13,6 +13,6 @@ const getFields = async (): Promise<DynamicFieldsResponse> => {
 const putField = async (
   data: DynamicFieldRequest
 ): Promise<DynamicFieldResponse> =>
-  (await APIUtils.put(`/fields/${data.id}`, data)) as DynamicFieldResponse;
+  (await APIUtils.put(`/fields/${data.id}/`, data)) as DynamicFieldResponse;
 
 export default { getFields, putField };

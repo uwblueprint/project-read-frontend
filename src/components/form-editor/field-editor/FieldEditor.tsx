@@ -118,7 +118,7 @@ const FieldEditor = ({
 
   const onSubmitField = async () => {
     const data = {
-      ...field,
+      ...fieldFormData,
       id: Number(field.id),
       options: fieldFormData.options.map((option) => option.value),
     };
