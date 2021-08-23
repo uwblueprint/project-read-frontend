@@ -100,8 +100,9 @@ const AttendanceTable = ({
         </Button>
         <Tooltip
           aria-label="currently editing attendance"
-          disableHoverListener={!isEditing}
-          title="Please save attendance before adding a guest"
+          title={
+            isEditing ? "Please save attendance before adding a guest" : ""
+          }
         >
           <span className={classes.button}>
             <Button
@@ -200,6 +201,10 @@ const AttendanceTable = ({
     });
     return rows;
   };
+
+  useEffect(() => {
+    setData(_.cloneDeep(classObj));
+  }, [classObj]);
 
   useEffect(() => {
     setTableRows(getTableRows());

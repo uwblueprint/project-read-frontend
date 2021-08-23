@@ -37,6 +37,7 @@ import {
 } from "api/types";
 import ConfirmationDialog from "components/common/confirmation-dialog";
 import RoundedOutlinedButton from "components/common/rounded-outlined-button";
+import SpinnerOverlay from "components/common/spinner-overlay";
 import StudentSearchBar from "components/family-search/student-search-bar";
 import DefaultFields from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
@@ -106,15 +107,18 @@ const AddGuestDialog = ({
   const [guests, setGuests] = useState<
     (StudentBasicRequest & { index: number })[]
   >([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const resetDialog = () => {
     setFirstName("");
     setLastName("");
     setShouldDisplaySearch(false);
     setFamilyResults([]);
-    setExpandedFamily(null);
+    setIsConfirming(false);
     setEnrolment(getDefaultEnrolmentData(sessionId, classObj.id));
+    setExpandedFamily(null);
     setGuests([]);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -150,6 +154,7 @@ const AddGuestDialog = ({
     if (!family) {
       return;
     }
+    setIsLoading(true);
     try {
       const guestIds: number[] = [];
       await Promise.all(
@@ -182,6 +187,7 @@ const AddGuestDialog = ({
       // eslint-disable-next-line no-alert
       alert(err);
     }
+    setIsLoading(false);
   };
 
   // Selecting existing students ==============================================
@@ -330,6 +336,7 @@ const AddGuestDialog = ({
   }, [enrolment.students, guests]);
 
   useEffect(() => {
+    // if a family was selected, expand their additional members
     if (enrolment.family !== null) {
       setExpandedFamily(
         familyResults.find((family) => family.id === enrolment.family?.id) ||
@@ -340,6 +347,7 @@ const AddGuestDialog = ({
 
   return (
     <>
+      {isLoading && <SpinnerOverlay />}
       <Dialog
         open={open}
         onClose={() => setIsConfirming(true)}
@@ -368,6 +376,7 @@ const AddGuestDialog = ({
           </Typography>
           <StudentSearchBar
             disabled={enrolment.students.length > 0}
+            disabledMessage="Clear student selections to search"
             firstName={firstName}
             lastName={lastName}
             onChangeFirstName={setFirstName}
@@ -380,9 +389,9 @@ const AddGuestDialog = ({
                 Search results
               </Typography>
               <TableContainer
+                className={classes.tableContainer}
                 component={Paper}
                 elevation={0}
-                className={classes.tableContainer}
               >
                 <Table stickyHeader aria-label="family search results table">
                   <caption hidden>Family search results</caption>
@@ -404,6 +413,7 @@ const AddGuestDialog = ({
                     <TableBody>
                       {familyResults.map((family) => (
                         <>
+                          {/* Parent */}
                           <TableRow key={family.id}>
                             <TableCell className={classes.iconButtonTableCell}>
                               <IconButton
@@ -449,6 +459,8 @@ const AddGuestDialog = ({
                               {getSelectButton(family, family.parent.id, true)}
                             </TableCell>
                           </TableRow>
+
+                          {/* New guests added */}
                           {family.id === expandedFamily?.id && (
                             <>
                               {guests.length > 0 &&
@@ -509,15 +521,24 @@ const AddGuestDialog = ({
                                     <TableCell
                                       className={classes.densePaddingY}
                                     >
-                                      <RoundedOutlinedButton
-                                        className={classes.selectButton}
-                                        disabled
+                                      <Tooltip
+                                        aria-label="delete guest to unselect"
+                                        title="Delete guest to unselect"
                                       >
-                                        Unselect
-                                      </RoundedOutlinedButton>
+                                        <span>
+                                          <RoundedOutlinedButton
+                                            className={classes.selectButton}
+                                            disabled
+                                          >
+                                            Unselect
+                                          </RoundedOutlinedButton>
+                                        </span>
+                                      </Tooltip>
                                     </TableCell>
                                   </TableRow>
                                 ))}
+
+                              {/* Existing children and guests */}
                               {family.children
                                 .concat(family.guests)
                                 .map((student) => (
@@ -566,16 +587,22 @@ const AddGuestDialog = ({
               </TableContainer>
             </>
           )}
-          <Button
-            className={classes.submitButton}
-            color="primary"
-            disabled={enrolment.family === null}
-            onClick={handleSubmit}
-            type="button"
-            variant="contained"
+          <Tooltip
+            aria-label="select students to add"
+            title={enrolment.family === null ? "Select students to add" : ""}
           >
-            Done
-          </Button>
+            <span>
+              <Button
+                color="primary"
+                disabled={enrolment.family === null}
+                onClick={handleSubmit}
+                type="button"
+                variant="contained"
+              >
+                Done
+              </Button>
+            </span>
+          </Tooltip>
         </DialogContent>
       </Dialog>
       <ConfirmationDialog

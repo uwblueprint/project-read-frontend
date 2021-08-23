@@ -56,10 +56,9 @@ const useStyles = makeStyles((theme) => ({
   studentRow: {
     backgroundColor: theme.palette.background.default,
   },
-  submitButton: {
-    marginTop: theme.spacing(2),
-  },
   tableContainer: {
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
     maxHeight: 250,
   },
 }));

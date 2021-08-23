@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Button, Box, TextField } from "@material-ui/core";
+import { Button, Box, TextField, Tooltip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Search } from "@material-ui/icons";
 
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   disabled?: boolean;
+  disabledMessage?: string;
   firstName: string;
   lastName: string;
   onChangeFirstName: (name: string) => void;
@@ -28,6 +29,7 @@ type Props = {
 
 const StudentSearchBar = ({
   disabled = false,
+  disabledMessage = "",
   firstName,
   lastName,
   onChangeFirstName,
@@ -68,16 +70,23 @@ const StudentSearchBar = ({
           value={lastName}
           onChange={(e) => onChangeLastName(e.target.value)}
         />
-        <Button
-          type="submit"
-          aria-label="search"
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          disabled={disabled}
+        <Tooltip
+          aria-label={disabled ? disabledMessage : ""}
+          title={disabled ? disabledMessage : ""}
         >
-          <Search />
-        </Button>
+          <span>
+            <Button
+              type="submit"
+              aria-label="search"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              disabled={disabled}
+            >
+              <Search />
+            </Button>
+          </span>
+        </Tooltip>
       </form>
     </Box>
   );
