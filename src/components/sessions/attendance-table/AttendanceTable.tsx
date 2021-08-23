@@ -82,18 +82,6 @@ const AttendanceTable = ({
     }
   };
 
-  const AddGuestButton = () => (
-    <Button
-      className={classes.button}
-      disabled={isEditing}
-      onClick={onClickAddGuest}
-      variant="outlined"
-    >
-      Add a guest
-      <Add className={classes.buttonIcon} />
-    </Button>
-  );
-
   const options: MUIDataTableOptions = {
     responsive: "standard",
     pagination: false,
@@ -110,18 +98,22 @@ const AttendanceTable = ({
           {!isEditing ? "Take attendance " : "Done attendance "}
           <Check className={classes.buttonIcon} />
         </Button>
-        {isEditing ? (
-          <Tooltip
-            title="Please save attendance before adding a guest"
-            aria-label="currently editing attendance"
-          >
-            <span className={classes.button}>
-              <AddGuestButton />
-            </span>
-          </Tooltip>
-        ) : (
-          <AddGuestButton />
-        )}
+        <Tooltip
+          aria-label="currently editing attendance"
+          disableHoverListener={!isEditing}
+          title="Please save attendance before adding a guest"
+        >
+          <span className={classes.button}>
+            <Button
+              disabled={isEditing}
+              onClick={onClickAddGuest}
+              variant="outlined"
+            >
+              Add a guest
+              <Add className={classes.buttonIcon} />
+            </Button>
+          </span>
+        </Tooltip>
         {isEditing && (
           <>
             <Tooltip title="Add Date">

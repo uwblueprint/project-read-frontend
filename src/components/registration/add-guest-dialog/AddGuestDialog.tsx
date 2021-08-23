@@ -218,56 +218,58 @@ const AddGuestDialog = ({
   const isNotSelected = (familyId: number) =>
     enrolment.family !== null && enrolment.family?.id !== familyId;
 
+  const getSelectButtonState = (
+    familyId: number,
+    isParent: boolean,
+    studentId: number
+  ) => {
+    if (isNotSelected(familyId)) {
+      return {
+        message: "Another family is currently selected",
+        selected: false,
+      };
+    }
+    if (enrolledStudentIds.includes(studentId)) {
+      return {
+        message: `This student is already registered in ${classObj.name}`,
+        selected: false,
+      };
+    }
+
+    const isParentWithSelectedMembers =
+      isParent &&
+      familyId === enrolment.family?.id &&
+      (guests.length > 0 ||
+        enrolment.students.find((id) => id !== studentId) !== undefined);
+    if (isParentWithSelectedMembers) {
+      return {
+        message: "Members in this family have been selected",
+        selected: true,
+      };
+    }
+
+    return { message: "", selected: false };
+  };
+
   const getSelectButton = (
     family: FamilySearchResponse,
     studentId: number,
     isParent: boolean
   ) => {
-    const isParentWithSelectedMembers =
-      isParent &&
-      family.id === enrolment.family?.id &&
-      (guests.length > 0 ||
-        enrolment.students.find((id) => id !== studentId) !== undefined);
-
-    if (isNotSelected(family.id)) {
+    const selectButtonState = getSelectButtonState(
+      family.id,
+      isParent,
+      studentId
+    );
+    if (selectButtonState.message.length) {
       return (
         <Tooltip
-          title="Another family is currently selected"
-          aria-label="another family selected"
+          title={selectButtonState.message}
+          aria-label="cannot select student"
         >
           <span>
             <RoundedOutlinedButton className={classes.selectButton} disabled>
-              Select
-            </RoundedOutlinedButton>
-          </span>
-        </Tooltip>
-      );
-    }
-
-    if (enrolledStudentIds.includes(studentId)) {
-      return (
-        <Tooltip
-          title={`This student is already registered in ${classObj.name}`}
-          aria-label="already registered"
-        >
-          <span>
-            <RoundedOutlinedButton className={classes.selectButton} disabled>
-              Select
-            </RoundedOutlinedButton>
-          </span>
-        </Tooltip>
-      );
-    }
-
-    if (isParentWithSelectedMembers) {
-      return (
-        <Tooltip
-          title="Members in this family have been selected"
-          aria-label="members selected"
-        >
-          <span>
-            <RoundedOutlinedButton className={classes.selectButton} disabled>
-              Unselect
+              {selectButtonState.selected ? "Unselect" : "Select"}
             </RoundedOutlinedButton>
           </span>
         </Tooltip>
