@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Box, Button, Checkbox, IconButton, Tooltip } from "@material-ui/core";
 import { Add, Check, SupervisorAccountOutlined } from "@material-ui/icons";
@@ -18,7 +18,11 @@ import StudentRole from "constants/StudentRole";
 import theme from "theme";
 import { Attendance } from "types";
 
+const FAMILY_ID_DATA_INDEX = 0;
+const STUDENT_ID_DATA_INDEX = 1;
+
 type AttendanceTableRow = {
+  family_id: string;
   id: string;
   role: StudentRole;
   first_name: string;
@@ -29,6 +33,7 @@ type AttendanceTableRow = {
 type Props = {
   classObj: ClassDetailResponse;
   isEditing: boolean;
+  onSelectFamily: (id: number) => void;
   onSubmit: (data: ClassDetailRequest) => void;
 };
 
@@ -47,7 +52,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
+const AttendanceTable = ({
+  classObj,
+  isEditing,
+  onSelectFamily,
+  onSubmit,
+}: Props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<ClassDetailRequest>(_.cloneDeep(classObj));
@@ -135,6 +145,7 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
     const rows: AttendanceTableRow[] = [];
     classObj.families.forEach((family) => {
       const parentRow: AttendanceTableRow = {
+        family_id: family.id.toString(),
         id: family.parent.id.toString(),
         role: StudentRole.PARENT,
         first_name: family.parent.first_name,
@@ -150,6 +161,7 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
       rows.push(parentRow);
       family.children.forEach((child) => {
         const childRow: AttendanceTableRow = {
+          family_id: family.id.toString(),
           id: child.id.toString(),
           role: StudentRole.CHILD,
           first_name: child.first_name,
@@ -164,6 +176,7 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
       });
       family.guests.forEach((guest) => {
         const guestRow: AttendanceTableRow = {
+          family_id: family.id.toString(),
           id: guest.id.toString(),
           role: StudentRole.GUEST,
           first_name: `${guest.first_name} (guest)`,
@@ -222,7 +235,7 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
                 inputProps={{ "aria-label": "attendance date checkbox" }}
                 onChange={() =>
                   handleCheckboxOnClick(
-                    Number(tableMeta.rowData[0]),
+                    Number(tableMeta.rowData[STUDENT_ID_DATA_INDEX]),
                     currClass.date
                   )
                 }
@@ -241,6 +254,14 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
     );
     return [
       {
+        // FAMILY_ID_DATA_INDEX = 0
+        name: "family_id",
+        options: {
+          display: "excluded",
+        },
+      } as MUIDataTableColumn,
+      {
+        // STUDENT_ID_DATA_INDEX = 1
         name: DefaultFieldKey.ID,
         options: {
           display: "excluded",
@@ -256,6 +277,12 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
       .concat(getHeaderColumns([firstNameColumn, lastNameColumn]))
       .concat(dateColumns);
   };
+
+  options.onRowClick = useCallback((rowData) => {
+    if (!isEditing) {
+      onSelectFamily(rowData[FAMILY_ID_DATA_INDEX]);
+    }
+  }, []);
 
   return (
     <MUIDataTable

@@ -242,35 +242,26 @@ const Sessions = () => {
         <AttendanceTable
           classObj={selectedClass}
           isEditing={isEditingAttendance}
+          onSelectFamily={async (id) => {
+            await onSelectFamily(id);
+            setIsSidebarOpen(true);
+          }}
           onSubmit={onSubmitAttendance}
         />
       );
     }
     return (
-      <>
-        <FamilyTable
-          families={getFamilies()}
-          enrolmentFields={
-            isOnAllClassesTab(classTabIndex)
-              ? [DefaultFields.ENROLLED_CLASS]
-              : []
-          }
-          shouldDisplayDynamicFields={false}
-          onSelectFamily={async (id) => {
-            await onSelectFamily(id);
-            setIsSidebarOpen(true);
-          }}
-        />
-        {selectedFamily && (
-          <FamilySidebar
-            isOpen={isSidebarOpen}
-            family={selectedFamily}
-            onClose={() => setIsSidebarOpen(false)}
-            onEditEnrolment={onEditFamilyEnrolment}
-            onSaveFamily={onSaveFamily}
-          />
-        )}
-      </>
+      <FamilyTable
+        families={getFamilies()}
+        enrolmentFields={
+          isOnAllClassesTab(classTabIndex) ? [DefaultFields.ENROLLED_CLASS] : []
+        }
+        shouldDisplayDynamicFields={false}
+        onSelectFamily={async (id) => {
+          await onSelectFamily(id);
+          setIsSidebarOpen(true);
+        }}
+      />
     );
   };
 
@@ -382,6 +373,15 @@ const Sessions = () => {
           classTabIndex={classTabIndex}
           onChangeClassTabIndex={handleChangeClassTabIndex}
           classDefaultView={getClassView()}
+        />
+      )}
+      {selectedFamily && (
+        <FamilySidebar
+          isOpen={isSidebarOpen}
+          family={selectedFamily}
+          onClose={() => setIsSidebarOpen(false)}
+          onEditEnrolment={onEditFamilyEnrolment}
+          onSaveFamily={onSaveFamily}
         />
       )}
     </>
