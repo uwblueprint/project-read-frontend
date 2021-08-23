@@ -99,15 +99,18 @@ export type FamilyListResponse = Pick<
   enrolment: EnrolmentResponse | null;
 };
 
+export type StudentSearchResponse = Pick<
+  Student,
+  "id" | DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME
+>;
+
 export type FamilySearchResponse = Pick<
   Family,
-  | DefaultFieldKey.EMAIL
-  | DefaultFieldKey.ID
-  | DefaultFieldKey.NUM_CHILDREN
-  | DefaultFieldKey.PHONE_NUMBER
+  DefaultFieldKey.EMAIL | DefaultFieldKey.ID | DefaultFieldKey.PHONE_NUMBER
 > & {
-  [DefaultFieldKey.FIRST_NAME]: string;
-  [DefaultFieldKey.LAST_NAME]: string;
+  parent: StudentSearchResponse;
+  children: StudentSearchResponse[];
+  guests: StudentSearchResponse[];
 };
 
 export type FamilyBaseRequest = Pick<

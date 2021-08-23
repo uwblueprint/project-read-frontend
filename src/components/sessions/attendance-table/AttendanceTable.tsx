@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Box, Button, Checkbox, IconButton, Tooltip } from "@material-ui/core";
 import { Add, Check, SupervisorAccountOutlined } from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import { makeStyles } from "@material-ui/styles";
 import _ from "lodash";
 import moment from "moment";
 import MUIDataTable, {
@@ -17,6 +16,8 @@ import getHeaderColumns from "constants/MuiDatatables";
 import StudentRole from "constants/StudentRole";
 import theme from "theme";
 import { Attendance } from "types";
+
+import useStyles from "./styles";
 
 const FAMILY_ID_DATA_INDEX = 0;
 const STUDENT_ID_DATA_INDEX = 1;
@@ -33,28 +34,15 @@ type AttendanceTableRow = {
 type Props = {
   classObj: ClassDetailResponse;
   isEditing: boolean;
+  onClickAddGuest: () => void;
   onSelectFamily: (id: number) => void;
   onSubmit: (data: ClassDetailRequest) => void;
 };
 
-const useStyles = makeStyles(() => ({
-  button: {
-    order: -1,
-    height: 36,
-    marginTop: 5,
-    marginRight: 15,
-    textTransform: "none",
-  },
-  checkmark: {
-    height: "20px",
-    width: "20px",
-    marginLeft: "8px",
-  },
-}));
-
 const AttendanceTable = ({
   classObj,
   isEditing,
+  onClickAddGuest,
   onSelectFamily,
   onSubmit,
 }: Props) => {
@@ -108,7 +96,15 @@ const AttendanceTable = ({
           className={classes.button}
         >
           {!isEditing ? "Take attendance " : "Done attendance "}
-          <Check className={classes.checkmark} />
+          <Check className={classes.buttonIcon} />
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={onClickAddGuest}
+          className={classes.button}
+        >
+          Add a guest
+          <Add className={classes.buttonIcon} />
         </Button>
         {isEditing ? (
           <>

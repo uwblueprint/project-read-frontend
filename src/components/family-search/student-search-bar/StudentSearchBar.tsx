@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  disabled?: boolean;
   firstName: string;
   lastName: string;
   onChangeFirstName: (name: string) => void;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 const StudentSearchBar = ({
+  disabled = false,
   firstName,
   lastName,
   onChangeFirstName,
@@ -72,6 +74,7 @@ const StudentSearchBar = ({
           variant="contained"
           color="primary"
           className={classes.button}
+          disabled={disabled}
         >
           <Search />
         </Button>

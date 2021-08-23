@@ -31,6 +31,7 @@ import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
 import saveEnrolments from "components/families/family-sidebar/utils";
 import FamilyTable from "components/families/family-table";
+import AddGuestDialog from "components/registration/add-guest-dialog";
 import RegistrationForm from "components/registration/registration-form";
 import RegistrationDialog from "components/registration/RegistrationDialog";
 import AttendanceTable from "components/sessions/attendance-table";
@@ -70,6 +71,7 @@ const Sessions = () => {
   );
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
+  const [displayAddGuestDialog, setDisplayAddGuestDialog] = useState(false);
   const [isOnAttendanceView, setAttendanceView] = useState(false);
   const [isEditingAttendance, setIsEditingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -241,15 +243,23 @@ const Sessions = () => {
     const selectedClass = classesMap.get(classTabIndex);
     if (isOnAttendanceView && selectedClass) {
       return (
-        <AttendanceTable
-          classObj={selectedClass}
-          isEditing={isEditingAttendance}
-          onSelectFamily={async (id) => {
-            await onSelectFamily(id);
-            setIsSidebarOpen(true);
-          }}
-          onSubmit={onSubmitAttendance}
-        />
+        <>
+          <AttendanceTable
+            classObj={selectedClass}
+            isEditing={isEditingAttendance}
+            onClickAddGuest={() => setDisplayAddGuestDialog(true)}
+            onSelectFamily={async (id) => {
+              await onSelectFamily(id);
+              setIsSidebarOpen(true);
+            }}
+            onSubmit={onSubmitAttendance}
+          />
+          <AddGuestDialog
+            classObj={selectedClass}
+            open={displayAddGuestDialog}
+            sessionId={selectedSession!.id}
+          />
+        </>
       );
     }
     return (
