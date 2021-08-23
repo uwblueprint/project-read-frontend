@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  Button,
-  Checkbox,
-  createMuiTheme,
-  MuiThemeProvider,
-  Tooltip,
-} from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/Add";
+import { Box, Button, Checkbox, IconButton, Tooltip } from "@material-ui/core";
+import { Add, SupervisorAccountOutlined } from "@material-ui/icons";
 import CheckIcon from "@material-ui/icons/Check";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/styles";
@@ -21,16 +14,20 @@ import MUIDataTable, {
 
 import { ClassDetailResponse, ClassDetailRequest } from "api/types";
 import DefaultFieldKey from "constants/DefaultFieldKey";
-import { Attendance } from "types/index";
+import getHeaderColumns from "constants/MuiDatatables";
+import StudentRole from "constants/StudentRole";
+import theme from "theme";
+import { Attendance } from "types";
 
 type AttendanceTableRow = {
   id: string;
+  role: StudentRole;
   first_name: string;
   last_name: string;
   [key: string]: string; // array of dates and student's attendance is represented as "yes" or "no"
 };
 
-type AttendanceTableProps = {
+type Props = {
   classObj: ClassDetailResponse;
   isEditing: boolean;
   onSubmit: (data: ClassDetailRequest) => void;
@@ -51,15 +48,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AttendanceTable = ({
-  classObj,
-  isEditing,
-  onSubmit,
-}: AttendanceTableProps) => {
+const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<ClassDetailRequest>(_.cloneDeep(classObj));
   const [tableRows, setTableRows] = useState<AttendanceTableRow[]>([]);
+  const [tableColumns, setTableColumns] = useState<MUIDataTableColumn[]>([]);
 
   const handleCheckboxOnClick = (id: number, date: string) => {
     const dateIndex = data.attendance.findIndex(
@@ -92,19 +86,6 @@ const AttendanceTable = ({
     }
   };
 
-  const getMuiTheme = () =>
-    createMuiTheme({
-      overrides: {
-        MUIDataTableToolbar: {
-          actions: {
-            display: "flex",
-            flexDirection: "row",
-            flex: "initial",
-          },
-        },
-      },
-    });
-
   const options: MUIDataTableOptions = {
     responsive: "standard",
     pagination: false,
@@ -125,7 +106,7 @@ const AttendanceTable = ({
           <>
             <Tooltip title="Add Date">
               <IconButton onClick={() => setOpen(true)}>
-                <AddIcon />
+                <Add />
               </IconButton>
             </Tooltip>
             <KeyboardDatePicker
@@ -143,6 +124,13 @@ const AttendanceTable = ({
         ) : null}
       </>
     ),
+    setRowProps: (row, dataIndex, rowIndex) => ({
+      style: {
+        ...(tableRows[rowIndex].role !== StudentRole.PARENT && {
+          backgroundColor: theme.palette.background.default,
+        }),
+      },
+    }),
   };
 
   const getTableRows = (): AttendanceTableRow[] => {
@@ -150,7 +138,8 @@ const AttendanceTable = ({
     classObj.families.forEach((family) => {
       const parentRow: AttendanceTableRow = {
         id: family.parent.id.toString(),
-        first_name: `${family.parent.first_name} (parent)`,
+        role: StudentRole.PARENT,
+        first_name: family.parent.first_name,
         last_name: family.parent.last_name,
       };
       data.attendance.forEach((currClass) => {
@@ -164,7 +153,8 @@ const AttendanceTable = ({
       family.children.forEach((child) => {
         const childRow: AttendanceTableRow = {
           id: child.id.toString(),
-          first_name: `${child.first_name} (child)`,
+          role: StudentRole.CHILD,
+          first_name: child.first_name,
           last_name: child.last_name,
         };
         data.attendance.forEach((currClass) => {
@@ -177,6 +167,7 @@ const AttendanceTable = ({
       family.guests.forEach((guest) => {
         const guestRow: AttendanceTableRow = {
           id: guest.id.toString(),
+          role: StudentRole.GUEST,
           first_name: `${guest.first_name} (guest)`,
           last_name: guest.last_name,
         };
@@ -196,23 +187,34 @@ const AttendanceTable = ({
   }, [data]);
 
   const getTableColumns = (): MUIDataTableColumn[] => {
-    const idColumn: MUIDataTableColumn = {
-      name: DefaultFieldKey.ID,
-      options: { display: "excluded" },
-    };
+    if (!tableRows.length) {
+      return [];
+    }
     const firstNameColumn: MUIDataTableColumn = {
       name: DefaultFieldKey.FIRST_NAME,
-      label: "First Name",
+      label: "First name",
+      options: {
+        customBodyRenderLite: (dataIndex, rowIndex) => (
+          <Box display="flex" alignItems="center">
+            <Box paddingRight={1}> {tableRows[rowIndex].first_name}</Box>
+            {tableRows[rowIndex].role === StudentRole.PARENT && (
+              <SupervisorAccountOutlined color="action" />
+            )}
+          </Box>
+        ),
+      },
     };
     const lastNameColumn: MUIDataTableColumn = {
       name: DefaultFieldKey.LAST_NAME,
-      label: "Last Name",
+      label: "Last name",
     };
     const dateColumns: MUIDataTableColumn[] = data.attendance.map(
       (currClass) => {
         const dateColumn: MUIDataTableColumn = {
           name: currClass.date,
-          label: moment(currClass.date).format("MMM D"),
+          label: moment(currClass.date).isValid()
+            ? moment(currClass.date).format("MMM D")
+            : currClass.date,
           options: {
             customBodyRender: (value, tableMeta) => (
               <Checkbox
@@ -228,23 +230,51 @@ const AttendanceTable = ({
                 }
               />
             ),
+            setCellProps: () => ({
+              style: {
+                minWidth: 64,
+                padding: "0px 16px",
+              },
+            }),
           },
         };
         return dateColumn;
       }
     );
-    return [idColumn, firstNameColumn, lastNameColumn].concat(dateColumns);
+    return [
+      {
+        name: DefaultFieldKey.ID,
+        options: {
+          display: "excluded",
+        },
+      } as MUIDataTableColumn,
+      {
+        name: "role",
+        options: {
+          display: "excluded",
+        },
+      } as MUIDataTableColumn,
+    ]
+      .concat(getHeaderColumns([firstNameColumn, lastNameColumn]))
+      .concat(dateColumns);
   };
 
+  useEffect(() => {
+    setData(_.cloneDeep(classObj));
+    setTableColumns([]);
+  }, [classObj]);
+
+  useEffect(() => {
+    setTableColumns(getTableColumns());
+  }, [tableRows, isEditing]);
+
   return (
-    <MuiThemeProvider theme={getMuiTheme()}>
-      <MUIDataTable
-        title=""
-        data={tableRows}
-        columns={getTableColumns()}
-        options={options}
-      />
-    </MuiThemeProvider>
+    <MUIDataTable
+      title=""
+      data={tableRows}
+      columns={tableColumns}
+      options={options}
+    />
   );
 };
 
