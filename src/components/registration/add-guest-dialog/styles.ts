@@ -6,6 +6,10 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
+  densePaddingY: {
+    paddingBottom: 8,
+    paddingTop: 8,
+  },
   dialogHeading: {
     marginBottom: theme.spacing(1),
     marginTop: theme.spacing(1),
@@ -30,6 +34,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     width: 38,
   },
+  nameColumn: {
+    width: 200,
+  },
+  nameInput: {
+    fontSize: 14,
+  },
   noResultsTableCell: {
     textAlign: "center",
   },
@@ -40,9 +50,8 @@ const useStyles = makeStyles((theme) => ({
   parentIcon: {
     paddingLeft: theme.spacing(1),
   },
-  selectButtonTableCell: {
-    paddingBottom: 8,
-    paddingTop: 8,
+  selectButton: {
+    width: 100,
   },
   studentRow: {
     backgroundColor: theme.palette.background.default,

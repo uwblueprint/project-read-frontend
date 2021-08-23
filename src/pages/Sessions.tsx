@@ -256,6 +256,7 @@ const Sessions = () => {
           />
           <AddGuestDialog
             classObj={selectedClass}
+            onClose={() => setDisplayAddGuestDialog(false)}
             open={displayAddGuestDialog}
             sessionId={selectedSession!.id}
           />

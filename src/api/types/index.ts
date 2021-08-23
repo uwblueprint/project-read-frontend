@@ -104,6 +104,11 @@ export type StudentSearchResponse = Pick<
   "id" | DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME
 >;
 
+export type GuestRequest = Pick<
+  Student,
+  DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME
+>;
+
 export type FamilySearchResponse = Pick<
   Family,
   DefaultFieldKey.EMAIL | DefaultFieldKey.ID | DefaultFieldKey.PHONE_NUMBER
