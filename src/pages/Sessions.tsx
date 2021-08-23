@@ -196,7 +196,7 @@ const Sessions = () => {
       (prevMap) =>
         new Map([...Array.from(prevMap), [classObj.id, updatedClass]])
     );
-    setIsEditingAttendance(false);
+    setIsEditingAttendance(!isEditingAttendance);
   };
 
   const onSelectFamily = async (id: number | null) => {

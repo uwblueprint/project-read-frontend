@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Box, Button, Checkbox, IconButton, Tooltip } from "@material-ui/core";
-import { Add, SupervisorAccountOutlined } from "@material-ui/icons";
-import CheckIcon from "@material-ui/icons/Check";
+import { Add, Check, SupervisorAccountOutlined } from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/styles";
 import _ from "lodash";
@@ -53,7 +52,6 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<ClassDetailRequest>(_.cloneDeep(classObj));
   const [tableRows, setTableRows] = useState<AttendanceTableRow[]>([]);
-  const [tableColumns, setTableColumns] = useState<MUIDataTableColumn[]>([]);
 
   const handleCheckboxOnClick = (id: number, date: string) => {
     const dateIndex = data.attendance.findIndex(
@@ -100,7 +98,7 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
           className={classes.button}
         >
           {!isEditing ? "Take attendance " : "Done attendance "}
-          <CheckIcon className={classes.checkmark} />
+          <Check className={classes.checkmark} />
         </Button>
         {isEditing ? (
           <>
@@ -259,20 +257,11 @@ const AttendanceTable = ({ classObj, isEditing, onSubmit }: Props) => {
       .concat(dateColumns);
   };
 
-  useEffect(() => {
-    setData(_.cloneDeep(classObj));
-    setTableColumns([]);
-  }, [classObj]);
-
-  useEffect(() => {
-    setTableColumns(getTableColumns());
-  }, [tableRows, isEditing]);
-
   return (
     <MUIDataTable
       title=""
       data={tableRows}
-      columns={tableColumns}
+      columns={getTableColumns()}
       options={options}
     />
   );
