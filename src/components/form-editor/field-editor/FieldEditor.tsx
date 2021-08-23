@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   Box,
@@ -73,7 +73,10 @@ const FieldEditor = ({
   const [isEditing, setIsEditing] = useState(false);
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
     ...field,
-    options: [],
+    options: field.options.map((option) => ({
+      index: generateKey(),
+      value: option,
+    })),
   });
   const [showEditConfirmationDialog, setShowEditConfirmationDialog] = useState(
     false
@@ -82,16 +85,6 @@ const FieldEditor = ({
     showDeleteConfirmationDialog,
     setShowDeleteConfirmationDialog,
   ] = useState(false);
-
-  useEffect(() => {
-    setFieldFormData({
-      ...field,
-      options: field.options.map((option) => ({
-        index: generateKey(),
-        value: option,
-      })),
-    });
-  }, [field]);
 
   const onAddOption = (): void => {
     setFieldFormData({
