@@ -48,10 +48,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   enrolment: EnrolmentResponse | null;
-  onChange: (enrolment: EnrolmentRequest) => void;
+  onChange?: (enrolment: EnrolmentRequest) => void;
 };
 
-const EnrolmentForm = ({ enrolment, onChange }: Props) => {
+const EnrolmentForm = ({ enrolment, onChange = () => {} }: Props) => {
   const classes = useStyles();
 
   const SessionRow = () => (

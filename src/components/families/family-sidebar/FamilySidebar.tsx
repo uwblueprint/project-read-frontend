@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   family: FamilyDetailResponse;
   isOpen: boolean;
-  onEditCurrentEnrolment: (enrolment: EnrolmentRequest) => void;
+  onEditEnrolment: (enrolment: EnrolmentRequest) => void;
   onSaveFamily: (family: FamilyDetailResponse, refetch: boolean) => void;
   onClose: () => void;
 };
@@ -100,7 +100,7 @@ const FamilySidebar = ({
   family,
   isOpen,
   onClose,
-  onEditCurrentEnrolment,
+  onEditEnrolment,
   onSaveFamily,
 }: Props) => {
   const { currentUser, users } = useContext(UsersContext);
@@ -159,7 +159,17 @@ const FamilySidebar = ({
     return true;
   };
 
-  // Family form =============================================================
+  // Enrolments ===============================================================
+
+  const activeEnrolments = family.enrolments.filter(
+    (enrolment) => enrolment.session.active
+  );
+
+  const previousEnrolments = family.enrolments.filter(
+    (enrolment) => !enrolment.session.active
+  );
+
+  // Family form ==============================================================
 
   const resetFormData = () => {
     setFamilyFormData(familyResponseToFamilyFormData(family));
@@ -240,10 +250,20 @@ const FamilySidebar = ({
         <Typography variant="h3" className={classes.heading}>
           Enrolment
         </Typography>
-        <EnrolmentForm
-          enrolment={family.current_enrolment}
-          onChange={onEditCurrentEnrolment}
-        />
+        {activeEnrolments.length ? (
+          activeEnrolments.map((enrolment, i) => (
+            <div key={enrolment.id}>
+              <EnrolmentForm enrolment={enrolment} onChange={onEditEnrolment} />
+              {i < activeEnrolments.length - 1 && (
+                <Box paddingY={2}>
+                  <Divider />
+                </Box>
+              )}
+            </div>
+          ))
+        ) : (
+          <EnrolmentForm enrolment={null} />
+        )}
 
         <Box paddingTop={2}>
           <Divider />
@@ -367,9 +387,8 @@ const FamilySidebar = ({
         <Typography variant="h3" className={classes.heading}>
           Previous Enrolments
         </Typography>
-        {family.enrolments
-          .filter((enrolment) => !enrolment.session.active)
-          .map((enrolment) => (
+        {previousEnrolments.length ? (
+          previousEnrolments.map((enrolment) => (
             <PreviousEnrolmentCard
               key={enrolment.id}
               enrolment={enrolment}
@@ -377,7 +396,12 @@ const FamilySidebar = ({
                 .concat(family.parent)
                 .concat(family.guests)}
             />
-          ))}
+          ))
+        ) : (
+          <Box paddingLeft={2}>
+            <Typography variant="body2">No previous enrolments</Typography>
+          </Box>
+        )}
       </Box>
 
       {isEditingFamily && (
