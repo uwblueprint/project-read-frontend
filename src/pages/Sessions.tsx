@@ -33,10 +33,10 @@ import saveEnrolments from "components/families/family-sidebar/utils";
 import FamilyTable from "components/families/family-table";
 import RegistrationForm from "components/registration/registration-form";
 import RegistrationDialog from "components/registration/RegistrationDialog";
+import AttendanceTable from "components/sessions/attendance-table";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
-import AttendanceTable from "components/sessions/session-detail-view/AttendanceTable";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
@@ -70,7 +70,7 @@ const Sessions = () => {
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
   const [isOnAttendanceView, setAttendanceView] = useState(false);
-  const [isEditingAttendance, setIsTakingAttendance] = useState(false);
+  const [isEditingAttendance, setIsEditingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [
     selectedFamily,
@@ -187,7 +187,7 @@ const Sessions = () => {
   };
 
   useEffect(() => {
-    setIsTakingAttendance(false);
+    setIsEditingAttendance(false);
   }, [isOnAttendanceView, classTabIndex]);
 
   const onSubmitAttendance = async (classObj: ClassDetailRequest) => {
@@ -196,7 +196,7 @@ const Sessions = () => {
       (prevMap) =>
         new Map([...Array.from(prevMap), [classObj.id, updatedClass]])
     );
-    setIsTakingAttendance(!isEditingAttendance);
+    setIsEditingAttendance(!isEditingAttendance);
   };
 
   const onSelectFamily = async (id: number | null) => {

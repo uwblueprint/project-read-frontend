@@ -32,6 +32,24 @@ const theme = createMuiTheme({
         textTransform: "none",
       },
     },
+    MUIDataTable: {
+      tableRoot: {
+        borderCollapse: "separate",
+      },
+    },
+    MUIDataTableHeadCell: {
+      root: {
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+      },
+    },
+    MUIDataTableToolbar: {
+      actions: {
+        display: "flex",
+        flexDirection: "row",
+        flex: "initial",
+      },
+    },
     MuiDialogContent: {
       root: {
         paddingLeft: 48,
@@ -101,7 +119,7 @@ const theme = createMuiTheme({
       root: {
         backgroundColor: defaultTheme.palette.background.paper,
         "&$hover:hover": {
-          backgroundColor: "rgb(245, 245, 245)",
+          backgroundColor: defaultTheme.palette.background.default,
         },
       },
     },
