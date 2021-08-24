@@ -67,6 +67,7 @@ export type Family = {
 };
 
 export type Session = {
+  active: boolean;
   fields: number[]; // array of field IDs
   id: number;
   name: string;

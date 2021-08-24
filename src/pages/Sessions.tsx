@@ -15,7 +15,6 @@ import { makeStyles } from "@material-ui/styles";
 import { useHistory, useParams } from "react-router-dom";
 
 import ClassAPI from "api/ClassAPI";
-import EnrolmentAPI from "api/EnrolmentAPI";
 import FamilyAPI from "api/FamilyAPI";
 import SessionAPI from "api/SessionAPI";
 import {
@@ -30,13 +29,14 @@ import {
 import Spinner from "components/common/spinner";
 import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
+import saveEnrolments from "components/families/family-sidebar/utils";
 import FamilyTable from "components/families/family-table";
 import RegistrationForm from "components/registration/registration-form";
 import RegistrationDialog from "components/registration/RegistrationDialog";
+import AttendanceTable from "components/sessions/attendance-table";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
-import AttendanceTable from "components/sessions/session-detail-view/AttendanceTable";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
@@ -70,7 +70,7 @@ const Sessions = () => {
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
   const [isOnAttendanceView, setAttendanceView] = useState(false);
-  const [isEditingAttendance, setIsTakingAttendance] = useState(false);
+  const [isEditingAttendance, setIsEditingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [
     selectedFamily,
@@ -100,7 +100,7 @@ const Sessions = () => {
       return;
     }
     if (!sessionId) {
-      history.push(`/sessions/${sessions[0].id}`);
+      history.push(`/sessions/${sessions[sessions.length - 1].id}`);
     } else {
       updateSelectedSession(Number(sessionId));
     }
@@ -187,7 +187,7 @@ const Sessions = () => {
   };
 
   useEffect(() => {
-    setIsTakingAttendance(false);
+    setIsEditingAttendance(false);
   }, [isOnAttendanceView, classTabIndex]);
 
   const onSubmitAttendance = async (classObj: ClassDetailRequest) => {
@@ -196,7 +196,7 @@ const Sessions = () => {
       (prevMap) =>
         new Map([...Array.from(prevMap), [classObj.id, updatedClass]])
     );
-    setIsTakingAttendance(!isEditingAttendance);
+    setIsEditingAttendance(!isEditingAttendance);
   };
 
   const onSelectFamily = async (id: number | null) => {
@@ -223,13 +223,14 @@ const Sessions = () => {
     }
   };
 
-  const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
-    if (selectedFamily === null || selectedFamily.current_enrolment === null) {
+  const onEditFamilyEnrolment = async (data: EnrolmentRequest) => {
+    if (selectedFamily === null) {
       return;
     }
+    const enrolments = await saveEnrolments(selectedFamily.enrolments, data);
     setSelectedFamily({
       ...selectedFamily,
-      current_enrolment: await EnrolmentAPI.putEnrolment(data),
+      enrolments,
     });
     resetSession();
   };
@@ -265,7 +266,7 @@ const Sessions = () => {
             isOpen={isSidebarOpen}
             family={selectedFamily}
             onClose={() => setIsSidebarOpen(false)}
-            onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
+            onEditEnrolment={onEditFamilyEnrolment}
             onSaveFamily={onSaveFamily}
           />
         )}

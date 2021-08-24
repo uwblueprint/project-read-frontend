@@ -1,7 +1,6 @@
 import React, { useContext, useCallback } from "react";
 
 import { Typography } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
 import moment from "moment";
 import MUIDataTable, {
   MUIDataTableColumn,
@@ -13,12 +12,10 @@ import StatusChip from "components/common/status-chip";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import DefaultFields from "constants/DefaultFields";
 import EnrolmentStatus from "constants/EnrolmentStatus";
+import getHeaderColumns from "constants/MuiDatatables";
 import QuestionType from "constants/QuestionType";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField } from "types";
-
-const stickyColumnWidth = 116;
-const stickyColumnPaddingX = 16;
 
 const options: MUIDataTableOptions = {
   responsive: "standard",
@@ -26,20 +23,6 @@ const options: MUIDataTableOptions = {
   rowsPerPageOptions: [25, 50, 100],
   selectableRows: "none",
   elevation: 0,
-  setTableProps: () => ({
-    style: {
-      borderCollapse: "separate",
-    },
-  }),
-};
-
-const stickyColumnStyles = {
-  backgroundColor: "inherit",
-  left: 0,
-  maxWidth: stickyColumnWidth,
-  minWidth: stickyColumnWidth,
-  position: "sticky",
-  zIndex: 101,
 };
 
 const idColumn: MUIDataTableColumn = {
@@ -136,7 +119,9 @@ const FamilyTable = ({
         ...args,
       };
       parentDynamicFields.forEach((field) => {
-        Object.assign(familyRow, { [field.id]: parent.information[field.id] });
+        Object.assign(familyRow, {
+          [field.id]: parent.information[field.id]?.split("\n").join(", "),
+        });
       });
       return familyRow;
     });
@@ -158,32 +143,6 @@ const FamilyTable = ({
       ),
     },
   });
-
-  const getStickyColumn = (
-    column: MUIDataTableColumn,
-    isLast: boolean,
-    offset: number
-  ): MUIDataTableColumn => {
-    const columnStyles = {
-      ...stickyColumnStyles,
-      left: offset,
-      ...(isLast && {
-        borderRight: `1px solid ${grey[300]}`,
-      }),
-    };
-    return {
-      ...column,
-      options: {
-        ...column.options,
-        setCellHeaderProps: () => ({
-          style: columnStyles,
-        }),
-        setCellProps: () => ({
-          style: columnStyles,
-        }),
-      },
-    };
-  };
 
   const enrolledClassColumn: MUIDataTableColumn = {
     name: DefaultFields.ENROLLED_CLASS.id,
@@ -214,12 +173,10 @@ const FamilyTable = ({
     idColumn,
 
     // sticky first and last name columns
-    getStickyColumn(getColumn(DefaultFields.FIRST_NAME, false), false, 0),
-    getStickyColumn(
+    ...getHeaderColumns([
+      getColumn(DefaultFields.FIRST_NAME, false),
       getColumn(DefaultFields.LAST_NAME, false),
-      true,
-      stickyColumnWidth + stickyColumnPaddingX * 2
-    ),
+    ]),
 
     // remaining default fields
     ...[

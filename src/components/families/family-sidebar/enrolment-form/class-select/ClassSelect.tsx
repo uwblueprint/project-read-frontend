@@ -53,7 +53,7 @@ const ClassSelect = ({ id, onChange, options, value }: Props) => {
       value={value || ""}
     >
       <MenuItem className={classes.menuItem} value="">
-        None
+        Not Assigned
       </MenuItem>
       {options?.map((option) => (
         <MenuItem
