@@ -12,6 +12,7 @@ import {
   Radio,
   Select,
   Switch,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { Clear, DragIndicator, EditOutlined } from "@material-ui/icons";
@@ -101,6 +102,8 @@ const FieldEditor = ({
     options[optionIndex] = data;
     setFieldFormData({ ...fieldFormData, options });
   };
+
+  const deleteOptionDisabled = fieldFormData.options.length <= 1;
 
   const onDeleteOption = (index: number): void => {
     setFieldFormData({
@@ -312,13 +315,29 @@ const FieldEditor = ({
                     value={option.value}
                   />
                 </FormRow>
-                <IconButton
-                  aria-label="Delete option"
-                  onClick={() => onDeleteOption(option.index)}
-                  size="small"
+                <Tooltip
+                  aria-label={
+                    deleteOptionDisabled
+                      ? "Dropdown or checkbox questions must have at least one option"
+                      : ""
+                  }
+                  title={
+                    deleteOptionDisabled
+                      ? "Dropdown or checkbox questions must have at least one option"
+                      : ""
+                  }
                 >
-                  <Clear fontSize="small" />
-                </IconButton>
+                  <span>
+                    <IconButton
+                      aria-label="Delete option"
+                      disabled={deleteOptionDisabled}
+                      onClick={() => onDeleteOption(option.index)}
+                      size="small"
+                    >
+                      <Clear fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </Box>
             ))}
             <Box display="flex" alignItems="center">
