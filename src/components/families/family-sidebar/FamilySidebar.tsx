@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import {
   Box,
@@ -215,12 +209,9 @@ const FamilySidebar = ({
 
   // Notes ====================================================================
 
-  const debouncedSaveFamily = useCallback(
-    debounce((notes: string) => {
-      saveFamily({ ...familyFormData, notes }, false);
-    }, 1000),
-    []
-  );
+  const debouncedSaveFamily = debounce((notes: string) => {
+    saveFamily({ ...familyFormData, notes }, false);
+  }, 1000);
 
   return (
     <Drawer
