@@ -24,7 +24,7 @@ import FormRow from "components/common/form-row";
 import FieldVariant from "constants/FieldVariant";
 import QuestionType from "constants/QuestionType";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
-import { DefaultField, DynamicField } from "types";
+import { DefaultField, DynamicField, FieldType } from "types";
 
 import QuestionTypeLabel from "../question-type-label";
 import useStyles from "./styles";
@@ -56,7 +56,6 @@ type FieldFormData = Omit<DefaultField | DynamicField, "options"> & {
 
 type Props = {
   field: DefaultField | DynamicField;
-  isDefault: boolean;
   isEnabled?: boolean;
   isReadOnly: boolean;
   onChangeEnabled?: (enabled: boolean) => void;
@@ -64,12 +63,12 @@ type Props = {
 
 const FieldEditor = ({
   field,
-  isDefault,
   isEnabled = true,
   isReadOnly,
   onChangeEnabled = () => {},
 }: Props) => {
   const { fetchDynamicFields } = useContext(DynamicFieldsContext);
+  const isDefault = field.type === FieldType.Default;
   const classes = useStyles({ isDefault });
   const [isEditing, setIsEditing] = useState(false);
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
