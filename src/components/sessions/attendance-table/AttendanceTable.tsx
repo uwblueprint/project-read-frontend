@@ -254,14 +254,14 @@ const AttendanceTable = ({
     );
     return [
       {
-        // FAMILY_ID_DATA_INDEX = 0
+        // corresponds to FAMILY_ID_DATA_INDEX
         name: "family_id",
         options: {
           display: "excluded",
         },
       } as MUIDataTableColumn,
       {
-        // STUDENT_ID_DATA_INDEX = 1
+        // corresponds to STUDENT_ID_DATA_INDEX
         name: DefaultFieldKey.ID,
         options: {
           display: "excluded",
