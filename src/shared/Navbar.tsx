@@ -58,17 +58,13 @@ function Navbar() {
               horizontal: "right",
             }}
           >
+            <Link to="/users" className={classes.link}>
+              <MenuItem>Manage users</MenuItem>
+            </Link>
             <Link to="/fields" className={classes.link}>
               <MenuItem>Configure global questions</MenuItem>
             </Link>
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                app.auth().signOut();
-              }}
-            >
-              Logout
-            </MenuItem>
+            <MenuItem onClick={() => app.auth().signOut()}>Logout</MenuItem>
           </Menu>
         </div>
       </Toolbar>
