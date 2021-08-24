@@ -2,6 +2,7 @@ import React from "react";
 
 import Field from "components/common/field";
 import FieldVariant from "constants/FieldVariant";
+import StudentRole from "constants/StudentRole";
 import { DynamicField } from "types";
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
   information: Record<number, string>;
   isEditing: boolean;
   onChange: (data: Record<number, string>) => void;
+  role: StudentRole;
   variant: FieldVariant;
 };
 
@@ -25,6 +27,7 @@ const StudentDynamicFields = ({
   information,
   isEditing,
   onChange,
+  role,
   variant,
 }: Props) => (
   <>
@@ -34,7 +37,7 @@ const StudentDynamicFields = ({
         index={index}
         isEditing={isEditing}
         key={field.id}
-        field={field}
+        field={{ ...field, role }}
         onChange={(value) =>
           onChange({
             ...information,

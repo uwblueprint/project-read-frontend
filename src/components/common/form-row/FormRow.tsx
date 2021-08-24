@@ -29,12 +29,16 @@ const stackedStyles = {
   },
 };
 
-const useStyles = makeStyles<Theme, Pick<Props, "dense" | "variant">>(() => ({
-  formRow: ({ dense, variant }) => ({
+const useStyles = makeStyles<
+  Theme,
+  Pick<Props, "dense" | "multiple" | "variant">
+>(() => ({
+  formRow: ({ dense, multiple, variant }) => ({
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    marginBottom: 16,
+    flexGrow: 1,
+    marginBottom: multiple ? 16 : 0,
     ...(dense && denseStyles.formRow),
     ...(variant === FieldVariant.STACKED && stackedStyles.formRow),
   }),
@@ -55,24 +59,21 @@ type Props = {
   dense?: boolean;
   id: string;
   label: string;
+  multiple?: boolean;
   questionType: string;
   variant?: FieldVariant;
 };
 
-const defaultProps = {
-  dense: false,
-  variant: FieldVariant.DEFAULT,
-};
-
 const FormRow = ({
   children,
-  dense,
+  dense = false,
   id,
   label,
+  multiple = true,
   questionType,
-  variant,
+  variant = FieldVariant.DEFAULT,
 }: Props) => {
-  const classes = useStyles({ dense, variant });
+  const classes = useStyles({ dense, multiple, variant });
 
   const inputLabelProps =
     questionType === QuestionType.SELECT ? { id } : { htmlFor: id };
@@ -102,7 +103,5 @@ const FormRow = ({
     </div>
   );
 };
-
-FormRow.defaultProps = defaultProps;
 
 export default FormRow;

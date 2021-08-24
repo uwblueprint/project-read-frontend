@@ -31,7 +31,6 @@ export type DefaultField = Field & {
 
 export type DynamicField = Field & {
   id: number;
-  role: StudentRole;
 };
 
 export type Student = {
@@ -72,7 +71,7 @@ export type Session = {
   fields: number[]; // array of field IDs
   id: number;
   name: string;
-  start_date: string;
+  start_date: Date | null;
 };
 
 export type Attendance = {

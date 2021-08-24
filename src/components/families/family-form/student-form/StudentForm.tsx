@@ -201,6 +201,7 @@ const StudentForm = ({
                     information: value,
                   })
                 }
+                role={role}
                 variant={fieldProps.variant}
               />
               {!isEditing && i < students.length - 1 && (

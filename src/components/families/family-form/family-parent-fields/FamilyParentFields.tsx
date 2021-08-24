@@ -119,6 +119,7 @@ const FamilyParentFields = ({
             parent: { ...family.parent, information: value },
           })
         }
+        role={StudentRole.PARENT}
         variant={FieldVariant.DEFAULT}
       />
     </>
