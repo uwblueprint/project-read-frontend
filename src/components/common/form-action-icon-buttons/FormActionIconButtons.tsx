@@ -1,16 +1,21 @@
 import React from "react";
 
-import { IconButton } from "@material-ui/core";
+import { IconButton, Tooltip } from "@material-ui/core";
 import { Check, DeleteOutline } from "@material-ui/icons";
 
 import useStyles from "./styles";
 
 type Props = {
+  errorMessage?: string;
   onDelete: () => void;
   onSubmit: () => void;
 };
 
-const FormActionIconButtons = ({ onDelete, onSubmit }: Props) => {
+const FormActionIconButtons = ({
+  errorMessage = "",
+  onDelete,
+  onSubmit,
+}: Props) => {
   const classes = useStyles();
   return (
     <>
@@ -22,14 +27,19 @@ const FormActionIconButtons = ({ onDelete, onSubmit }: Props) => {
       >
         <DeleteOutline />
       </IconButton>
-      <IconButton
-        aria-label="save"
-        className={classes.formActionButton}
-        onClick={onSubmit}
-        size="small"
-      >
-        <Check />
-      </IconButton>
+      <Tooltip aria-label={errorMessage} title={errorMessage}>
+        <span>
+          <IconButton
+            aria-label="save"
+            className={classes.formActionButton}
+            disabled={errorMessage.length > 0}
+            onClick={onSubmit}
+            size="small"
+          >
+            <Check />
+          </IconButton>
+        </span>
+      </Tooltip>
     </>
   );
 };
