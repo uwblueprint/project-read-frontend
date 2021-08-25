@@ -80,7 +80,7 @@ const FieldEditor = ({
   onSubmit = () => {},
 }: Props) => {
   const { fetchDynamicFields } = useContext(DynamicFieldsContext);
-  const isDefault = field?.type === FieldType.Default;
+  const isDefault = field.type === FieldType.Default;
   const classes = useStyles({ isDefault });
   const [isEditing, setIsEditing] = useState(!isDefault && existingId === null);
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
@@ -99,7 +99,7 @@ const FieldEditor = ({
   ] = useState(false);
 
   const getId = () => {
-    if (field?.type === FieldType.Default) {
+    if (field.type === FieldType.Default) {
       return field.id;
     }
     if (existingId) {
@@ -137,7 +137,7 @@ const FieldEditor = ({
     fieldFormData.name.length === 0 ? "Please enter a question name" : "";
 
   const onSubmitField = async () => {
-    if (field?.type === FieldType.Default) {
+    if (field.type === FieldType.Default) {
       return;
     }
 
