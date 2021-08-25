@@ -14,7 +14,11 @@ export enum DaysOfWeek {
 
 export type User = {
   id: number;
+  date_joined: Date;
+  email: string;
   first_name: string;
+  is_active: boolean;
+  is_admin: boolean;
   last_name: string;
 };
 
