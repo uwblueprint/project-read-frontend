@@ -29,7 +29,7 @@ const putFamily = (
   APIUtils.put(`/families/${data.id}/`, data) as Promise<FamilyDetailResponse>;
 
 const exportFamilies = (): Promise<string> =>
-  APIUtils.get(`/export/families`) as Promise<string>;
+  APIUtils.get(`/export/families`, true) as Promise<string>;
 
 export default {
   getFamilies,

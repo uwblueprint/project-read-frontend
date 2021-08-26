@@ -8,6 +8,6 @@ const getSession = (id: number): Promise<SessionDetailResponse> =>
   APIUtils.get(`/sessions/${id}`) as Promise<SessionDetailResponse>;
 
 const exportSessions = (): Promise<string> =>
-  APIUtils.get(`/export/sessions`) as Promise<string>;
+  APIUtils.get(`/export/sessions`, true) as Promise<string>;
 
 export default { getSessions, getSession, exportSessions };
