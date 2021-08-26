@@ -1,10 +1,18 @@
 import * as APIUtils from "./APIUtils";
-import { ClassDetailResponse, ClassDetailRequest } from "./types";
+import {
+  ClassDetailResponse,
+  ClassDetailRequest,
+  ClassListResponse,
+  ClassListRequest,
+} from "./types";
 
 const getClass = (id: number): Promise<ClassDetailResponse> =>
   APIUtils.get(`/classes/${id}`) as Promise<ClassDetailResponse>;
 
+const postClass = (data: ClassListRequest): Promise<ClassListResponse> =>
+  APIUtils.post(`/classes/`, data) as Promise<ClassListResponse>;
+
 const putClass = (data: ClassDetailRequest): Promise<ClassDetailResponse> =>
   APIUtils.put(`/classes/${data.id}/`, data) as Promise<ClassDetailResponse>;
 
-export default { getClass, putClass };
+export default { getClass, postClass, putClass };
