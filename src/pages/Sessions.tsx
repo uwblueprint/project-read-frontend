@@ -12,9 +12,11 @@ import {
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
 import { makeStyles } from "@material-ui/styles";
+import AttendanceTable from "components/sessions/session-detail-view/AttendanceTable";
 import { useHistory, useParams } from "react-router-dom";
 
 import ClassAPI from "api/ClassAPI";
+import EnrolmentAPI from "api/EnrolmentAPI";
 import FamilyAPI from "api/FamilyAPI";
 import SessionAPI from "api/SessionAPI";
 import {
@@ -29,14 +31,13 @@ import {
 import Spinner from "components/common/spinner";
 import SpinnerOverlay from "components/common/spinner-overlay";
 import FamilySidebar from "components/families/family-sidebar";
-import saveEnrolments from "components/families/family-sidebar/utils";
 import FamilyTable from "components/families/family-table";
 import RegistrationForm from "components/registration/registration-form";
 import RegistrationDialog from "components/registration/RegistrationDialog";
-import AttendanceTable from "components/sessions/attendance-table";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
+import AddClassDialog from "components/sessions/session-detail-view/AddClassDialog";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
@@ -70,8 +71,9 @@ const Sessions = () => {
   const [classTabIndex, setClassTabIndex] = useState(ALL_CLASSES_TAB_INDEX);
   const [displayRegDialog, setDisplayRegDialog] = useState(false);
   const [isOnAttendanceView, setAttendanceView] = useState(false);
-  const [isEditingAttendance, setIsEditingAttendance] = useState(false);
+  const [isEditingAttendance, setIsTakingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [
     selectedFamily,
     setSelectedFamily,
@@ -100,7 +102,7 @@ const Sessions = () => {
       return;
     }
     if (!sessionId) {
-      history.push(`/sessions/${sessions[sessions.length - 1].id}`);
+      history.push(`/sessions/${sessions[0].id}`);
     } else {
       updateSelectedSession(Number(sessionId));
     }
@@ -187,7 +189,7 @@ const Sessions = () => {
   };
 
   useEffect(() => {
-    setIsEditingAttendance(false);
+    setIsTakingAttendance(false);
   }, [isOnAttendanceView, classTabIndex]);
 
   const onSubmitAttendance = async (classObj: ClassDetailRequest) => {
@@ -196,7 +198,7 @@ const Sessions = () => {
       (prevMap) =>
         new Map([...Array.from(prevMap), [classObj.id, updatedClass]])
     );
-    setIsEditingAttendance(!isEditingAttendance);
+    setIsTakingAttendance(!isEditingAttendance);
   };
 
   const onSelectFamily = async (id: number | null) => {
@@ -223,14 +225,13 @@ const Sessions = () => {
     }
   };
 
-  const onEditFamilyEnrolment = async (data: EnrolmentRequest) => {
-    if (selectedFamily === null) {
+  const onEditFamilyCurrentEnrolment = async (data: EnrolmentRequest) => {
+    if (selectedFamily === null || selectedFamily.current_enrolment === null) {
       return;
     }
-    const enrolments = await saveEnrolments(selectedFamily.enrolments, data);
     setSelectedFamily({
       ...selectedFamily,
-      enrolments,
+      current_enrolment: await EnrolmentAPI.putEnrolment(data),
     });
     resetSession();
   };
@@ -242,28 +243,35 @@ const Sessions = () => {
         <AttendanceTable
           classObj={selectedClass}
           isEditing={isEditingAttendance}
-          onSelectFamily={async (id) => {
-            await onSelectFamily(id);
-            setIsSidebarOpen(true);
-          }}
           onSubmit={onSubmitAttendance}
         />
       );
     }
     return (
-      <FamilyTable
-        families={getFamilies()}
-        enrolmentFields={
-          isOnAllClassesTab(classTabIndex)
-            ? [DefaultFields.REGISTERED_AT, DefaultFields.ENROLLED_CLASS]
-            : [DefaultFields.REGISTERED_AT]
-        }
-        shouldDisplayDynamicFields={false}
-        onSelectFamily={async (id) => {
-          await onSelectFamily(id);
-          setIsSidebarOpen(true);
-        }}
-      />
+      <>
+        <FamilyTable
+          families={getFamilies()}
+          enrolmentFields={
+            isOnAllClassesTab(classTabIndex)
+              ? [DefaultFields.ENROLLED_CLASS]
+              : []
+          }
+          shouldDisplayDynamicFields={false}
+          onSelectFamily={async (id) => {
+            await onSelectFamily(id);
+            setIsSidebarOpen(true);
+          }}
+        />
+        {selectedFamily && (
+          <FamilySidebar
+            isOpen={isSidebarOpen}
+            family={selectedFamily}
+            onClose={() => setIsSidebarOpen(false)}
+            onEditCurrentEnrolment={onEditFamilyCurrentEnrolment}
+            onSaveFamily={onSaveFamily}
+          />
+        )}
+      </>
     );
   };
 
@@ -366,24 +374,28 @@ const Sessions = () => {
               }
               session={selectedSession}
             />
+            <AddClassDialog
+              open={isDialogOpen}
+              onClose={() => setIsDialogOpen(false)}
+              session={selectedSession}
+              onClassCreate={(newClass) => {
+                setClassTabIndex(ALL_CLASSES_TAB_INDEX);
+                setSnackbarMessage(
+                  `Successfully created class ${newClass.name} in this session.`
+                );
+                updateSelectedSession(selectedSession.id);
+              }}
+            />
           </>
         )}
       </Box>
       {selectedSession && (
         <SessionDetailView
           classes={selectedSession.classes}
+          classDefaultView={getClassView()}
           classTabIndex={classTabIndex}
           onChangeClassTabIndex={handleChangeClassTabIndex}
-          classDefaultView={getClassView()}
-        />
-      )}
-      {selectedFamily && (
-        <FamilySidebar
-          isOpen={isSidebarOpen}
-          family={selectedFamily}
-          onClose={() => setIsSidebarOpen(false)}
-          onEditEnrolment={onEditFamilyEnrolment}
-          onSaveFamily={onSaveFamily}
+          onDialogOpen={() => setIsDialogOpen(true)}
         />
       )}
     </>
