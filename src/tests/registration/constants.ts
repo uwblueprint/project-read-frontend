@@ -48,7 +48,7 @@ export const TEST_GUEST_DYNAMIC_FIELD = {
 
 export const TEST_SESSION_DYNAMIC_FIELD = {
   id: 4,
-  role: StudentRole.PARENT,
+  role: StudentRole.SESSION,
   is_default: false,
   name: "Time in Canada",
   question_type: QuestionType.TEXT,

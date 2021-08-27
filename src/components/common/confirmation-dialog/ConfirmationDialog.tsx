@@ -14,6 +14,8 @@ import useStyles from "./styles";
 const BASE_NAME = "confirmation-dialog";
 
 type Props = {
+  cancelButtonLabel: string;
+  confirmButtonLabel: string;
   description: string;
   onCancel: () => void;
   onConfirm: () => void;
@@ -22,6 +24,8 @@ type Props = {
 };
 
 const ConfirmationDialog = ({
+  cancelButtonLabel,
+  confirmButtonLabel,
   description,
   onCancel,
   onConfirm,
@@ -47,7 +51,7 @@ const ConfirmationDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onConfirm} color="default" variant="contained">
-          Leave this page
+          {confirmButtonLabel}
         </Button>
         <Button
           onClick={onCancel}
@@ -55,7 +59,7 @@ const ConfirmationDialog = ({
           variant="contained"
           autoFocus
         >
-          Stay on this page
+          {cancelButtonLabel}
         </Button>
       </DialogActions>
     </Dialog>

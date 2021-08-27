@@ -8,6 +8,7 @@ import { Redirect, Switch } from "react-router-dom";
 import { DynamicFieldsProvider } from "context/DynamicFieldsContext";
 import { UsersProvider } from "context/UsersContext";
 import CreateSession from "pages/create-session";
+import GlobalFields from "pages/global-fields";
 import MainRegistration from "pages/MainRegistration";
 import NotFound from "pages/not-found";
 import Sessions from "pages/Sessions";
@@ -38,6 +39,7 @@ function ProjectREAD() {
                 ]}
                 component={Sessions}
               />
+              <PrivateRoute exact path="/fields" component={GlobalFields} />
               <PrivateRoute exact path="/oops" component={NotFound} />
               <Redirect to="/oops" />
             </Switch>

@@ -21,7 +21,7 @@ import useStyles from "./styles";
 
 type Props = {
   dense?: boolean;
-  field: (DefaultField & { role: StudentRole }) | DynamicField;
+  field: (DefaultField | DynamicField) & { role: StudentRole };
   index?: number | null;
   isEditing: boolean;
   onChange: (value: string) => void;

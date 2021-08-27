@@ -159,6 +159,8 @@ const RegistrationDialog = ({
         </DialogContent>
       </Dialog>
       <ConfirmationDialog
+        cancelButtonLabel="Stay on this page"
+        confirmButtonLabel="Leave this page"
         description="This information will not be saved."
         onCancel={() => {
           setIsConfirming(false);

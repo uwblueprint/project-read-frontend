@@ -8,11 +8,12 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
-import { Check, DeleteOutline, Edit } from "@material-ui/icons";
+import { Edit } from "@material-ui/icons";
 import moment from "moment";
 
 import { UserResponse } from "api/types";
 import DateInput from "components/common/date-input";
+import FormActionIconButtons from "components/common/form-action-icon-buttons";
 import FormRow from "components/common/form-row";
 import { InteractionFormData } from "components/families/family-form/types";
 import FieldVariant from "constants/FieldVariant";
@@ -104,18 +105,13 @@ const InteractionCard = ({
             />
           </FormRow>
         </Box>
-        <Box>
-          <IconButton className={classes.formActionButton} onClick={onDelete}>
-            <DeleteOutline />
-          </IconButton>
-          <IconButton
-            className={classes.formActionButton}
-            onClick={() =>
-              onSubmit({ ...interactionFormData, isEditing: false })
-            }
-          >
-            <Check />
-          </IconButton>
+        <Box paddingTop={0.25}>
+          <FormActionIconButtons
+            onDelete={onDelete}
+            onSubmit={() => {
+              onSubmit({ ...interactionFormData, isEditing: false });
+            }}
+          />
         </Box>
       </Box>
       <Box display="flex">

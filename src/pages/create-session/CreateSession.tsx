@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -12,9 +12,11 @@ import { NavigateBefore } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
 import { SessionRequest } from "api/types";
+import FormEditor from "components/form-editor";
 import AddClasses from "components/sessions/add-classes";
 import { defaultClassData } from "components/sessions/add-classes/AddClasses";
 import SessionConfig from "components/sessions/session-config";
+import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 
 enum CreateSessionStepLabel {
   ADD_CLASSES = "Add classes",
@@ -29,14 +31,39 @@ const steps = [
 ];
 
 const CreateSession = () => {
+  const {
+    parentDynamicFields,
+    childDynamicFields,
+    guestDynamicFields,
+    sessionDynamicFields,
+  } = useContext(DynamicFieldsContext).dynamicFields;
   const history = useHistory();
   const [session, setSession] = useState<SessionRequest>({
     name: "",
-    startDate: null,
+    start_date: null,
+    fields: [],
     classes: [defaultClassData],
   });
+
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeStep = steps[activeStepIndex];
+
+  useEffect(() => {
+    setSession({
+      ...session,
+      fields: [
+        ...parentDynamicFields.map((field) => field.id),
+        ...childDynamicFields.map((field) => field.id),
+        ...guestDynamicFields.map((field) => field.id),
+        ...sessionDynamicFields.map((field) => field.id),
+      ],
+    });
+  }, [
+    parentDynamicFields,
+    childDynamicFields,
+    guestDynamicFields,
+    sessionDynamicFields,
+  ]);
 
   const goToSessions = () => {
     history.push("/sessions");
@@ -55,7 +82,7 @@ const CreateSession = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const payload = {
       name: session.name,
-      start_date: session.startDate,
+      start_date: session.start_date,
     };
     goToSessions();
   };
@@ -73,13 +100,22 @@ const CreateSession = () => {
           <SessionConfig
             sessionName={session.name}
             onChangeSessionName={(name) => setSession({ ...session, name })}
-            startDate={session.startDate}
-            onChangeStartDate={(startDate) =>
-              setSession({ ...session, startDate })
+            startDate={session.start_date}
+            onChangeStartDate={(start_date) =>
+              setSession({ ...session, start_date })
             }
           />
         );
       case CreateSessionStepLabel.CONFIGURE_FORM:
+        return (
+          <FormEditor
+            isReadOnly
+            enabledFieldIds={session.fields}
+            onChangeEnabledFieldIds={(fields) =>
+              setSession({ ...session, fields })
+            }
+          />
+        );
       // fall through
       case CreateSessionStepLabel.ADD_CLASSES:
         return (

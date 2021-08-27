@@ -105,9 +105,7 @@ export type FamilyBaseRequest = Pick<
   | DefaultFieldKey.WORK_NUMBER
 >;
 
-export type SessionRequest = {
-  name: string;
-  startDate: Date | null;
+export type SessionRequest = Pick<Session, "name" | "start_date" | "fields"> & {
   classes: ClassListRequest[];
 };
 
@@ -132,3 +130,10 @@ export type DynamicFieldsResponse = {
   guest_fields: DynamicField[];
   session_fields: DynamicField[];
 };
+
+export type DynamicFieldRequest = Pick<
+  DynamicField,
+  "id" | "name" | "options" | "question_type"
+>;
+
+export type DynamicFieldResponse = DynamicFieldRequest;

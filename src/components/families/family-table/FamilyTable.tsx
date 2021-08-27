@@ -78,7 +78,9 @@ const FamilyTable = ({
   onSelectFamily,
   shouldDisplayDynamicFields,
 }: FamilyTableProps) => {
-  const { parentDynamicFields } = useContext(DynamicFieldsContext);
+  const { parentDynamicFields } = useContext(
+    DynamicFieldsContext
+  ).dynamicFields;
 
   const getTableRows = (): FamilyTableRow[] =>
     families.map(({ parent, children, enrolment, ...args }) => {
