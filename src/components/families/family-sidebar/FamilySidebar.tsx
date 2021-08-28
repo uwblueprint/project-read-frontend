@@ -22,6 +22,7 @@ import moment from "moment";
 
 import FamilyAPI from "api/FamilyAPI";
 import { EnrolmentRequest, FamilyDetailResponse } from "api/types";
+import ConfirmationDialog from "components/common/confirmation-dialog/ConfirmationDialog";
 import SpinnerOverlay from "components/common/spinner-overlay";
 import {
   familyFormDataToFamilyRequest,
@@ -113,27 +114,46 @@ const FamilySidebar = ({
   const [isEditingFamily, setIsEditingFamily] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [showExitWhileEditingDialog, setExitWhileEditingDialog] = useState(
+    false
+  );
+
   const isEditing =
     isEditingFamily ||
     familyFormData.interactions.some((interaction) => interaction.isEditing);
 
   const handleClick = (e: MouseEvent) => {
     const sidebarRef = sidebar?.current;
-    if (!sidebarRef || !isOpen) {
+    if (!sidebarRef || !isOpen || showExitWhileEditingDialog) {
       return;
     }
     const sidebarX = sidebarRef.getBoundingClientRect().x || 0;
     const clickX = e.clientX;
     if (clickX < sidebarX) {
+      // console.log( // troubleshooting how the isEditing variable was being updated
+      //   "isEditing: ",
+      //   isEditing,
+      //   " | isEditingFamily: ",
+      //   isEditingFamily
+      // );
+      // // if (isEditing === true) { // this causes things to be one step behind?
+      // setExitWhileEditingDialog(true);
+      // // }
       sidebarRef.scrollTo(0, 0);
       onClose();
     }
   };
 
   useEffect(() => {
+    if (isEditing === true) {
+      setExitWhileEditingDialog(true);
+    }
+  }, [isEditing]);
+
+  useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", handleClick);
-      setIsEditingFamily(false);
+      setIsEditingFamily(false); // this was resetting editing every time -- is this intentional?
       return () => {
         document.removeEventListener("mousedown", handleClick);
       };
@@ -241,6 +261,19 @@ const FamilySidebar = ({
       PaperProps={{ ref: sidebar }}
     >
       {isLoading && <SpinnerOverlay />}
+
+      <ConfirmationDialog
+        cancelButtonLabel="No, continue editing"
+        confirmButtonLabel="Yes, exit"
+        description="This information will not be saved."
+        onCancel={() => setExitWhileEditingDialog(false)}
+        onConfirm={() => {
+          setExitWhileEditingDialog(false);
+          setIsEditingFamily(false);
+        }}
+        open={showExitWhileEditingDialog}
+        title="Are you sure you want to exit editing mode?"
+      />
 
       <Box padding={3} paddingBottom={isEditingFamily ? 10 : 3}>
         <Typography component="h2" variant="h3">
