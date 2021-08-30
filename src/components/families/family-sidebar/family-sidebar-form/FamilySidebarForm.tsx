@@ -24,6 +24,7 @@ const useStyles = makeStyles(() => ({
 type Props = {
   family: FamilyFormData;
   isEditing: boolean;
+  onOpen: (isOpen: boolean) => void;
   onChange: (family: FamilyFormData) => void;
   onSubmit: (family: FamilyRequest) => void;
 };
@@ -31,6 +32,7 @@ type Props = {
 const FamilySidebarForm = ({
   family,
   isEditing,
+  onOpen,
   onChange,
   onSubmit,
 }: Props) => {
@@ -72,6 +74,7 @@ const FamilySidebarForm = ({
           dynamicFields={childDynamicFields}
           isEditing={isEditing}
           onChange={(children) => onChange({ ...family, children })}
+          onOpen={onOpen}
           role={StudentRole.CHILD}
           students={family.children}
         />
@@ -87,6 +90,7 @@ const FamilySidebarForm = ({
           dynamicFields={guestDynamicFields}
           isEditing={isEditing}
           onChange={(guests) => onChange({ ...family, guests })}
+          onOpen={onOpen}
           role={StudentRole.GUEST}
           students={family.guests}
         />

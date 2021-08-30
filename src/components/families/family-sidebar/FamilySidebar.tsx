@@ -112,6 +112,7 @@ const FamilySidebar = ({
   );
   const [isEditingFamily, setIsEditingFamily] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
 
   const isEditing =
     isEditingFamily ||
@@ -119,7 +120,8 @@ const FamilySidebar = ({
 
   const handleClick = (e: MouseEvent) => {
     const sidebarRef = sidebar?.current;
-    if (!sidebarRef || !isOpen) {
+
+    if (!sidebarRef || !isOpen || isConfirm) {
       return;
     }
     const sidebarX = sidebarRef.getBoundingClientRect().x || 0;
@@ -283,6 +285,7 @@ const FamilySidebar = ({
             <FamilySidebarForm
               family={familyFormData}
               isEditing={isEditingFamily}
+              onOpen={setIsConfirm}
               onChange={setFamilyFormData}
               onSubmit={onSubmitFamilyForm}
             />
