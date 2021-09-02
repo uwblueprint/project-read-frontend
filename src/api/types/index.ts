@@ -11,7 +11,16 @@ import {
   User,
 } from "types";
 
-export type UserResponse = Pick<User, "id" | "first_name" | "last_name">;
+export type UserResponse = Pick<
+  User,
+  | "id"
+  | "date_joined"
+  | "email"
+  | "first_name"
+  | "is_active"
+  | "is_admin"
+  | "last_name"
+>;
 
 export type ClassListResponse = Pick<Class, "id" | "name" | "colour">;
 
