@@ -16,6 +16,7 @@ enum DefaultFieldKey {
   PREFERRED_CLASS = "preferred_class",
   PREFERRED_CONTACT = "preferred_comms",
   PREFERRED_NUMBER = "preferred_number",
+  REGISTERED_AT = "registered_at",
   SESSION = "session",
   STATUS = "status",
   WORK_NUMBER = "work_number",
