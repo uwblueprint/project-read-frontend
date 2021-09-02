@@ -19,8 +19,10 @@ const getHeaderColumns = (
   columns.map((column, index) => {
     const style = {
       ...STICKY_COLUMN_STYLES,
+      ...(index && {
+        left: index * (STICKY_COLUMN_WIDTH + STICKY_COLUMN_PADDING_X * 2),
+      }),
       ...(index === columns.length - 1 && {
-        left: STICKY_COLUMN_WIDTH + STICKY_COLUMN_PADDING_X * 2,
         borderRight: `1px solid ${grey[300]}`,
       }),
     };
