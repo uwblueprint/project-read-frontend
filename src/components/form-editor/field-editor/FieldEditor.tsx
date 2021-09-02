@@ -12,6 +12,7 @@ import {
   Radio,
   Select,
   Switch,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import { Clear, DragIndicator, EditOutlined } from "@material-ui/icons";
@@ -27,6 +28,9 @@ import { DefaultField, DynamicField } from "types";
 
 import QuestionTypeLabel from "../question-type-label";
 import useStyles from "./styles";
+
+const DELETE_OPTION_MESSAGE =
+  "Dropdown or checkbox questions must have at least one option";
 
 // unique identifier for options
 let OPTION_KEY_COUNTER = 1;
@@ -101,6 +105,8 @@ const FieldEditor = ({
     options[optionIndex] = data;
     setFieldFormData({ ...fieldFormData, options });
   };
+
+  const deleteOptionDisabled = fieldFormData.options.length <= 1;
 
   const onDeleteOption = (index: number): void => {
     setFieldFormData({
@@ -312,13 +318,21 @@ const FieldEditor = ({
                     value={option.value}
                   />
                 </FormRow>
-                <IconButton
-                  aria-label="Delete option"
-                  onClick={() => onDeleteOption(option.index)}
-                  size="small"
+                <Tooltip
+                  aria-label={deleteOptionDisabled ? DELETE_OPTION_MESSAGE : ""}
+                  title={deleteOptionDisabled ? DELETE_OPTION_MESSAGE : ""}
                 >
-                  <Clear fontSize="small" />
-                </IconButton>
+                  <span>
+                    <IconButton
+                      aria-label="Delete option"
+                      disabled={deleteOptionDisabled}
+                      onClick={() => onDeleteOption(option.index)}
+                      size="small"
+                    >
+                      <Clear fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </Box>
             ))}
             <Box display="flex" alignItems="center">
