@@ -29,6 +29,9 @@ import { DefaultField, DynamicField, FieldType } from "types";
 import QuestionTypeLabel from "../question-type-label";
 import useStyles from "./styles";
 
+const DELETE_OPTION_MESSAGE =
+  "Dropdown or checkbox questions must have at least one option";
+
 // unique identifier for options
 let OPTION_KEY_COUNTER = 1;
 
@@ -315,16 +318,8 @@ const FieldEditor = ({
                   />
                 </FormRow>
                 <Tooltip
-                  aria-label={
-                    deleteOptionDisabled
-                      ? "Dropdown or checkbox questions must have at least one option"
-                      : ""
-                  }
-                  title={
-                    deleteOptionDisabled
-                      ? "Dropdown or checkbox questions must have at least one option"
-                      : ""
-                  }
+                  aria-label={deleteOptionDisabled ? DELETE_OPTION_MESSAGE : ""}
+                  title={deleteOptionDisabled ? DELETE_OPTION_MESSAGE : ""}
                 >
                   <span>
                     <IconButton

@@ -61,6 +61,7 @@ type FamilyTableRow = Pick<
   [DefaultFieldKey.SESSION]: string;
   [DefaultFieldKey.ENROLLED_CLASS]: string;
   [DefaultFieldKey.PREFERRED_CLASS]: string;
+  [DefaultFieldKey.REGISTERED_AT]: string;
   [DefaultFieldKey.CHILDREN]: string;
   [key: number]: string | number; // dynamic fields
 };
@@ -100,11 +101,15 @@ const FamilyTable = ({
       });
 
       const enrolmentData = enrolment || {
+        created_at: null,
         enrolled_class: null,
         preferred_class: null,
         status: EnrolmentStatus.UNASSIGNED,
       };
       const familyRow: FamilyTableRow = {
+        [DefaultFieldKey.REGISTERED_AT]: enrolmentData.created_at
+          ? moment(enrolmentData.created_at).format("MMM D h:mma")
+          : "N/A",
         [DefaultFieldKey.FIRST_NAME]: parent.first_name,
         [DefaultFieldKey.LAST_NAME]: parent.last_name,
         [DefaultFieldKey.CHILDREN]: childrenInfo,
@@ -174,6 +179,9 @@ const FamilyTable = ({
 
     // sticky first and last name columns
     ...getHeaderColumns([
+      ...(enrolmentFields.includes(DefaultFields.REGISTERED_AT)
+        ? [getColumn(DefaultFields.REGISTERED_AT, false)]
+        : []),
       getColumn(DefaultFields.FIRST_NAME, false),
       getColumn(DefaultFields.LAST_NAME, false),
     ]),
@@ -192,7 +200,11 @@ const FamilyTable = ({
 
     // enrolment columns
     ...enrolmentFields
-      .filter((field) => field !== DefaultFields.ENROLLED_CLASS)
+      .filter(
+        (field) =>
+          field !== DefaultFields.REGISTERED_AT &&
+          field !== DefaultFields.ENROLLED_CLASS
+      )
       .map((field) => getColumn(field, false)),
     ...(enrolmentFields.includes(DefaultFields.ENROLLED_CLASS)
       ? [enrolledClassColumn]

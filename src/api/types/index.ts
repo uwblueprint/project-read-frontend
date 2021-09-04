@@ -11,7 +11,16 @@ import {
   User,
 } from "types";
 
-export type UserResponse = Pick<User, "id" | "first_name" | "last_name">;
+export type UserResponse = Pick<
+  User,
+  | "id"
+  | "date_joined"
+  | "email"
+  | "first_name"
+  | "is_active"
+  | "is_admin"
+  | "last_name"
+>;
 
 export type ClassListResponse = Pick<Class, "id" | "name" | "colour">;
 
@@ -37,13 +46,19 @@ export type SessionDetailResponse = Session & {
   families: FamilyListResponse[];
 };
 
-export type EnrolmentResponse = Enrolment & {
+export type EnrolmentResponse = Pick<
+  Enrolment,
+  "id" | "created_at" | "family" | "status" | "students"
+> & {
   session: SessionListResponse;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
 };
 
-export type EnrolmentRequest = Enrolment & {
+export type EnrolmentRequest = Pick<
+  Enrolment,
+  "id" | "family" | "status" | "students"
+> & {
   session: number;
   preferred_class: number | null;
   enrolled_class: number | null;
