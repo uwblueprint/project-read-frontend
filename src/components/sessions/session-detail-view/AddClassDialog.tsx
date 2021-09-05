@@ -118,6 +118,8 @@ const AddClassDialog = ({ open, onClose, session, onClassCreate }: Props) => {
         </DialogContent>
       </Dialog>
       <ConfirmationDialog
+        cancelButtonLabel="No, go back"
+        confirmButtonLabel="Yes"
         description="This information will not be saved."
         onCancel={() => {
           setIsConfirming(false);
