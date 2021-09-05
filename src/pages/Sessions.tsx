@@ -38,7 +38,6 @@ import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
 import AddClassDialog from "components/sessions/session-detail-view/AddClassDialog";
-import AttendanceTable from "components/sessions/session-detail-view/AttendanceTable";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
