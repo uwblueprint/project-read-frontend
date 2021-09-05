@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons/";
 import { makeStyles } from "@material-ui/styles";
+import AttendanceTable from "components/sessions/session-detail-view/AttendanceTable";
 import { useHistory, useParams } from "react-router-dom";
 
 import ClassAPI from "api/ClassAPI";
@@ -37,7 +38,6 @@ import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
 import AddClassDialog from "components/sessions/session-detail-view/AddClassDialog";
-import AttendanceTable from "components/sessions/session-detail-view/AttendanceTable";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
