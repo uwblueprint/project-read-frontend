@@ -9,7 +9,9 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { Link, useHistory } from "react-router-dom";
 
+import ClassesAPI from "api/ClassAPI";
 import FieldsAPI from "api/DynamicFieldAPI";
+import EnrolmentAPI from "api/EnrolmentAPI";
 import FamilyAPI from "api/FamilyAPI";
 import SessionAPI from "api/SessionAPI";
 import StudentAPI from "api/StudentAPI";
@@ -44,6 +46,8 @@ function Navbar() {
     zip.file("fields.csv", await FieldsAPI.exportFields());
     zip.file("sessions.csv", await SessionAPI.exportSessions());
     zip.file("students.csv", await StudentAPI.exportStudents());
+    zip.file("classes.csv", await ClassesAPI.exportClasses());
+    zip.file("enrolments.csv", await EnrolmentAPI.exportEnrolments());
     zip
       .generateAsync({ type: "blob" })
       .then((content) => saveAs(content, "data.zip"));

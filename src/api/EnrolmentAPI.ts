@@ -19,7 +19,7 @@ const putEnrolment = (data: EnrolmentRequest): Promise<EnrolmentResponse> =>
   APIUtils.put(`/enrolments/${data.id}/`, data) as Promise<EnrolmentResponse>;
 
 const exportEnrolments = (): Promise<string> =>
-  APIUtils.get(`/export/enrolments`) as Promise<string>;
+  APIUtils.get(`/export/enrolments`, true) as Promise<string>;
 
 export default {
   postEnrolment,
