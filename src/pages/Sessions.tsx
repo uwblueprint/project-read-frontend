@@ -378,6 +378,7 @@ const Sessions = () => {
                   `Successfully created class ${newClass.name} in this session.`
                 );
                 updateSelectedSession(selectedSession.id);
+                setIsDialogOpen(false);
               }}
             />
           </>

@@ -42,6 +42,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type ClassRequest = ClassListRequest & {
+  session: number;
+};
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -54,9 +58,10 @@ const AddClassDialog = ({ open, onClose, session, onClassCreate }: Props) => {
   const classes = useStyles();
   const [isConfirming, setIsConfirming] = useState(false);
 
-  const [classData, setClassData] = useState<ClassListRequest>(
-    defaultClassData
-  );
+  const [classData, setClassData] = useState<ClassRequest>({
+    ...defaultClassData,
+    session: session.id,
+  });
 
   const classRequestToClassFormData = (
     classListData: ClassListRequest
@@ -67,7 +72,7 @@ const AddClassDialog = ({ open, onClose, session, onClassCreate }: Props) => {
   };
 
   const onUpdateClass = (index: number, newClass: ClassListRequest) => {
-    setClassData(newClass);
+    setClassData({ ...newClass, session: session.id });
   };
 
   const submitClass = async () => {
