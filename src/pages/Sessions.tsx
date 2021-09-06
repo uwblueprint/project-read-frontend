@@ -389,6 +389,7 @@ const Sessions = () => {
           classTabIndex={classTabIndex}
           onChangeClassTabIndex={handleChangeClassTabIndex}
           classDefaultView={getClassView()}
+          onDialogOpen={() => setIsDialogOpen(true)}
         />
       )}
       {selectedFamily && (
