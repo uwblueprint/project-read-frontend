@@ -15,7 +15,6 @@ import {
   Button,
   InputBase,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import { Add, Edit } from "@material-ui/icons";
 import debounce from "lodash/debounce";
 import moment from "moment";
@@ -35,58 +34,7 @@ import EnrolmentForm from "./enrolment-form";
 import FamilySidebarForm, { familySidebarFormId } from "./family-sidebar-form";
 import InteractionCard from "./interaction-card";
 import PreviousEnrolmentCard from "./previous-enrolment-card";
-
-const DRAWER_WIDTH = 416;
-
-const useStyles = makeStyles((theme) => ({
-  actionButton: {
-    backgroundColor: theme.palette.backgroundSecondary.default,
-    borderRadius: 8,
-    height: 40,
-    width: 40,
-  },
-  actionButtonIcon: {
-    height: 20,
-    width: 20,
-  },
-  drawer: {
-    width: DRAWER_WIDTH,
-  },
-  drawerPaper: {
-    backgroundColor: theme.palette.backgroundSecondary.paper,
-    borderLeft: "none",
-    height: "calc(100% - 64px)",
-    marginTop: 64,
-    width: DRAWER_WIDTH,
-  },
-  formActionRow: {
-    backgroundColor: theme.palette.backgroundSecondary.paper,
-    boxShadow: "rgb(0 0 0 / 12%) 8px 0px 8px 0px",
-    zIndex: theme.zIndex.appBar + 1,
-  },
-  heading: {
-    fontWeight: 700,
-    fontSize: 18,
-    paddingBottom: 20,
-    paddingTop: 20,
-  },
-  notes: {
-    alignItems: "baseline",
-    backgroundColor: theme.palette.backgroundSecondary.default,
-    borderRadius: 4,
-    fontSize: 14,
-    height: 150,
-    overflowY: "scroll",
-    padding: 16,
-  },
-  notesLabel: {
-    display: "none",
-  },
-  submitButton: {
-    marginLeft: 12,
-    marginRight: 24,
-  },
-}));
+import useStyles from "./styles";
 
 type Props = {
   family: FamilyDetailResponse;
@@ -413,7 +361,6 @@ const FamilySidebar = ({
           justifyContent="flex-end"
           paddingY={2}
           position="fixed"
-          width={DRAWER_WIDTH}
         >
           <Button
             onClick={() => onToggleEdit(false)}
