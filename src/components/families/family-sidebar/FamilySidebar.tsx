@@ -75,8 +75,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.backgroundSecondary.default,
     borderRadius: 4,
     fontSize: 14,
-    height: "fit-content",
-    minHeight: 150,
+    height: 150,
+    overflowY: "scroll",
     padding: 16,
   },
   notesLabel: {
