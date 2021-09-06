@@ -130,6 +130,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Registered at",
     question_type: QuestionType.DATE,
     options: [],
+    type: FieldType.Default,
   },
   SESSION: {
     id: DefaultFieldKey.SESSION,
