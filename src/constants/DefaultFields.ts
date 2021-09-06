@@ -1,4 +1,4 @@
-import { DefaultField } from "types";
+import { DefaultField, FieldType } from "types";
 
 import DefaultFieldKey from "./DefaultFieldKey";
 import QuestionType from "./QuestionType";
@@ -10,6 +10,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Address",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   CELL_NUMBER: {
     id: DefaultFieldKey.CELL_NUMBER,
@@ -17,6 +18,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Cell phone",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   CHILDREN: {
     id: DefaultFieldKey.CHILDREN,
@@ -24,6 +26,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Children",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   ENROLLED_CLASS: {
     id: DefaultFieldKey.ENROLLED_CLASS,
@@ -31,6 +34,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Class",
     question_type: QuestionType.SELECT,
     options: [],
+    type: FieldType.Default,
   },
   DATE_OF_BIRTH: {
     id: DefaultFieldKey.DATE_OF_BIRTH,
@@ -38,6 +42,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Date of birth",
     question_type: QuestionType.DATE,
     options: [],
+    type: FieldType.Default,
   },
   EMAIL: {
     id: DefaultFieldKey.EMAIL,
@@ -45,6 +50,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Email",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   FIRST_NAME: {
     id: DefaultFieldKey.FIRST_NAME,
@@ -52,6 +58,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "First name",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   HOME_NUMBER: {
     id: DefaultFieldKey.HOME_NUMBER,
@@ -59,6 +66,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Home phone",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   ID: {
     id: DefaultFieldKey.ID,
@@ -66,6 +74,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Id",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   LAST_NAME: {
     id: DefaultFieldKey.LAST_NAME,
@@ -73,6 +82,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Last name",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   NUM_CHILDREN: {
     id: DefaultFieldKey.NUM_CHILDREN,
@@ -80,6 +90,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "No. of children",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   PHONE_NUMBER: {
     id: DefaultFieldKey.PHONE_NUMBER,
@@ -87,6 +98,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Primary phone number",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   PREFERRED_CLASS: {
     id: DefaultFieldKey.PREFERRED_CLASS,
@@ -94,6 +106,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Preferred class",
     question_type: QuestionType.SELECT,
     options: [],
+    type: FieldType.Default,
   },
   PREFERRED_CONTACT: {
     id: DefaultFieldKey.PREFERRED_CONTACT,
@@ -101,6 +114,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Preferred contact",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
   PREFERRED_NUMBER: {
     id: DefaultFieldKey.PREFERRED_NUMBER,
@@ -108,6 +122,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Preferred number",
     question_type: QuestionType.SELECT,
     options: ["Home", "Cell", "Work"],
+    type: FieldType.Default,
   },
   REGISTERED_AT: {
     id: DefaultFieldKey.REGISTERED_AT,
@@ -122,6 +137,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Current session",
     question_type: QuestionType.SELECT,
     options: [],
+    type: FieldType.Default,
   },
   STATUS: {
     id: DefaultFieldKey.STATUS,
@@ -129,6 +145,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Status",
     question_type: QuestionType.SELECT,
     options: [],
+    type: FieldType.Default,
   },
   WORK_NUMBER: {
     id: DefaultFieldKey.WORK_NUMBER,
@@ -136,6 +153,7 @@ const DefaultFields: Record<string, DefaultField> = Object.freeze({
     name: "Work phone",
     question_type: QuestionType.TEXT,
     options: [],
+    type: FieldType.Default,
   },
 });
 

@@ -22,6 +22,11 @@ export type User = {
   last_name: string;
 };
 
+export enum FieldType {
+  Default = "default",
+  Dynamic = "dynamic",
+}
+
 type Field = {
   is_default: boolean;
   name: string;
@@ -31,10 +36,14 @@ type Field = {
 
 export type DefaultField = Field & {
   id: DefaultFieldKey;
+  type: FieldType.Default;
 };
 
 export type DynamicField = Field & {
   id: number;
+  order: number;
+  role: StudentRole;
+  type: FieldType.Dynamic;
 };
 
 export type Student = {

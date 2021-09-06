@@ -39,18 +39,12 @@ const FormEditor = ({
         Basic information
       </Typography>
       {DEFAULT_STUDENT_FIELDS.concat(DEFAULT_FAMILY_FIELDS).map((field) => (
-        <FieldEditor
-          key={field.id}
-          field={field}
-          isDefault
-          isReadOnly={isReadOnly}
-        />
+        <FieldEditor key={field.id} field={field} isReadOnly={isReadOnly} />
       ))}
       {parentDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
           field={field}
-          isDefault={false}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}
           onChangeEnabled={(enabled) =>
@@ -66,18 +60,12 @@ const FormEditor = ({
         Children
       </Typography>
       {DEFAULT_STUDENT_FIELDS.map((field) => (
-        <FieldEditor
-          key={field.id}
-          field={field}
-          isDefault
-          isReadOnly={isReadOnly}
-        />
+        <FieldEditor key={field.id} field={field} isReadOnly={isReadOnly} />
       ))}
       {childDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
           field={field}
-          isDefault={false}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}
           onChangeEnabled={(enabled) =>
@@ -89,18 +77,12 @@ const FormEditor = ({
         Additional members
       </Typography>
       {DEFAULT_STUDENT_FIELDS.map((field) => (
-        <FieldEditor
-          key={field.id}
-          field={field}
-          isDefault
-          isReadOnly={isReadOnly}
-        />
+        <FieldEditor key={field.id} field={field} isReadOnly={isReadOnly} />
       ))}
       {guestDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
           field={field}
-          isDefault={false}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}
           onChangeEnabled={(enabled) =>
@@ -114,14 +96,12 @@ const FormEditor = ({
       </Typography>
       <FieldEditor
         field={DefaultFields.PREFERRED_CLASS}
-        isDefault
         isReadOnly={isReadOnly}
       />
       {sessionDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
           field={field}
-          isDefault={false}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}
           onChangeEnabled={(enabled) =>

@@ -139,16 +139,19 @@ export type FamilyRequest = FamilyBaseRequest & {
   interactions: Interaction[];
 };
 
+export type DynamicFieldResponse = Pick<
+  DynamicField,
+  "id" | "is_default" | "name" | "order" | "options" | "question_type" | "role"
+>;
+
 export type DynamicFieldsResponse = {
-  parent_fields: DynamicField[];
-  child_fields: DynamicField[];
-  guest_fields: DynamicField[];
-  session_fields: DynamicField[];
+  parent_fields: DynamicFieldResponse[];
+  child_fields: DynamicFieldResponse[];
+  guest_fields: DynamicFieldResponse[];
+  session_fields: DynamicFieldResponse[];
 };
 
 export type DynamicFieldRequest = Pick<
   DynamicField,
   "id" | "name" | "options" | "question_type"
 >;
-
-export type DynamicFieldResponse = DynamicFieldRequest;
