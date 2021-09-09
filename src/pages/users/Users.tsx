@@ -11,6 +11,7 @@ import {
   OutlinedInput,
   Paper,
   Select,
+  Snackbar,
   Table,
   TableCell,
   TableContainer,
@@ -22,6 +23,7 @@ import { Add, Close } from "@material-ui/icons/";
 import moment from "moment";
 
 import { UserRequest } from "api/types";
+import UserAPI from "api/UserAPI";
 import FormRow from "components/common/form-row";
 import FieldVariant from "constants/FieldVariant";
 import QuestionType from "constants/QuestionType";
@@ -43,6 +45,7 @@ const Users = () => {
   const classes = useStyles();
   const { users } = useContext(UsersContext);
   const [displayInviteDialog, setIsDisplayInviteDialog] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [newUser, setNewUser] = useState(defaultUserData);
 
   const handleOpenInviteDialog = () => {
@@ -58,15 +61,27 @@ const Users = () => {
     isAdmin ? UserRole.Admin : UserRole.Facilitator;
   const convertRoleToBoolean = (role: UserRole) => role === UserRole.Admin;
 
-  const inviteUser = () => {
-    console.log(newUser);
-    // Call POST users API here
+  const inviteUser = async () => {
+    await UserAPI.postUser(newUser);
+    handleCloseInviteDialog();
+    setSnackbarMessage(
+      `Successfully added ${newUser.email} to the application.`
+    );
   };
 
   return (
     <>
       <Box display="flex">
         <Box display="flex" flexGrow={1} alignItems="center">
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            autoHideDuration={5000}
+            message={snackbarMessage}
+            onClose={() => {
+              setSnackbarMessage("");
+            }}
+            open={snackbarMessage !== ""}
+          />
           <Typography variant="h1">Manage users</Typography>
         </Box>
         <Box flexShrink={0}>
