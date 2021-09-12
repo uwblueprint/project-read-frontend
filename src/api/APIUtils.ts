@@ -17,7 +17,10 @@ async function getIdToken() {
   return user.getIdToken();
 }
 
-export const get = async (path: string): Promise<unknown> => {
+export const get = async (
+  path: string,
+  csv: boolean = false
+): Promise<unknown> => {
   const token = await getIdToken();
   const res = await fetch(url + path, {
     headers: {
@@ -28,8 +31,7 @@ export const get = async (path: string): Promise<unknown> => {
   if (!res.ok) {
     throw Error(res.statusText);
   }
-
-  return res.json();
+  return csv ? res.text() : res.json();
 };
 
 export const post = async (path: string, data: unknown): Promise<unknown> => {

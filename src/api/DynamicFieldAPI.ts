@@ -5,6 +5,9 @@ import {
   DynamicFieldsResponse,
 } from "./types";
 
+const exportFields = (): Promise<string> =>
+  APIUtils.get("/export/fields", true) as Promise<string>;
+
 const getFields = async (): Promise<DynamicFieldsResponse> => {
   const res = (await APIUtils.get("/fields")) as DynamicFieldsResponse[];
   return res[0]; // API returns the content as the first element of an array
@@ -20,4 +23,4 @@ const putField = async (
 ): Promise<DynamicFieldResponse> =>
   (await APIUtils.put(`/fields/${data.id}/`, data)) as DynamicFieldResponse;
 
-export default { getFields, postField, putField };
+export default { exportFields, getFields, postField, putField };
