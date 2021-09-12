@@ -153,5 +153,5 @@ export type DynamicFieldsResponse = {
 
 export type DynamicFieldRequest = Pick<
   DynamicField,
-  "id" | "name" | "options" | "question_type"
+  "is_default" | "name" | "options" | "order" | "question_type" | "role"
 >;
