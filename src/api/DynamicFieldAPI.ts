@@ -6,7 +6,7 @@ import {
 } from "./types";
 
 const exportFields = (): Promise<string> =>
-  APIUtils.get(`/export/fields`) as Promise<string>;
+  APIUtils.get("/export/fields", true) as Promise<string>;
 
 const getFields = async (): Promise<DynamicFieldsResponse> => {
   const res = (await APIUtils.get("/fields")) as DynamicFieldsResponse[];
