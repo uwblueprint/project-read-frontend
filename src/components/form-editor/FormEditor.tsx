@@ -67,7 +67,7 @@ const FormEditor = ({
       {parentDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
-          existingId={field.id}
+          existingFieldId={field.id}
           field={field}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}
@@ -104,7 +104,7 @@ const FormEditor = ({
       {childDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
-          existingId={field.id}
+          existingFieldId={field.id}
           field={field}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}
@@ -138,7 +138,7 @@ const FormEditor = ({
       {guestDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
-          existingId={field.id}
+          existingFieldId={field.id}
           field={field}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}
@@ -169,7 +169,7 @@ const FormEditor = ({
       {sessionDynamicFields.map((field) => (
         <FieldEditor
           key={field.id}
-          existingId={field.id}
+          existingFieldId={field.id}
           field={field}
           isEnabled={enabledFieldIds.includes(field.id)}
           isReadOnly={isReadOnly}

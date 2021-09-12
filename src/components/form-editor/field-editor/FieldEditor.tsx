@@ -62,7 +62,7 @@ export type FieldFormData = (
 };
 
 type Props = {
-  existingId?: number | null;
+  existingFieldId?: number | null;
   field: DefaultField | Omit<DynamicField, "id">;
   isEnabled?: boolean;
   isReadOnly: boolean;
@@ -72,7 +72,7 @@ type Props = {
 };
 
 const FieldEditor = ({
-  existingId = null,
+  existingFieldId = null,
   field,
   isEnabled = true,
   isReadOnly,
@@ -82,7 +82,9 @@ const FieldEditor = ({
   const { fetchDynamicFields } = useContext(DynamicFieldsContext);
   const isDefault = field.type === FieldType.Default;
   const classes = useStyles({ isDefault });
-  const [isEditing, setIsEditing] = useState(!isDefault && existingId === null);
+  const [isEditing, setIsEditing] = useState(
+    !isDefault && existingFieldId === null
+  );
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
     ...field,
     options: field.options.map((option) => ({
@@ -102,8 +104,8 @@ const FieldEditor = ({
     if (field.type === FieldType.Default) {
       return field.id;
     }
-    if (existingId) {
-      return existingId;
+    if (existingFieldId) {
+      return existingFieldId;
     }
     return `new ${field.role} field`;
   };
@@ -146,10 +148,10 @@ const FieldEditor = ({
       options = fieldFormData.options.map((option) => option.value);
     }
     try {
-      if (existingId !== null) {
+      if (existingFieldId !== null) {
         await DynamicFieldAPI.putField({
           ...fieldFormData,
-          id: existingId,
+          id: existingFieldId,
           options,
           order: field.order,
           role: field.role,
