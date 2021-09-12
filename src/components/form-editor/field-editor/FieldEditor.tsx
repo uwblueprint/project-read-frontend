@@ -113,7 +113,13 @@ const FieldEditor = ({
   const onAddOption = (): void => {
     setFieldFormData({
       ...fieldFormData,
-      options: [...fieldFormData.options, { index: generateKey(), value: "" }],
+      options: [
+        ...fieldFormData.options,
+        {
+          index: generateKey(),
+          value: `Option ${fieldFormData.options.length + 1}`,
+        },
+      ],
     });
   };
 
