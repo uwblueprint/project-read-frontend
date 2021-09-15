@@ -1,13 +1,24 @@
 import React from "react";
 
-import { Box, AppBar, Tabs, Tab } from "@material-ui/core";
+import { AppBar, Box, Button, Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
 
 import { ClassListResponse } from "api/types";
 
 export const ALL_CLASSES_TAB_INDEX = 0;
 
 const useStyles = makeStyles(() => ({
+  addButton: {
+    backgroundColor: "#E7E7E7",
+    border: "1px solid #C8C8C8",
+    borderTopLeftRadius: "15px",
+    borderTopRightRadius: "15px",
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    minWidth: 45,
+    opacity: 0.7,
+  },
   appBar: {
     flexDirection: "row",
     backgroundColor: "inherit",
@@ -29,6 +40,7 @@ type Props = {
   classDefaultView: JSX.Element;
   classTabIndex: number;
   onChangeClassTabIndex: (tab: number) => void;
+  onDialogOpen: () => void;
 };
 
 const SessionDetailView = ({
@@ -36,6 +48,7 @@ const SessionDetailView = ({
   classDefaultView,
   classTabIndex,
   onChangeClassTabIndex,
+  onDialogOpen,
 }: Props) => {
   const styles = useStyles();
 
@@ -64,6 +77,9 @@ const SessionDetailView = ({
             />
           ))}
         </Tabs>
+        <Button className={styles.addButton} onClick={onDialogOpen}>
+          <AddIcon />
+        </Button>
         <Box flexGrow={1} className={styles.borderBottom} />
       </AppBar>
       <div
