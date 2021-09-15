@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Typography,
-} from "@material-ui/core";
-import { Add, RemoveCircle } from "@material-ui/icons";
+import { Box, Divider, IconButton, Typography } from "@material-ui/core";
+import { RemoveCircle } from "@material-ui/icons";
 
 import { ClassListRequest } from "api/types";
+import AddButton from "components/common/add-button";
 import FieldVariant from "constants/FieldVariant";
 
 import AddClass, { ClassFormData } from "./AddClass";
@@ -134,15 +129,9 @@ const AddClasses = ({ classList, onChangeClasses }: Props) => {
                 )}
               </Box>
             ))}
-            <Button
-              onClick={onAddClass}
-              className={classes.addButton}
-              size="medium"
-              variant="outlined"
-            >
-              <Add fontSize="small" className={classes.addButtonIcon} />
-              Add class
-            </Button>
+            <Box marginBottom={6} marginTop={1} marginLeft={4}>
+              <AddButton label="Add class" onClick={onAddClass} />
+            </Box>
           </Box>
         </Box>
       </Box>

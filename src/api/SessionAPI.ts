@@ -7,4 +7,7 @@ const getSessions = (): Promise<SessionListResponse[]> =>
 const getSession = (id: number): Promise<SessionDetailResponse> =>
   APIUtils.get(`/sessions/${id}`) as Promise<SessionDetailResponse>;
 
-export default { getSessions, getSession };
+const exportSessions = (): Promise<string> =>
+  APIUtils.get(`/export/sessions`, true) as Promise<string>;
+
+export default { getSessions, getSession, exportSessions };

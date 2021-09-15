@@ -15,4 +15,7 @@ const postClass = (data: ClassListRequest): Promise<ClassListResponse> =>
 const putClass = (data: ClassDetailRequest): Promise<ClassDetailResponse> =>
   APIUtils.put(`/classes/${data.id}/`, data) as Promise<ClassDetailResponse>;
 
-export default { getClass, postClass, putClass };
+const exportClasses = (): Promise<string> =>
+  APIUtils.get(`/export/classes`, true) as Promise<string>;
+
+export default { getClass, postClass, putClass, exportClasses };

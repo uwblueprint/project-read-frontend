@@ -23,6 +23,7 @@ import FormActionIconButtons from "components/common/form-action-icon-buttons";
 import FormRow from "components/common/form-row";
 import FieldVariant from "constants/FieldVariant";
 import QuestionType from "constants/QuestionType";
+import StudentRole from "constants/StudentRole";
 import { DynamicFieldsContext } from "context/DynamicFieldsContext";
 import { DefaultField, DynamicField, FieldType } from "types";
 
@@ -53,27 +54,37 @@ type OptionFormData = {
   value: string;
 };
 
-type FieldFormData = Omit<DefaultField | DynamicField, "options"> & {
+export type FieldFormData = (
+  | Omit<DefaultField, "options">
+  | Omit<DynamicField, "id" | "options">
+) & {
   options: OptionFormData[];
 };
 
 type Props = {
-  field: DefaultField | DynamicField;
+  existingFieldId?: number | null;
+  field: DefaultField | Omit<DynamicField, "id">;
   isEnabled?: boolean;
   isReadOnly: boolean;
   onChangeEnabled?: (enabled: boolean) => void;
+  onSubmit?: () => void;
+  role: StudentRole;
 };
 
 const FieldEditor = ({
+  existingFieldId = null,
   field,
   isEnabled = true,
   isReadOnly,
   onChangeEnabled = () => {},
+  onSubmit = () => {},
 }: Props) => {
   const { fetchDynamicFields } = useContext(DynamicFieldsContext);
   const isDefault = field.type === FieldType.Default;
   const classes = useStyles({ isDefault });
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(
+    !isDefault && existingFieldId === null
+  );
   const [fieldFormData, setFieldFormData] = useState<FieldFormData>({
     ...field,
     options: field.options.map((option) => ({
@@ -89,10 +100,26 @@ const FieldEditor = ({
     setShowDeleteConfirmationDialog,
   ] = useState(false);
 
+  const getId = () => {
+    if (field.type === FieldType.Default) {
+      return field.id;
+    }
+    if (existingFieldId) {
+      return existingFieldId;
+    }
+    return `new ${field.role} field`;
+  };
+
   const onAddOption = (): void => {
     setFieldFormData({
       ...fieldFormData,
-      options: [...fieldFormData.options, { index: generateKey(), value: "" }],
+      options: [
+        ...fieldFormData.options,
+        {
+          index: generateKey(),
+          value: `Option ${fieldFormData.options.length + 1}`,
+        },
+      ],
     });
   };
 
@@ -114,16 +141,38 @@ const FieldEditor = ({
     });
   };
 
+  const formErrorMessage =
+    fieldFormData.name.length === 0 ? "Please enter a question name" : "";
+
   const onSubmitField = async () => {
-    const data = {
-      ...fieldFormData,
-      id: Number(field.id),
-      options: fieldFormData.options.map((option) => option.value),
-    };
+    if (field.type === FieldType.Default) {
+      return;
+    }
+
+    let options: string[] = [];
+    if (fieldFormData.question_type !== QuestionType.TEXT) {
+      options = fieldFormData.options.map((option) => option.value);
+    }
     try {
-      await DynamicFieldAPI.putField(data);
+      if (existingFieldId !== null) {
+        await DynamicFieldAPI.putField({
+          ...fieldFormData,
+          id: existingFieldId,
+          options,
+          order: field.order,
+          role: field.role,
+        });
+      } else {
+        await DynamicFieldAPI.postField({
+          ...fieldFormData,
+          options,
+          order: field.order,
+          role: field.role,
+        });
+      }
       setIsEditing(false);
       fetchDynamicFields();
+      onSubmit();
     } catch (err) {
       // eslint-disable-next-line no-alert
       alert(err);
@@ -186,8 +235,8 @@ const FieldEditor = ({
             )}
             {isEditing ? (
               <FormRow
-                id={`${field.id} name`}
-                label={`${fieldFormData.name} field name`}
+                id={`${getId()} name`}
+                label={`${getId()} name`}
                 multiple={false}
                 questionType={QuestionType.TEXT}
                 variant={FieldVariant.COMPACT}
@@ -196,10 +245,12 @@ const FieldEditor = ({
                   autoComplete="new-password" // disable autocomplete
                   className={classes.input}
                   fullWidth
-                  id={`${field.id} name`}
+                  id={`${getId()} name`}
+                  inputProps={{ maxLength: 512 }}
                   onChange={(e) =>
                     setFieldFormData({ ...fieldFormData, name: e.target.value })
                   }
+                  placeholder="Question name"
                   value={fieldFormData.name}
                 />
               </FormRow>
@@ -224,18 +275,18 @@ const FieldEditor = ({
                 <>
                   {isEditing ? (
                     <FormRow
-                      id={`${field.id} question type`}
-                      label={`${field.name} field question type`}
+                      id={`${getId()} question type`}
+                      label={`${getId()} question type`}
                       multiple={false}
                       questionType={QuestionType.TEXT}
                       variant={FieldVariant.COMPACT}
                     >
                       <Select
-                        aria-label={field.question_type}
+                        aria-label={`${getId()} question type`}
                         className={classes.input}
                         displayEmpty
                         fullWidth
-                        labelId={`${field.id} question type`}
+                        labelId={`${getId()} question type`}
                         onChange={(e) =>
                           setFieldFormData({
                             ...fieldFormData,
@@ -271,6 +322,7 @@ const FieldEditor = ({
                 {!isDefault &&
                   (isEditing ? (
                     <FormActionIconButtons
+                      errorMessage={formErrorMessage}
                       onDelete={() => setShowDeleteConfirmationDialog(true)}
                       onSubmit={() => onSubmitField()}
                     />
@@ -298,7 +350,7 @@ const FieldEditor = ({
                 )}
                 <FormRow
                   dense
-                  id={`${field.id} option ${i}`}
+                  id={`${getId()} option ${i}`}
                   label={`Option ${i}`}
                   questionType={QuestionType.TEXT}
                   variant={FieldVariant.COMPACT}
@@ -307,13 +359,15 @@ const FieldEditor = ({
                     autoFocus={i === fieldFormData.options.length - 1}
                     className={classes.input}
                     fullWidth
-                    id={`${field.id} option ${i}`}
+                    id={`${getId()} option ${i}`}
+                    inputProps={{ maxLength: 64 }}
                     onChange={(e) =>
                       onUpdateOption({
                         index: option.index,
                         value: e.target.value,
                       })
                     }
+                    placeholder="Option name"
                     value={option.value}
                   />
                 </FormRow>
