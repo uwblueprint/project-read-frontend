@@ -62,11 +62,16 @@ const Users = () => {
   const convertRoleToBoolean = (role: UserRole) => role === UserRole.Admin;
 
   const inviteUser = async () => {
-    await UserAPI.postUser(newUser);
-    handleCloseInviteDialog();
-    setSnackbarMessage(
-      `Successfully added ${newUser.email} to the application.`
-    );
+    try {
+      await UserAPI.postUser(newUser);
+      handleCloseInviteDialog();
+      setSnackbarMessage(
+        `Successfully added ${newUser.email} to the application.`
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
+    }
   };
 
   return (
