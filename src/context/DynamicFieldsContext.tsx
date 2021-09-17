@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, ReactNode } from "react";
 
 import DynamicFieldAPI from "api/DynamicFieldAPI";
-import { DynamicField } from "types";
+import { DynamicField, FieldType } from "types";
 
 type DynamicFields = {
   childDynamicFields: DynamicField[];
@@ -39,10 +39,22 @@ export const DynamicFieldsProvider = ({
   const fetchDynamicFields = async () => {
     const res = await DynamicFieldAPI.getFields();
     setDynamicFields({
-      childDynamicFields: res.child_fields,
-      guestDynamicFields: res.guest_fields,
-      parentDynamicFields: res.parent_fields,
-      sessionDynamicFields: res.session_fields,
+      childDynamicFields: res.child_fields.map((field) => ({
+        ...field,
+        type: FieldType.Dynamic,
+      })),
+      guestDynamicFields: res.guest_fields.map((field) => ({
+        ...field,
+        type: FieldType.Dynamic,
+      })),
+      parentDynamicFields: res.parent_fields.map((field) => ({
+        ...field,
+        type: FieldType.Dynamic,
+      })),
+      sessionDynamicFields: res.session_fields.map((field) => ({
+        ...field,
+        type: FieldType.Dynamic,
+      })),
     });
   };
 

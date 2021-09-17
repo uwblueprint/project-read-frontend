@@ -1,24 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Typography,
-} from "@material-ui/core";
-import { Add, RemoveCircle } from "@material-ui/icons";
+import { Box, Divider, IconButton, Typography } from "@material-ui/core";
+import { RemoveCircle } from "@material-ui/icons";
 
 import { ClassListRequest } from "api/types";
-import FormRow from "components/common/form-row";
+import AddButton from "components/common/add-button";
 import FieldVariant from "constants/FieldVariant";
-import QuestionType from "constants/QuestionType";
-import { UsersContext } from "context/UsersContext";
 
-import DaysPicker from "./DaysPicker";
+import AddClass, { ClassFormData } from "./AddClass";
 import useStyles from "./styles";
 
 // unique identifier for children form components
@@ -30,8 +19,6 @@ export const generateKey = (): number => {
   CLASS_COUNTER += 1;
   return key;
 };
-
-export type ClassFormData = ClassListRequest & { index: number };
 
 export const defaultClassData: ClassListRequest = {
   name: "",
@@ -47,7 +34,6 @@ type Props = {
 
 const AddClasses = ({ classList, onChangeClasses }: Props) => {
   const classes = useStyles();
-  const { users } = useContext(UsersContext);
 
   const classRequestToClassFormData = (
     classesData: ClassListRequest[]
@@ -128,101 +114,24 @@ const AddClasses = ({ classList, onChangeClasses }: Props) => {
                       Class {classData.index + 1}
                     </Typography>
                   </Box>
-                  <FormRow
-                    id={`classname-${classData.index}`}
-                    label="Name"
-                    questionType={QuestionType.TEXT}
-                    variant={FieldVariant.COMPACT}
-                  >
-                    <OutlinedInput
-                      autoComplete="new-password" // disable autocomplete
-                      className={classes.input}
-                      fullWidth
-                      id={`classname-${classData.index}`}
-                      placeholder="Class name"
-                      onChange={(e) =>
-                        onUpdateClass(i, { ...classData, name: e.target.value })
-                      }
-                      value={classData.name}
-                    />
-                  </FormRow>
-                  <Box marginBottom={2}>
-                    <DaysPicker
-                      days={classData.days}
-                      onChange={(days) => {
-                        onUpdateClass(i, { ...classData, days });
-                      }}
-                    />
-                  </Box>
-                  <FormRow
-                    id={`location-${classData.index}`}
-                    label="Location"
-                    questionType={QuestionType.TEXT}
-                    variant={FieldVariant.COMPACT}
-                  >
-                    <OutlinedInput
-                      autoComplete="new-password" // disable autocomplete
-                      className={classes.input}
-                      fullWidth
-                      id={`location-${classData.index}`}
-                      placeholder="Location"
-                      onChange={(e) =>
-                        onUpdateClass(i, {
-                          ...classData,
-                          location: e.target.value,
-                        })
-                      }
-                      value={classData.location}
-                    />
-                  </FormRow>
-                  <FormRow
-                    id={`class ${classData.index}`}
-                    label="Facilitator"
-                    questionType={QuestionType.SELECT}
-                    variant={FieldVariant.COMPACT}
-                  >
-                    <Select
-                      aria-label="Class facilitator"
-                      className={classes.input}
-                      displayEmpty
-                      fullWidth
-                      labelId={`class ${classData.index}`}
-                      onChange={(e) =>
-                        onUpdateClass(i, {
-                          ...classData,
-                          facilitator: e.target.value as number,
-                        })
-                      }
-                      value={classData.facilitator || ""}
-                      variant="outlined"
-                    >
-                      <MenuItem value="" className={classes.selectPlaceholder}>
-                        Facilitator
-                      </MenuItem>
-                      {users?.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>
-                          {option.first_name} {option.last_name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormRow>
-                  {i < classFormData.length - 1 && (
-                    <Box paddingY={2}>
-                      <Divider />
-                    </Box>
-                  )}
+                  <AddClass
+                    key={classData.index}
+                    classData={classData}
+                    classIndex={i}
+                    fieldVariant={FieldVariant.COMPACT}
+                    onUpdateClass={onUpdateClass}
+                  />
                 </Box>
+                {i < classFormData.length - 1 && (
+                  <Box paddingY={2}>
+                    <Divider />
+                  </Box>
+                )}
               </Box>
             ))}
-            <Button
-              onClick={onAddClass}
-              className={classes.addButton}
-              size="medium"
-              variant="outlined"
-            >
-              <Add fontSize="small" className={classes.addButtonIcon} />
-              Add class
-            </Button>
+            <Box marginBottom={6} marginTop={1} marginLeft={4}>
+              <AddButton label="Add class" onClick={onAddClass} />
+            </Box>
           </Box>
         </Box>
       </Box>

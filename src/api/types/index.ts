@@ -48,13 +48,19 @@ export type SessionDetailResponse = Session & {
   families: FamilyListResponse[];
 };
 
-export type EnrolmentResponse = Enrolment & {
+export type EnrolmentResponse = Pick<
+  Enrolment,
+  "id" | "created_at" | "family" | "status" | "students"
+> & {
   session: SessionListResponse;
   preferred_class: ClassListResponse | null;
   enrolled_class: ClassListResponse | null;
 };
 
-export type EnrolmentRequest = Enrolment & {
+export type EnrolmentRequest = Pick<
+  Enrolment,
+  "id" | "family" | "status" | "students"
+> & {
   session: number;
   preferred_class: number | null;
   enrolled_class: number | null;
@@ -135,16 +141,19 @@ export type FamilyRequest = FamilyBaseRequest & {
   interactions: Interaction[];
 };
 
+export type DynamicFieldResponse = Pick<
+  DynamicField,
+  "id" | "is_default" | "name" | "order" | "options" | "question_type" | "role"
+>;
+
 export type DynamicFieldsResponse = {
-  parent_fields: DynamicField[];
-  child_fields: DynamicField[];
-  guest_fields: DynamicField[];
-  session_fields: DynamicField[];
+  parent_fields: DynamicFieldResponse[];
+  child_fields: DynamicFieldResponse[];
+  guest_fields: DynamicFieldResponse[];
+  session_fields: DynamicFieldResponse[];
 };
 
 export type DynamicFieldRequest = Pick<
   DynamicField,
-  "id" | "name" | "options" | "question_type"
+  "is_default" | "name" | "options" | "order" | "question_type" | "role"
 >;
-
-export type DynamicFieldResponse = DynamicFieldRequest;
