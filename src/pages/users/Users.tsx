@@ -1,10 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import {
+  Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
   MenuItem,
+  OutlinedInput,
   Paper,
   Select,
+  Snackbar,
   Table,
   TableCell,
   TableContainer,
@@ -12,8 +19,11 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import { Add, Close } from "@material-ui/icons/";
 import moment from "moment";
 
+import { UserRequest } from "api/types";
+import UserAPI from "api/UserAPI";
 import FormRow from "components/common/form-row";
 import FieldVariant from "constants/FieldVariant";
 import QuestionType from "constants/QuestionType";
@@ -26,12 +36,70 @@ enum UserRole {
   Facilitator = "Facilitator",
 }
 
+const defaultUserData: UserRequest = {
+  email: "",
+  is_admin: false,
+};
+
 const Users = () => {
   const classes = useStyles();
   const { users } = useContext(UsersContext);
+  const [displayInviteDialog, setIsDisplayInviteDialog] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [newUser, setNewUser] = useState(defaultUserData);
+
+  const handleOpenInviteDialog = () => {
+    setIsDisplayInviteDialog(true);
+  };
+
+  const handleCloseInviteDialog = () => {
+    setNewUser(defaultUserData);
+    setIsDisplayInviteDialog(false);
+  };
+
+  const convertBooleanToRole = (isAdmin: boolean) =>
+    isAdmin ? UserRole.Admin : UserRole.Facilitator;
+  const convertRoleToBoolean = (role: UserRole) => role === UserRole.Admin;
+
+  const inviteUser = async () => {
+    try {
+      await UserAPI.postUser(newUser);
+      handleCloseInviteDialog();
+      setSnackbarMessage(
+        `Successfully added ${newUser.email} to the application.`
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
+    }
+  };
+
   return (
     <>
-      <Typography variant="h1">Manage users</Typography>
+      <Box display="flex">
+        <Box display="flex" flexGrow={1} alignItems="center">
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            autoHideDuration={5000}
+            message={snackbarMessage}
+            onClose={() => {
+              setSnackbarMessage("");
+            }}
+            open={snackbarMessage !== ""}
+          />
+          <Typography variant="h1">Manage users</Typography>
+        </Box>
+        <Box flexShrink={0}>
+          <Button
+            variant="outlined"
+            className={classes.registerButton}
+            onClick={handleOpenInviteDialog}
+          >
+            Invite &nbsp;
+            <Add />
+          </Button>
+        </Box>
+      </Box>
       <TableContainer
         className={classes.tableContainer}
         component={Paper}
@@ -107,6 +175,85 @@ const Users = () => {
           ))}
         </Table>
       </TableContainer>
+      <Dialog
+        open={displayInviteDialog}
+        onClose={handleCloseInviteDialog}
+        disableBackdropClick
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle disableTypography>
+          <Typography variant="h2">Invite a member</Typography>
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseInviteDialog}
+            className={classes.closeButton}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Box marginBottom={4}>
+            Send an invite to another member through email.
+          </Box>
+          <Box marginBottom={4} width={488}>
+            <FormRow
+              id="email"
+              label="Name"
+              questionType={QuestionType.TEXT}
+              variant={FieldVariant.DEFAULT}
+            >
+              <OutlinedInput
+                autoComplete="new-password" // disable autocomplete
+                fullWidth
+                id="email"
+                placeholder="Email address"
+                onChange={(e) =>
+                  setNewUser({
+                    ...newUser,
+                    email: e.target.value,
+                  })
+                }
+                value={newUser.email}
+              />
+            </FormRow>
+            <FormRow
+              id="role"
+              label="Role"
+              questionType={QuestionType.SELECT}
+              variant={FieldVariant.DEFAULT}
+            >
+              <Select
+                aria-label="Class facilitator"
+                displayEmpty
+                fullWidth
+                labelId="role"
+                onChange={(e) =>
+                  setNewUser({
+                    ...newUser,
+                    is_admin: convertRoleToBoolean(e.target.value as UserRole),
+                  })
+                }
+                value={convertBooleanToRole(newUser.is_admin)}
+                variant="outlined"
+              >
+                <MenuItem value={UserRole.Facilitator}>Facilitator</MenuItem>
+                <MenuItem value={UserRole.Admin}>Admin</MenuItem>
+              </Select>
+            </FormRow>
+          </Box>
+          <Box display="flex" justifyContent="flex-end">
+            <Box marginRight={1}>
+              <Button variant="contained" onClick={handleCloseInviteDialog}>
+                Cancel
+              </Button>
+            </Box>
+            <Button variant="contained" color="primary" onClick={inviteUser}>
+              Send Invite
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
