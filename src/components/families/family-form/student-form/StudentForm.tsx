@@ -95,7 +95,6 @@ type Props = {
   dense: boolean;
   dynamicFields: DynamicField[];
   isEditing: boolean;
-  onOpen: (isOpen: boolean) => void;
   onChange: (students: StudentFormData[]) => void;
   role: StudentRole.CHILD | StudentRole.GUEST;
   students: StudentFormData[];
@@ -105,7 +104,6 @@ const StudentForm = ({
   dense,
   dynamicFields,
   isEditing,
-  onOpen,
   onChange,
   role,
   students,
@@ -155,7 +153,6 @@ const StudentForm = ({
                       onClick={() => {
                         setIsConfirming(true);
                         setStudentID(student.index);
-                        onOpen(true);
                       }}
                       className={classes.deleteButton}
                     >
@@ -169,12 +166,10 @@ const StudentForm = ({
                   description="This information will be completely removed."
                   onCancel={() => {
                     setIsConfirming(false);
-                    // onOpen(false);
                   }}
                   onConfirm={() => {
                     setIsConfirming(false);
                     onDeleteStudent(studentID);
-                    // onOpen(false);
                   }}
                   open={isConfirming}
                   title="Are you sure you want to delete this member?"

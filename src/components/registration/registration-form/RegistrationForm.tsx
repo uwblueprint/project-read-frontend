@@ -201,7 +201,6 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
           dense={false}
           dynamicFields={getSessionDynamicFields(childDynamicFields)}
           isEditing
-          onOpen={() => {}}
           onChange={(children) =>
             setFamily({
               ...family,
@@ -215,7 +214,6 @@ const RegistrationForm = ({ existingFamily, onRegister, session }: Props) => {
           dense={false}
           dynamicFields={getSessionDynamicFields(guestDynamicFields)}
           isEditing
-          onOpen={() => {}}
           onChange={(guests) =>
             setFamily({
               ...family,

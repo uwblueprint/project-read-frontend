@@ -16,7 +16,7 @@ import {
   InputBase,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Add, Edit } from "@material-ui/icons";
+import { Add, Close, Edit } from "@material-ui/icons";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
@@ -48,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
   actionButtonIcon: {
     height: 20,
     width: 20,
+  },
+  close: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    marginTop: 6,
   },
   drawer: {
     width: DRAWER_WIDTH,
@@ -112,36 +118,10 @@ const FamilySidebar = ({
   );
   const [isEditingFamily, setIsEditingFamily] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isConfirm, setIsConfirm] = useState(false);
 
   const isEditing =
     isEditingFamily ||
     familyFormData.interactions.some((interaction) => interaction.isEditing);
-
-  const handleClick = (e: MouseEvent) => {
-    const sidebarRef = sidebar?.current;
-
-    if (!sidebarRef || !isOpen || isConfirm) {
-      return;
-    }
-    const sidebarX = sidebarRef.getBoundingClientRect().x || 0;
-    const clickX = e.clientX;
-    if (clickX < sidebarX) {
-      sidebarRef.scrollTo(0, 0);
-      onClose();
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClick);
-      setIsEditingFamily(false);
-      return () => {
-        document.removeEventListener("mousedown", handleClick);
-      };
-    }
-    return () => {};
-  }, [isOpen]);
 
   const saveFamily = async (
     data: FamilyFormData,
@@ -245,6 +225,16 @@ const FamilySidebar = ({
       {isLoading && <SpinnerOverlay />}
 
       <Box padding={3} paddingBottom={isEditingFamily ? 10 : 3}>
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            onToggleEdit(false);
+            onClose();
+          }}
+          className={classes.close}
+        >
+          <Close />
+        </IconButton>
         <Typography component="h2" variant="h3">
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
@@ -285,7 +275,6 @@ const FamilySidebar = ({
             <FamilySidebarForm
               family={familyFormData}
               isEditing={isEditingFamily}
-              onOpen={setIsConfirm}
               onChange={setFamilyFormData}
               onSubmit={onSubmitFamilyForm}
             />
