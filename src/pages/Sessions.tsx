@@ -37,6 +37,7 @@ import AttendanceTable from "components/sessions/attendance-table";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
+import AddClassDialog from "components/sessions/session-detail-view/AddClassDialog";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
@@ -72,6 +73,7 @@ const Sessions = () => {
   const [isOnAttendanceView, setAttendanceView] = useState(false);
   const [isEditingAttendance, setIsEditingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [
     selectedFamily,
     setSelectedFamily,
@@ -242,35 +244,28 @@ const Sessions = () => {
         <AttendanceTable
           classObj={selectedClass}
           isEditing={isEditingAttendance}
+          onSelectFamily={async (id) => {
+            await onSelectFamily(id);
+            setIsSidebarOpen(true);
+          }}
           onSubmit={onSubmitAttendance}
         />
       );
     }
     return (
-      <>
-        <FamilyTable
-          families={getFamilies()}
-          enrolmentFields={
-            isOnAllClassesTab(classTabIndex)
-              ? [DefaultFields.ENROLLED_CLASS]
-              : []
-          }
-          shouldDisplayDynamicFields={false}
-          onSelectFamily={async (id) => {
-            await onSelectFamily(id);
-            setIsSidebarOpen(true);
-          }}
-        />
-        {selectedFamily && (
-          <FamilySidebar
-            isOpen={isSidebarOpen}
-            family={selectedFamily}
-            onClose={() => setIsSidebarOpen(false)}
-            onEditEnrolment={onEditFamilyEnrolment}
-            onSaveFamily={onSaveFamily}
-          />
-        )}
-      </>
+      <FamilyTable
+        families={getFamilies()}
+        enrolmentFields={
+          isOnAllClassesTab(classTabIndex)
+            ? [DefaultFields.REGISTERED_AT, DefaultFields.ENROLLED_CLASS]
+            : [DefaultFields.REGISTERED_AT]
+        }
+        shouldDisplayDynamicFields={false}
+        onSelectFamily={async (id) => {
+          await onSelectFamily(id);
+          setIsSidebarOpen(true);
+        }}
+      />
     );
   };
 
@@ -373,6 +368,19 @@ const Sessions = () => {
               }
               session={selectedSession}
             />
+            <AddClassDialog
+              open={isDialogOpen}
+              onClose={() => setIsDialogOpen(false)}
+              session={selectedSession}
+              onClassCreate={(newClass) => {
+                setClassTabIndex(ALL_CLASSES_TAB_INDEX);
+                setSnackbarMessage(
+                  `Successfully created class ${newClass.name} in this session.`
+                );
+                updateSelectedSession(selectedSession.id);
+                setIsDialogOpen(false);
+              }}
+            />
           </>
         )}
       </Box>
@@ -382,6 +390,16 @@ const Sessions = () => {
           classTabIndex={classTabIndex}
           onChangeClassTabIndex={handleChangeClassTabIndex}
           classDefaultView={getClassView()}
+          onDialogOpen={() => setIsDialogOpen(true)}
+        />
+      )}
+      {selectedFamily && (
+        <FamilySidebar
+          isOpen={isSidebarOpen}
+          family={selectedFamily}
+          onClose={() => setIsSidebarOpen(false)}
+          onEditEnrolment={onEditFamilyEnrolment}
+          onSaveFamily={onSaveFamily}
         />
       )}
     </>

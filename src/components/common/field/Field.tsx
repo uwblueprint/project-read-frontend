@@ -49,6 +49,10 @@ const Field = ({
   const compact = variant === FieldVariant.COMPACT;
   const valueText: string = value.split("\n").join(", ");
 
+  if (!isEditing && value.length === 0) {
+    return null;
+  }
+
   if (!isEditing) {
     return (
       <Box display="flex" paddingY={1}>

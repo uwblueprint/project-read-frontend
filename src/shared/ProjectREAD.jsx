@@ -12,6 +12,7 @@ import GlobalFields from "pages/global-fields";
 import MainRegistration from "pages/MainRegistration";
 import NotFound from "pages/not-found";
 import Sessions from "pages/Sessions";
+import Users from "pages/users";
 
 import Navbar from "./Navbar";
 import PrivateRoute from "./PrivateRoute";
@@ -40,6 +41,7 @@ function ProjectREAD() {
                 component={Sessions}
               />
               <PrivateRoute exact path="/fields" component={GlobalFields} />
+              <PrivateRoute exact path="/users" component={Users} />
               <PrivateRoute exact path="/oops" component={NotFound} />
               <Redirect to="/oops" />
             </Switch>

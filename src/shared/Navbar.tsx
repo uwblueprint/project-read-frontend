@@ -5,8 +5,16 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { AccountCircle } from "@material-ui/icons";
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
 import { Link, useHistory } from "react-router-dom";
 
+import ClassesAPI from "api/ClassAPI";
+import FieldsAPI from "api/DynamicFieldAPI";
+import EnrolmentAPI from "api/EnrolmentAPI";
+import FamilyAPI from "api/FamilyAPI";
+import SessionAPI from "api/SessionAPI";
+import StudentAPI from "api/StudentAPI";
 import app from "firebase/config";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +38,19 @@ function Navbar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleExport = async () => {
+    const zip = new JSZip();
+    zip.file("families.csv", await FamilyAPI.exportFamilies());
+    zip.file("fields.csv", await FieldsAPI.exportFields());
+    zip.file("sessions.csv", await SessionAPI.exportSessions());
+    zip.file("students.csv", await StudentAPI.exportStudents());
+    zip.file("classes.csv", await ClassesAPI.exportClasses());
+    zip.file("enrolments.csv", await EnrolmentAPI.exportEnrolments());
+    zip
+      .generateAsync({ type: "blob" })
+      .then((content) => saveAs(content, "data.zip"));
   };
 
   return (
@@ -58,9 +79,13 @@ function Navbar() {
               horizontal: "right",
             }}
           >
+            <Link to="/users" className={classes.link}>
+              <MenuItem>Manage users</MenuItem>
+            </Link>
             <Link to="/fields" className={classes.link}>
               <MenuItem>Configure global questions</MenuItem>
             </Link>
+            <MenuItem onClick={handleExport}>Export data</MenuItem>
             <MenuItem
               onClick={() => {
                 handleClose();

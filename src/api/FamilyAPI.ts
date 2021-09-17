@@ -28,10 +28,14 @@ const putFamily = (
 ): Promise<FamilyDetailResponse> =>
   APIUtils.put(`/families/${data.id}/`, data) as Promise<FamilyDetailResponse>;
 
+const exportFamilies = (): Promise<string> =>
+  APIUtils.get(`/export/families`, true) as Promise<string>;
+
 export default {
   getFamilies,
   getFamiliesByParentName,
   getFamilyById,
   postFamily,
   putFamily,
+  exportFamilies,
 };
