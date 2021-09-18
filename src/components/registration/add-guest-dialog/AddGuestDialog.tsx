@@ -123,16 +123,13 @@ const AddGuestDialog = ({
 
   useEffect(() => {
     if (open) {
-      window.onbeforeunload = () => true;
       resetDialog();
-    } else {
-      window.onbeforeunload = null;
     }
   }, [open]);
 
   const onSubmitSearch = async () => {
     setFamilyResults(
-      await (await FamilyAPI.getFamiliesByStudentName(firstName, lastName)).map(
+      (await FamilyAPI.getFamiliesByStudentName(firstName, lastName)).map(
         (family) => ({
           ...family,
           parent: { ...family.parent, selected: false },
