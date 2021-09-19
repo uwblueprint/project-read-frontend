@@ -69,3 +69,19 @@ export const put = async (path: string, data: unknown): Promise<unknown> => {
 
   return res.json();
 };
+
+export const destroy = async (path: string): Promise<unknown> => {
+  const token = await getIdToken();
+  const res = await fetch(url + path, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw Error(res.statusText);
+  }
+
+  return res.status;
+};

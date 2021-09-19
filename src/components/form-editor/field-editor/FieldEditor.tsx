@@ -181,8 +181,10 @@ const FieldEditor = ({
 
   const onDeleteField = async () => {
     try {
-      // TODO: call delete endpoint
-      fetchDynamicFields();
+      if (existingFieldId) {
+        await DynamicFieldAPI.deleteField(Number(existingFieldId));
+        fetchDynamicFields();
+      }
     } catch (err) {
       // eslint-disable-next-line no-alert
       alert(err);

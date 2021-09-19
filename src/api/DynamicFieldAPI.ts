@@ -23,4 +23,7 @@ const putField = async (
 ): Promise<DynamicFieldResponse> =>
   (await APIUtils.put(`/fields/${data.id}/`, data)) as DynamicFieldResponse;
 
-export default { exportFields, getFields, postField, putField };
+const deleteField = async (id: number): Promise<Number> =>
+  (await APIUtils.destroy(`/fields/${id}/`)) as Number;
+
+export default { exportFields, getFields, postField, putField, deleteField };
