@@ -1,5 +1,5 @@
 import * as APIUtils from "./APIUtils";
-import { UserResponse } from "./types";
+import { UserRequest, UserResponse } from "./types";
 
 const getMe = (): Promise<UserResponse> =>
   APIUtils.get("/users/me/") as Promise<UserResponse>;
@@ -7,4 +7,7 @@ const getMe = (): Promise<UserResponse> =>
 const getUsers = (): Promise<UserResponse[]> =>
   APIUtils.get("/users") as Promise<UserResponse[]>;
 
-export default { getMe, getUsers };
+const postUser = (user: UserRequest): Promise<UserResponse> =>
+  APIUtils.post("/users/", user) as Promise<UserResponse>;
+
+export default { getMe, getUsers, postUser };

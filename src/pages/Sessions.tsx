@@ -37,6 +37,7 @@ import AttendanceTable from "components/sessions/attendance-table";
 import SessionDetailView, {
   ALL_CLASSES_TAB_INDEX,
 } from "components/sessions/session-detail-view";
+import AddClassDialog from "components/sessions/session-detail-view/AddClassDialog";
 import DefaultFields from "constants/DefaultFields";
 
 const NEW_SESSION = -1;
@@ -72,6 +73,7 @@ const Sessions = () => {
   const [isOnAttendanceView, setAttendanceView] = useState(false);
   const [isEditingAttendance, setIsEditingAttendance] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [
     selectedFamily,
     setSelectedFamily,
@@ -366,6 +368,19 @@ const Sessions = () => {
               }
               session={selectedSession}
             />
+            <AddClassDialog
+              open={isDialogOpen}
+              onClose={() => setIsDialogOpen(false)}
+              session={selectedSession}
+              onClassCreate={(newClass) => {
+                setClassTabIndex(ALL_CLASSES_TAB_INDEX);
+                setSnackbarMessage(
+                  `Successfully created class ${newClass.name} in this session.`
+                );
+                updateSelectedSession(selectedSession.id);
+                setIsDialogOpen(false);
+              }}
+            />
           </>
         )}
       </Box>
@@ -375,6 +390,7 @@ const Sessions = () => {
           classTabIndex={classTabIndex}
           onChangeClassTabIndex={handleChangeClassTabIndex}
           classDefaultView={getClassView()}
+          onDialogOpen={() => setIsDialogOpen(true)}
         />
       )}
       {selectedFamily && (

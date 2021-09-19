@@ -11,6 +11,8 @@ import {
   User,
 } from "types";
 
+export type UserRequest = Pick<User, "email" | "is_admin">;
+
 export type UserResponse = Pick<
   User,
   | "id"
