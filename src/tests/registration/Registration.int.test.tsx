@@ -278,5 +278,5 @@ describe("RegistrationForm", () => {
     });
 
     expect(onRegister).toHaveBeenCalledTimes(1);
-  }, 15000);
+  }, 20000);
 });
