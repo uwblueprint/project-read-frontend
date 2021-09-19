@@ -34,18 +34,18 @@ const useStyles = makeStyles(() => ({
 type Props = {
   families: FamilySearchResponse[];
   onSelectFamily: (id: number) => void;
-  session?: SessionDetailResponse | null;
+  session: SessionDetailResponse;
 };
 
 const FamilySearchResultsTable = ({
   families,
   onSelectFamily,
-  session = null,
+  session,
 }: Props) => {
   const classes = useStyles();
 
   const isFamilyRegistered = (id: number): boolean =>
-    session?.families.find((family) => family.id === id) !== undefined;
+    session.families.find((family) => family.id === id) !== undefined;
 
   return (
     <Box marginY={2}>
@@ -78,7 +78,7 @@ const FamilySearchResultsTable = ({
                   <TableCell className={classes.selectButtonTableCell}>
                     {isFamilyRegistered(family.id) ? (
                       <Tooltip
-                        title={`This family is already registered in ${session?.name}`}
+                        title={`This family is already registered in ${session.name}`}
                         aria-label="already registered"
                       >
                         <span>
