@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Box,
@@ -12,6 +12,7 @@ import { Add, RemoveCircle } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 
 import { StudentRequest } from "api/types";
+import ConfirmationDialog from "components/common/confirmation-dialog";
 import Field from "components/common/field";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import DefaultFields from "constants/DefaultFields";
@@ -109,6 +110,8 @@ const StudentForm = ({
 }: Props) => {
   const classes = useStyles({ dense, isEditing });
   const fieldProps = { dense, isEditing, variant: FieldVariant.COMPACT };
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [studentID, setStudentID] = useState(-1);
 
   const onAddStudent = (): void => {
     onChange([
@@ -142,17 +145,36 @@ const StudentForm = ({
             marginBottom={isEditing ? 1 : 0}
           >
             {isEditing && (
-              <Box className={classes.rowContainer} minWidth={32}>
-                {(role === StudentRole.GUEST || students.length > 1) && (
-                  <IconButton
-                    aria-label={`delete ${role}`}
-                    onClick={() => onDeleteStudent(student.index)}
-                    className={classes.deleteButton}
-                  >
-                    <RemoveCircle className={classes.deleteButton} />
-                  </IconButton>
-                )}
-              </Box>
+              <>
+                <Box className={classes.rowContainer} minWidth={32}>
+                  {(role === StudentRole.GUEST || students.length > 1) && (
+                    <IconButton
+                      aria-label={`delete ${role}`}
+                      onClick={() => {
+                        setIsConfirming(true);
+                        setStudentID(student.index);
+                      }}
+                      className={classes.deleteButton}
+                    >
+                      <RemoveCircle className={classes.deleteButton} />
+                    </IconButton>
+                  )}
+                </Box>
+                <ConfirmationDialog
+                  cancelButtonLabel="No, go back"
+                  confirmButtonLabel="Yes"
+                  description="This information will be completely removed."
+                  onCancel={() => {
+                    setIsConfirming(false);
+                  }}
+                  onConfirm={() => {
+                    setIsConfirming(false);
+                    onDeleteStudent(studentID);
+                  }}
+                  open={isConfirming}
+                  title="Are you sure you want to delete this member?"
+                />
+              </>
             )}
             <Box
               flex="auto"

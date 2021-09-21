@@ -13,6 +13,12 @@ const useStyles = makeStyles((theme) => ({
     height: 20,
     width: 20,
   },
+  close: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    marginTop: 6,
+  },
   drawer: {
     width: DRAWER_WIDTH,
   },

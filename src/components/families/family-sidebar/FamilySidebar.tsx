@@ -15,7 +15,7 @@ import {
   Button,
   InputBase,
 } from "@material-ui/core";
-import { Add, Edit } from "@material-ui/icons";
+import { Add, Close, Edit } from "@material-ui/icons";
 import debounce from "lodash/debounce";
 import moment from "moment";
 
@@ -64,30 +64,6 @@ const FamilySidebar = ({
   const isEditing =
     isEditingFamily ||
     familyFormData.interactions.some((interaction) => interaction.isEditing);
-
-  const handleClick = (e: MouseEvent) => {
-    const sidebarRef = sidebar?.current;
-    if (!sidebarRef || !isOpen) {
-      return;
-    }
-    const sidebarX = sidebarRef.getBoundingClientRect().x || 0;
-    const clickX = e.clientX;
-    if (clickX < sidebarX) {
-      sidebarRef.scrollTo(0, 0);
-      onClose();
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClick);
-      setIsEditingFamily(false);
-      return () => {
-        document.removeEventListener("mousedown", handleClick);
-      };
-    }
-    return () => {};
-  }, [isOpen]);
 
   const saveFamily = async (
     data: FamilyFormData,
@@ -191,6 +167,16 @@ const FamilySidebar = ({
       {isLoading && <SpinnerOverlay />}
 
       <Box padding={3} paddingBottom={isEditingFamily ? 10 : 3}>
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            onToggleEdit(false);
+            onClose();
+          }}
+          className={classes.close}
+        >
+          <Close />
+        </IconButton>
         <Typography component="h2" variant="h3">
           {family.parent.first_name} {family.parent.last_name}
         </Typography>
