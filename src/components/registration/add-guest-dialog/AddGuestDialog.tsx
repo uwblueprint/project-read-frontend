@@ -162,7 +162,7 @@ const AddGuestDialog = ({
         })
       );
       const existingEnrolment = family.enrolments.find(
-        (e) => e.enrolled_class?.id === classObj.id && !e.is_guest
+        (e) => e.enrolled_class?.id === classObj.id
       );
       if (existingEnrolment) {
         await EnrolmentAPI.putEnrolment({
