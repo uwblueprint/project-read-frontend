@@ -354,7 +354,7 @@ const AddGuestDialog = ({
         classes={{ paper: classes.dialogPaper }}
       >
         <DialogTitle disableTypography>
-          <Typography variant="h2">Add a client</Typography>
+          <Typography variant="h2">Add a guest</Typography>
           <IconButton
             aria-label="close"
             onClick={() => setIsConfirming(true)}
@@ -451,7 +451,7 @@ const AddGuestDialog = ({
                               >
                                 <AddCircleOutline />
                               </IconButton>
-                            </TableCell>{" "}
+                            </TableCell>
                             <TableCell className={classes.densePaddingY}>
                               {getSelectButton(family, family.parent.id, true)}
                             </TableCell>
