@@ -50,7 +50,7 @@ export type SessionDetailResponse = Session & {
 
 export type EnrolmentResponse = Pick<
   Enrolment,
-  "id" | "created_at" | "family" | "status" | "students"
+  "id" | "created_at" | "family" | "is_guest" | "status" | "students"
 > & {
   session: SessionListResponse;
   preferred_class: ClassListResponse | null;
@@ -59,7 +59,7 @@ export type EnrolmentResponse = Pick<
 
 export type EnrolmentRequest = Pick<
   Enrolment,
-  "id" | "family" | "status" | "students"
+  "id" | "family" | "is_guest" | "status" | "students"
 > & {
   session: number;
   preferred_class: number | null;

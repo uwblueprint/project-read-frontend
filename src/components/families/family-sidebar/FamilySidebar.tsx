@@ -110,11 +110,11 @@ const FamilySidebar = ({
   // Enrolments ===============================================================
 
   const activeEnrolments = family.enrolments.filter(
-    (enrolment) => enrolment.session.active
+    (enrolment) => enrolment.session.active && !enrolment.is_guest
   );
 
   const previousEnrolments = family.enrolments.filter(
-    (enrolment) => !enrolment.session.active
+    (enrolment) => !activeEnrolments.includes(enrolment)
   );
 
   // Family form ==============================================================

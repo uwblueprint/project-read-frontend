@@ -103,6 +103,7 @@ export type Enrolment = {
   id: number;
   created_at: Date;
   family: number; // family id
+  is_guest: boolean;
   status: EnrolmentStatus;
   students: number[];
 };
