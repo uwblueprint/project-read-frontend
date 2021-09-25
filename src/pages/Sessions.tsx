@@ -187,7 +187,9 @@ const Sessions = () => {
       return selectedSession.families;
     }
     const classObj = classesMap.get(classTabIndex);
-    return classObj !== undefined ? classObj.families : [];
+    return classObj !== undefined
+      ? classObj.families.filter((family) => !family.enrolment?.is_guest)
+      : [];
   };
 
   useEffect(() => {
