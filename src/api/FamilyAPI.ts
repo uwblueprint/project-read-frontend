@@ -4,8 +4,8 @@ import {
   FamilyDetailResponse,
   FamilySearchResponse,
   FamilyRequest,
-  StudentBasicRequest,
-  StudentBasicResponse,
+  StudentListRequest,
+  StudentListResponse,
 } from "./types";
 
 const getFamilies = (): Promise<FamilyListResponse[]> =>
@@ -41,10 +41,8 @@ const putFamily = (
 const exportFamilies = (): Promise<string> =>
   APIUtils.get(`/export/families`, true) as Promise<string>;
 
-const postStudent = (
-  data: StudentBasicRequest
-): Promise<StudentBasicResponse> =>
-  APIUtils.post("/students/", data) as Promise<StudentBasicResponse>;
+const postStudent = (data: StudentListRequest): Promise<StudentListResponse> =>
+  APIUtils.post("/students/", data) as Promise<StudentListResponse>;
 
 export default {
   exportFamilies,

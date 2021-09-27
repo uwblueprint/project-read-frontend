@@ -99,14 +99,14 @@ export type FamilyListResponse = Pick<
   enrolment: EnrolmentResponse | null;
 };
 
-export type StudentBasicRequest = Pick<
+export type StudentListRequest = Pick<
   Student,
   DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME | "role"
 > & {
   family: number;
 };
 
-export type StudentBasicResponse = Pick<
+export type StudentListResponse = Pick<
   Student,
   "id" | DefaultFieldKey.FIRST_NAME | DefaultFieldKey.LAST_NAME
 >;
@@ -115,9 +115,9 @@ export type FamilySearchResponse = Pick<
   Family,
   DefaultFieldKey.EMAIL | DefaultFieldKey.ID | DefaultFieldKey.PHONE_NUMBER
 > & {
-  parent: StudentBasicResponse;
-  children: StudentBasicResponse[];
-  guests: StudentBasicResponse[];
+  parent: StudentListResponse;
+  children: StudentListResponse[];
+  guests: StudentListResponse[];
   enrolments: EnrolmentResponse[];
 };
 

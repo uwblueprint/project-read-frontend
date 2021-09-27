@@ -32,8 +32,8 @@ import {
   ClassDetailResponse,
   EnrolmentRequest,
   FamilySearchResponse,
-  StudentBasicRequest,
-  StudentBasicResponse,
+  StudentListRequest,
+  StudentListResponse,
 } from "api/types";
 import ConfirmationDialog from "components/common/confirmation-dialog";
 import RoundedOutlinedButton from "components/common/rounded-outlined-button";
@@ -63,7 +63,7 @@ const getDefaultEnrolmentData = (sessionId: number, classId: number) => ({
   students: [],
 });
 
-type SelectableStudent = StudentBasicResponse & { selected: boolean };
+type SelectableStudent = StudentListResponse & { selected: boolean };
 
 type SelectableFamily = Omit<
   FamilySearchResponse,
@@ -105,7 +105,7 @@ const AddGuestDialog = ({
     setExpandedFamily,
   ] = useState<FamilySearchResponse | null>(null);
   const [guests, setGuests] = useState<
-    (StudentBasicRequest & { index: number })[]
+    (StudentListRequest & { index: number })[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -242,6 +242,8 @@ const AddGuestDialog = ({
     const isParentWithSelectedMembers =
       isParent &&
       familyId === enrolment.family?.id &&
+      // guests have been created, or any of the existing children or guests
+      // have been selected
       (guests.length > 0 ||
         enrolment.students.find((id) => id !== studentId) !== undefined);
     if (isParentWithSelectedMembers) {
@@ -305,7 +307,7 @@ const AddGuestDialog = ({
     setEnrolment({ ...enrolment, family });
   };
 
-  const updateGuest = (i: number, data: StudentBasicRequest) => {
+  const updateGuest = (i: number, data: StudentListRequest) => {
     const guestsData = [...guests];
     guestsData[i] = { ...guests[i], ...data };
     setGuests([...guestsData]);
