@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Box, Button, Checkbox, IconButton, Tooltip } from "@material-ui/core";
 import { Add, Check, SupervisorAccountOutlined } from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import { makeStyles } from "@material-ui/styles";
 import _ from "lodash";
 import moment from "moment";
 import MUIDataTable, {
@@ -17,6 +16,8 @@ import getHeaderColumns from "constants/MuiDatatables";
 import StudentRole from "constants/StudentRole";
 import theme from "theme";
 import { Attendance } from "types";
+
+import useStyles from "./styles";
 
 const FAMILY_ID_DATA_INDEX = 0;
 const STUDENT_ID_DATA_INDEX = 1;
@@ -33,28 +34,15 @@ type AttendanceTableRow = {
 type Props = {
   classObj: ClassDetailResponse;
   isEditing: boolean;
+  onClickAddGuest: () => void;
   onSelectFamily: (id: number) => void;
   onSubmit: (data: ClassDetailRequest) => void;
 };
 
-const useStyles = makeStyles(() => ({
-  button: {
-    order: -1,
-    height: 36,
-    marginTop: 5,
-    marginRight: 15,
-    textTransform: "none",
-  },
-  checkmark: {
-    height: "20px",
-    width: "20px",
-    marginLeft: "8px",
-  },
-}));
-
 const AttendanceTable = ({
   classObj,
   isEditing,
+  onClickAddGuest,
   onSelectFamily,
   onSubmit,
 }: Props) => {
@@ -108,9 +96,26 @@ const AttendanceTable = ({
           className={classes.button}
         >
           {!isEditing ? "Take attendance " : "Done attendance "}
-          <Check className={classes.checkmark} />
+          <Check className={classes.buttonIcon} />
         </Button>
-        {isEditing ? (
+        <Tooltip
+          aria-label="currently editing attendance"
+          title={
+            isEditing ? "Please save attendance before adding a guest" : ""
+          }
+        >
+          <span className={classes.button}>
+            <Button
+              disabled={isEditing}
+              onClick={onClickAddGuest}
+              variant="outlined"
+            >
+              Add a guest
+              <Add className={classes.buttonIcon} />
+            </Button>
+          </span>
+        </Tooltip>
+        {isEditing && (
           <>
             <Tooltip title="Add Date">
               <IconButton onClick={() => setOpen(true)}>
@@ -129,7 +134,7 @@ const AttendanceTable = ({
               value={null}
             />
           </>
-        ) : null}
+        )}
       </>
     ),
     setRowProps: (row, dataIndex, rowIndex) => ({
@@ -159,39 +164,47 @@ const AttendanceTable = ({
           : "no";
       });
       rows.push(parentRow);
-      family.children.forEach((child) => {
-        const childRow: AttendanceTableRow = {
-          family_id: family.id.toString(),
-          id: child.id.toString(),
-          role: StudentRole.CHILD,
-          first_name: child.first_name,
-          last_name: child.last_name,
-        };
-        data.attendance.forEach((currClass) => {
-          childRow[currClass.date] = currClass.attendees.includes(child.id)
-            ? "yes"
-            : "no";
+      family.children
+        .filter((child) => family.enrolment?.students.includes(child.id))
+        .forEach((child) => {
+          const childRow: AttendanceTableRow = {
+            family_id: family.id.toString(),
+            id: child.id.toString(),
+            role: StudentRole.CHILD,
+            first_name: child.first_name,
+            last_name: child.last_name,
+          };
+          data.attendance.forEach((currClass) => {
+            childRow[currClass.date] = currClass.attendees.includes(child.id)
+              ? "yes"
+              : "no";
+          });
+          rows.push(childRow);
         });
-        rows.push(childRow);
-      });
-      family.guests.forEach((guest) => {
-        const guestRow: AttendanceTableRow = {
-          family_id: family.id.toString(),
-          id: guest.id.toString(),
-          role: StudentRole.GUEST,
-          first_name: `${guest.first_name} (guest)`,
-          last_name: guest.last_name,
-        };
-        data.attendance.forEach((currClass) => {
-          guestRow[currClass.date] = currClass.attendees.includes(guest.id)
-            ? "yes"
-            : "no";
+      family.guests
+        .filter((guest) => family.enrolment?.students.includes(guest.id))
+        .forEach((guest) => {
+          const guestRow: AttendanceTableRow = {
+            family_id: family.id.toString(),
+            id: guest.id.toString(),
+            role: StudentRole.GUEST,
+            first_name: `${guest.first_name} (guest)`,
+            last_name: guest.last_name,
+          };
+          data.attendance.forEach((currClass) => {
+            guestRow[currClass.date] = currClass.attendees.includes(guest.id)
+              ? "yes"
+              : "no";
+          });
+          rows.push(guestRow);
         });
-        rows.push(guestRow);
-      });
     });
     return rows;
   };
+
+  useEffect(() => {
+    setData(_.cloneDeep(classObj));
+  }, [classObj]);
 
   useEffect(() => {
     setTableRows(getTableRows());

@@ -70,11 +70,11 @@ const FamilySearchResultsTable = ({
             <TableBody>
               {families.map((family) => (
                 <TableRow key={family.id}>
-                  <TableCell>{family.first_name}</TableCell>
-                  <TableCell>{family.last_name}</TableCell>
+                  <TableCell>{family.parent.first_name}</TableCell>
+                  <TableCell>{family.parent.last_name}</TableCell>
                   <TableCell>{family.phone_number}</TableCell>
                   <TableCell>{family.email}</TableCell>
-                  <TableCell>{family.num_children}</TableCell>
+                  <TableCell>{family.children.length}</TableCell>
                   <TableCell className={classes.selectButtonTableCell}>
                     {isFamilyRegistered(family.id) ? (
                       <Tooltip
