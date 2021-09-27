@@ -54,13 +54,14 @@ export const generateKey = (): number => {
   return key;
 };
 
-const getDefaultEnrolmentData = (sessionId: number, classId: number) => ({
+const getDefaultGuestEnrolmentData = (sessionId: number, classId: number) => ({
   family: null,
   session: sessionId,
   enrolled_class: classId,
   preferred_class: null,
   status: EnrolmentStatus.REGISTERED,
   students: [],
+  is_guest: true,
 });
 
 type SelectableStudent = StudentListResponse & { selected: boolean };
@@ -99,7 +100,7 @@ const AddGuestDialog = ({
     Omit<EnrolmentRequest, "id" | "family"> & {
       family: FamilySearchResponse | null;
     }
-  >(getDefaultEnrolmentData(sessionId, classObj.id));
+  >(getDefaultGuestEnrolmentData(sessionId, classObj.id));
   const [
     expandedFamily,
     setExpandedFamily,
@@ -115,7 +116,7 @@ const AddGuestDialog = ({
     setShouldDisplaySearch(false);
     setFamilyResults([]);
     setIsConfirming(false);
-    setEnrolment(getDefaultEnrolmentData(sessionId, classObj.id));
+    setEnrolment(getDefaultGuestEnrolmentData(sessionId, classObj.id));
     setExpandedFamily(null);
     setGuests([]);
     setIsLoading(false);

@@ -82,6 +82,7 @@ const defaultFamilyData: FamilyFormData = {
 
 export const defaultEnrolmentData = {
   enrolled_class: null,
+  is_guest: false,
   preferred_class: null,
   status: EnrolmentStatus.REGISTERED,
   students: [],

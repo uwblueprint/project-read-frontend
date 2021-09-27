@@ -271,6 +271,7 @@ describe("RegistrationForm", () => {
     expect(EnrolmentAPI.postEnrolment).toHaveBeenCalledWith({
       enrolled_class: null,
       family: 1,
+      is_guest: false,
       preferred_class: session.classes[1].id,
       session: session.id,
       status: EnrolmentStatus.SIGNED_UP,

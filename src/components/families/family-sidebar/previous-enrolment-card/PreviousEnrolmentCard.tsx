@@ -38,7 +38,9 @@ const PreviousEnrolmentCard = ({ enrolment, students }: Props) => {
       <Box display="flex" flexDirection="row" alignItems="center">
         <Box className={classes.headingContainer}>
           <Typography variant="body2">
-            <b>{enrolment.session.name}</b>
+            <b>
+              {enrolment.session.name} {enrolment.is_guest && "(guest)"}
+            </b>
           </Typography>
         </Box>
         <Divider className={classes.divider} orientation="vertical" flexItem />
