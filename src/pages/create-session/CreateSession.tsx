@@ -80,8 +80,13 @@ const CreateSession = () => {
   };
 
   const handleSubmit = async () => {
-    const newSession = await SessionAPI.postSession(session);
-    history.push(`/sessions/${newSession.id}`);
+    try {
+      const newSession = await SessionAPI.postSession(session);
+      history.push(`/sessions/${newSession.id}`);
+    } catch (err) {
+      // eslint-disable-next-line no-alert
+      alert(err);
+    }
   };
 
   const stepTitles = {
