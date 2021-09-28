@@ -9,8 +9,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import { NavigateBefore } from "@material-ui/icons";
+import moment from "moment";
 import { useHistory } from "react-router-dom";
 
+import SessionAPI from "api/SessionAPI";
 import { SessionRequest } from "api/types";
 import FormEditor from "components/form-editor";
 import AddClasses from "components/sessions/add-classes";
@@ -40,7 +42,7 @@ const CreateSession = () => {
   const history = useHistory();
   const [session, setSession] = useState<SessionRequest>({
     name: "",
-    start_date: null,
+    start_date: moment(new Date()).format("YYYY-MM-DD"),
     fields: [],
     classes: [defaultClassData],
   });
@@ -77,14 +79,9 @@ const CreateSession = () => {
     setActiveStepIndex((prevActiveStepIndex) => prevActiveStepIndex - 1);
   };
 
-  const handleSubmit = () => {
-    // TODO: submit to the create session API
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const payload = {
-      name: session.name,
-      start_date: session.start_date,
-    };
-    goToSessions();
+  const handleSubmit = async () => {
+    const newSession = await SessionAPI.postSession(session);
+    history.push(`/sessions/${newSession.id}`);
   };
 
   const stepTitles = {
@@ -116,7 +113,6 @@ const CreateSession = () => {
             }
           />
         );
-      // fall through
       case CreateSessionStepLabel.ADD_CLASSES:
         return (
           <AddClasses

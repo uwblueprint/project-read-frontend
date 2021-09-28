@@ -84,7 +84,7 @@ export type Session = {
   fields: number[]; // array of field IDs
   id: number;
   name: string;
-  start_date: Date | null;
+  start_date: string;
 };
 
 export type Attendance = {
