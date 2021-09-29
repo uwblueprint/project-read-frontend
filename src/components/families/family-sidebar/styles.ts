@@ -44,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "scroll",
     padding: 16,
   },
+  notesViewOnly: {
+    // preserve newlines in notes
+    whiteSpace: "pre-line",
+  },
   notesLabel: {
     display: "none",
   },
