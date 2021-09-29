@@ -88,6 +88,7 @@ const AttendanceTable = ({
     pagination: false,
     search: false,
     selectableRows: "none",
+    sort: false,
     elevation: 0,
     viewColumns: false,
     customToolbar: () => (
@@ -263,7 +264,6 @@ const AttendanceTable = ({
                 padding: "0px 16px",
               },
             }),
-            sort: false,
           },
         };
         return dateColumn;
