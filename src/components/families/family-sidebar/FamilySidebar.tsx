@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import {
   Box,
@@ -16,7 +10,6 @@ import {
   InputBase,
 } from "@material-ui/core";
 import { Add, Edit } from "@material-ui/icons";
-import debounce from "lodash/debounce";
 import moment from "moment";
 
 import FamilyAPI from "api/FamilyAPI";
@@ -161,15 +154,6 @@ const FamilySidebar = ({
     });
   };
 
-  // Notes ====================================================================
-
-  const debouncedSaveFamily = useCallback(
-    debounce((notes: string) => {
-      saveFamily({ ...familyFormData, notes }, false);
-    }, 1000),
-    []
-  );
-
   return (
     <Drawer
       anchor="right"
@@ -237,11 +221,37 @@ const FamilySidebar = ({
           </Box>
         </Box>
 
-        {!isEditingFamily && (
-          <Box paddingTop={2}>
-            <Divider />
-          </Box>
+        <Box paddingTop={2}>
+          <Divider />
+        </Box>
+
+        <Typography variant="h3" className={classes.heading}>
+          Notes
+        </Typography>
+        {isEditingFamily ? (
+          <InputBase
+            className={classes.notes}
+            disabled={!isEditingFamily}
+            fullWidth
+            inputProps={{ "aria-label": "notes" }}
+            multiline
+            onChange={(e) => {
+              setFamilyFormData({
+                ...familyFormData,
+                notes: e.target.value,
+              });
+            }}
+            value={familyFormData.notes}
+          />
+        ) : (
+          <Typography variant="body2" className={classes.notesViewOnly}>
+            {familyFormData.notes}
+          </Typography>
         )}
+
+        <Box paddingTop={2}>
+          <Divider />
+        </Box>
 
         <Box position="relative">
           <Box position="absolute" top={8} right={0}>
@@ -297,36 +307,12 @@ const FamilySidebar = ({
                   />
                 ))
             ) : (
-              <Box paddingLeft={2} paddingBottom={1}>
+              <Box paddingBottom={1}>
                 <Typography variant="body2">No recent interactions</Typography>
               </Box>
             )}
           </Box>
         </Box>
-
-        <Box paddingTop={2}>
-          <Divider />
-        </Box>
-
-        <Typography variant="h3" className={classes.heading}>
-          Notes
-        </Typography>
-        <InputBase
-          className={classes.notes}
-          disabled={isEditing}
-          fullWidth
-          inputProps={{ "aria-label": "notes" }}
-          multiline
-          onChange={(e) => {
-            const notes = e.target.value;
-            setFamilyFormData({
-              ...familyFormData,
-              notes,
-            });
-            debouncedSaveFamily(notes);
-          }}
-          value={familyFormData.notes}
-        />
 
         <Box paddingTop={2}>
           <Divider />
