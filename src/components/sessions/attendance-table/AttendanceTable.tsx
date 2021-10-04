@@ -83,10 +83,14 @@ const AttendanceTable = ({
   };
 
   const options: MUIDataTableOptions = {
+    filter: false,
     responsive: "standard",
     pagination: false,
+    search: false,
     selectableRows: "none",
+    sort: false,
     elevation: 0,
+    viewColumns: false,
     customToolbar: () => (
       <>
         <Button
@@ -291,11 +295,14 @@ const AttendanceTable = ({
       .concat(dateColumns);
   };
 
-  options.onRowClick = useCallback((rowData) => {
-    if (!isEditing) {
-      onSelectFamily(rowData[FAMILY_ID_DATA_INDEX]);
-    }
-  }, []);
+  options.onRowClick = useCallback(
+    (rowData) => {
+      if (!isEditing) {
+        onSelectFamily(rowData[FAMILY_ID_DATA_INDEX]);
+      }
+    },
+    [isEditing]
+  );
 
   return (
     <MUIDataTable
