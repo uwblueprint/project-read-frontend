@@ -48,6 +48,15 @@ function Navbar() {
     zip.file("students.csv", await StudentAPI.exportStudents());
     zip.file("classes.csv", await ClassesAPI.exportClasses());
     zip.file("enrolments.csv", await EnrolmentAPI.exportEnrolments());
+    zip.folder("attendance");
+    (await SessionAPI.getSessions()).forEach((session) => {
+      session.classes.forEach((classObj) => {
+        zip.file(
+          `attendance/${session.name} - ${classObj.name} - Attendance.csv`,
+          ClassesAPI.exportClassAttendance(classObj.id)
+        );
+      });
+    });
     zip
       .generateAsync({ type: "blob" })
       .then((content) => saveAs(content, "data.zip"));
