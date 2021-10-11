@@ -50,9 +50,11 @@ function Navbar() {
     zip.file("enrolments.csv", await EnrolmentAPI.exportEnrolments());
     zip.folder("attendance");
     (await SessionAPI.getSessions()).forEach((session) => {
+      const sessionPath = `attendance/${session.name}`;
+      zip.folder(sessionPath);
       session.classes.forEach((classObj) => {
         zip.file(
-          `attendance/${session.name} - ${classObj.name} - Attendance.csv`,
+          `${sessionPath}/${classObj.name} - Attendance.csv`,
           ClassesAPI.exportClassAttendance(classObj.id)
         );
       });
