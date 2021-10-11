@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { Box, Button, Checkbox, IconButton, Tooltip } from "@material-ui/core";
-import { Add, Check, SupervisorAccountOutlined } from "@material-ui/icons";
+import {
+  Add,
+  Check,
+  RemoveCircle,
+  SupervisorAccountOutlined,
+} from "@material-ui/icons";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import _ from "lodash";
 import moment from "moment";
@@ -11,6 +16,7 @@ import MUIDataTable, {
 } from "mui-datatables";
 
 import { ClassDetailResponse, ClassDetailRequest } from "api/types";
+import ConfirmationDialog from "components/common/confirmation-dialog";
 import DefaultFieldKey from "constants/DefaultFieldKey";
 import getHeaderColumns from "constants/MuiDatatables";
 import StudentRole from "constants/StudentRole";
@@ -50,6 +56,9 @@ const AttendanceTable = ({
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<ClassDetailRequest>(_.cloneDeep(classObj));
   const [tableRows, setTableRows] = useState<AttendanceTableRow[]>([]);
+  const [dateIndexToDelete, setDateIndexToDelete] = useState<number | null>(
+    null
+  );
 
   const handleCheckboxOnClick = (id: number, date: string) => {
     const dateIndex = data.attendance.findIndex(
@@ -80,6 +89,12 @@ const AttendanceTable = ({
       newData.attendance.push(newDate);
       setData(newData);
     }
+  };
+
+  const deleteDateIndex = (index: number) => {
+    const newData: ClassDetailResponse = _.cloneDeep(data);
+    newData.attendance.splice(index, 1);
+    setData(newData);
   };
 
   const options: MUIDataTableOptions = {
@@ -121,7 +136,7 @@ const AttendanceTable = ({
         </Tooltip>
         {isEditing && (
           <>
-            <Tooltip title="Add Date">
+            <Tooltip title="Add Date" aria-label="add date">
               <IconButton onClick={() => setOpen(true)}>
                 <Add />
               </IconButton>
@@ -237,12 +252,13 @@ const AttendanceTable = ({
       label: "Last name",
     };
     const dateColumns: MUIDataTableColumn[] = data.attendance.map(
-      (currClass) => {
+      (currClass, index) => {
+        const dateLabel = moment(currClass.date).isValid()
+          ? moment(currClass.date).format("MMM D")
+          : currClass.date;
         const dateColumn: MUIDataTableColumn = {
           name: currClass.date,
-          label: moment(currClass.date).isValid()
-            ? moment(currClass.date).format("MMM D")
-            : currClass.date,
+          label: dateLabel,
           options: {
             customBodyRender: (value, tableMeta) => (
               <Checkbox
@@ -258,6 +274,26 @@ const AttendanceTable = ({
                 }
               />
             ),
+            customHeadLabelRender: () => (
+              <div style={{ width: 60, textAlign: "center" }}>
+                {isEditing ? (
+                  <>
+                    <Tooltip title="Delete date" aria-label="delete date">
+                      <IconButton
+                        onClick={() => setDateIndexToDelete(index)}
+                        style={{ height: 16, width: 16 }}
+                      >
+                        <RemoveCircle style={{ height: 16, width: 16 }} />
+                      </IconButton>
+                    </Tooltip>
+                    <p style={{ fontSize: 14, margin: 0 }}>{dateLabel}</p>
+                  </>
+                ) : (
+                  <p style={{ fontSize: 14 }}>{dateLabel}</p>
+                )}
+              </div>
+            ),
+            sort: false,
             setCellProps: () => ({
               style: {
                 minWidth: 64,
@@ -305,12 +341,31 @@ const AttendanceTable = ({
   );
 
   return (
-    <MUIDataTable
-      title=""
-      data={tableRows}
-      columns={getTableColumns()}
-      options={options}
-    />
+    <>
+      <MUIDataTable
+        title=""
+        data={tableRows}
+        columns={getTableColumns()}
+        options={options}
+      />
+      <ConfirmationDialog
+        cancelButtonLabel="Cancel"
+        confirmButtonLabel="Delete date"
+        description="This information cannot be recovered."
+        onCancel={() => {
+          setDateIndexToDelete(null);
+        }}
+        onConfirm={() => {
+          const index = dateIndexToDelete;
+          if (index !== null) {
+            deleteDateIndex(index);
+          }
+          setDateIndexToDelete(null);
+        }}
+        open={dateIndexToDelete !== null}
+        title="Are you sure you want to delete this date?"
+      />
+    </>
   );
 };
 
