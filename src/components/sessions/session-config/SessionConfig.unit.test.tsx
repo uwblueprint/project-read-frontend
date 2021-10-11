@@ -20,7 +20,7 @@ describe("SessionConfig", () => {
         <SessionConfig
           sessionName="Fall 2020"
           onChangeSessionName={onChangeSessionName}
-          startDate={new Date(2020, 9, 1)}
+          startDate="2020-10-01"
           onChangeStartDate={onChangeStartDate}
         />
       </MuiPickersUtilsProvider>
@@ -53,6 +53,6 @@ describe("SessionConfig", () => {
     await fireEvent.click(getByTestId(DateInputTestId.KeyboardButton));
     await fireEvent.click(await getByText("2"));
     expect(onChangeStartDate).toHaveBeenCalledTimes(1);
-    expect(onChangeStartDate).toHaveBeenCalledWith(new Date(2020, 9, 2));
+    expect(onChangeStartDate).toHaveBeenCalledWith("2020-10-02");
   });
 });

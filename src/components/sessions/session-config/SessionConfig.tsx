@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Box, OutlinedInput, Typography } from "@material-ui/core";
+import moment from "moment";
 
 import DateInput from "components/common/date-input";
 import FormRow from "components/common/form-row";
@@ -14,8 +15,8 @@ export enum TestId {
 type Props = {
   sessionName: string;
   onChangeSessionName: (name: string) => void;
-  startDate: Date | null;
-  onChangeStartDate: (date: Date | null) => void;
+  startDate: string;
+  onChangeStartDate: (date: string) => void;
 };
 
 const SessionConfig = ({
@@ -46,8 +47,12 @@ const SessionConfig = ({
       >
         <DateInput
           id="start-date"
-          value={startDate}
-          onChange={(date) => onChangeStartDate(date)}
+          onChange={(val) =>
+            onChangeStartDate(val ? moment(val).format("YYYY-MM-DD") : "")
+          }
+          value={
+            startDate === "" ? null : moment(startDate, "YYYY-MM-DD").toDate()
+          }
         />
       </FormRow>
     </Box>
