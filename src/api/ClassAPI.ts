@@ -15,7 +15,16 @@ const postClass = (data: ClassListRequest): Promise<ClassListResponse> =>
 const putClass = (data: ClassDetailRequest): Promise<ClassDetailResponse> =>
   APIUtils.put(`/classes/${data.id}/`, data) as Promise<ClassDetailResponse>;
 
-const exportClasses = (): Promise<string> =>
-  APIUtils.get(`/export/classes`, true) as Promise<string>;
+const exportClassAttendance = (id: number): Promise<string> =>
+  APIUtils.get(`/export/attendances?class_id=${id}`, true) as Promise<string>;
 
-export default { getClass, postClass, putClass, exportClasses };
+const exportClasses = (): Promise<string> =>
+  APIUtils.get("/export/classes", true) as Promise<string>;
+
+export default {
+  getClass,
+  postClass,
+  putClass,
+  exportClassAttendance,
+  exportClasses,
+};
